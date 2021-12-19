@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:mobial/settings.dart';
 
 Widget drawer(BuildContext context) {
   return Drawer(
@@ -16,17 +17,20 @@ Widget drawer(BuildContext context) {
           title: const Text('Account'),
           leading: IconButton(
             icon: const Icon(Icons.account_circle_outlined),
-            tooltip: 'Show Snackbar',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
+                  const SnackBar(content: Text('This is a Account button')));
             },
           ),
           onTap: () {
-            // Update the state of the app
-            // ...
-            // Then close the drawer
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return Settings();
+                },
+              ),
+            );
           },
         ),
         ListTile(
