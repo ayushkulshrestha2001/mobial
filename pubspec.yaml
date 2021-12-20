@@ -42,6 +42,7 @@ dev_dependencies:
   flutter_chat_ui:
   mime:
   intl:
+  qr_code_scanner: 
   open_file:
   uuid:
 

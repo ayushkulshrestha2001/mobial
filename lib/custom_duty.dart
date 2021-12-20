@@ -22,6 +22,42 @@ class _Custom_dutyState extends State<Custom_duty> {
     });
   }
 
+  handleChooseFromGallery() async {
+    Navigator.pop(context);
+    XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      this.selectedImage = File(file!.path);
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Camera'),
+                      onTap: () {
+                        handleCamera();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Photo Gallery'),
+                    onTap: () {
+                      handleChooseFromGallery();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -47,8 +83,8 @@ class _Custom_dutyState extends State<Custom_duty> {
               ),
             ),
             IconButton(
-              onPressed: handleCamera,
-              icon: Icon(Icons.camera_alt),
+              onPressed: () => {_showPicker(context)},
+              icon: Icon(Icons.add_a_photo),
             ),
           ],
         ),
