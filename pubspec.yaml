@@ -45,6 +45,7 @@ dev_dependencies:
   qr_code_scanner: 
   open_file:
   uuid:
+  google_maps_flutter:
 
 
 # For information on the generic Dart part of this file, see the

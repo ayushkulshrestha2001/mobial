@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobial/Ticket.dart';
+import 'package:mobial/home.dart';
 import 'package:mobial/login9/utils/bubble_indication_painter.dart';
 
 class Login9 extends StatefulWidget {
@@ -327,7 +328,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                       context,
                       MaterialPageRoute(
                         builder: (context) {
-                          return Ticket();
+                          return Home();
                         },
                       ),
                     );
