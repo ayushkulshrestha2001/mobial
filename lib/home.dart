@@ -37,7 +37,7 @@ class _HomeState extends State<Home> {
         children: [
           Ticket(),
           Custom_duty(),
-          Meet(),
+          ChatPage(),
           CarService(),
           QRScan(),
         ],
