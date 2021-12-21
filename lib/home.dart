@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
           Ticket(),
           Custom_duty(),
           ChatPage(),
-          CarService(),
+          Card5(),
           QrHome(),
         ],
         controller: _pageController,
