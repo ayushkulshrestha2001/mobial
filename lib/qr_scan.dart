@@ -1,6 +1,7 @@
 // import 'dart:io';
 // import 'dart:developer';
 
+//
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/material.dart';
 // import 'package:mobial/widgets/drawer.dart';
@@ -14,6 +15,14 @@
 //   _QRScanState createState() => _QRScanState();
 // }
 
+//
+// class QRScan extends StatefulWidget {
+//   QRScan({Key? key}) : super(key: key);
+//
+//   @override
+//   _QRScanState createState() => _QRScanState();
+// }
+//
 // class _QRScanState extends State<QRScan> {
 //   Barcode? result;
 //   QRViewController? controller;
@@ -27,6 +36,7 @@
 //     controller!.resumeCamera();
 //   }
 
+//
 //   @override
 //   Widget build(BuildContext context) {
 //     return Center(
@@ -123,12 +133,15 @@
 //     );
 //   }
 
+//
 //   Widget _buildQrView(BuildContext context) {
 //     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
 //     var scanArea = (MediaQuery.of(context).size.width < 400 ||
 //             MediaQuery.of(context).size.height < 400)
 //         ? 150.0
 //         : 300.0;
+//     // To ensure the Scanner view is properly sizes after rotation
+//     // we need to listen for Flutter SizeChanged notification and update controller
 //     return QRView(
 //       key: qrKey,
 //       onQRViewCreated: _onQRViewCreated,
@@ -142,6 +155,7 @@
 //     );
 //   }
 
+//
 //   void _onQRViewCreated(QRViewController controller) {
 //     setState(() {
 //       this.controller = controller;
@@ -153,6 +167,7 @@
 //     });
 //   }
 
+//
 //   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
 //     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
 //     if (!p) {
@@ -162,6 +177,7 @@
 //     }
 //   }
 
+//
 //   @override
 //   void dispose() {
 //     controller?.dispose();

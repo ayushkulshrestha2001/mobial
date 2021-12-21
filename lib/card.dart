@@ -27,7 +27,11 @@ class _Card5State extends State<Card5> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gradient Cards'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => {Navigator.pop(context)},
+        ),
+        title: Text('History'),
       ),
       body: ListView.builder(
         itemCount: items.length,
@@ -41,29 +45,30 @@ class _Card5State extends State<Card5> {
                     height: 150,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(_borderRadius),
-                      gradient: LinearGradient(colors: [
-                        items[index].startColor,
-                        items[index].endColor
-                      ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                      boxShadow: [
-                        BoxShadow(
-                          color: items[index].endColor,
-                          blurRadius: 12,
-                          offset: Offset(0, 6),
-                        ),
-                      ],
+                      color: Color(0xff393e46),
+                      // gradient: LinearGradient(colors: [
+                      //   items[index].startColor,
+                      //   items[index].endColor
+                      // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: items[index].endColor,
+                      //     blurRadius: 12,
+                      //     offset: Offset(0, 6),
+                      //   ),
+                      // ],
                     ),
                   ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    top: 0,
-                    child: CustomPaint(
-                      size: Size(100, 150),
-                      painter: CustomCardShapePainter(_borderRadius,
-                          items[index].startColor, items[index].endColor),
-                    ),
-                  ),
+                  // Positioned(
+                  //   right: 0,
+                  //   bottom: 0,
+                  //   top: 0,
+                  //   child: CustomPaint(
+                  //     size: Size(100, 150),
+                  //     painter: CustomCardShapePainter(_borderRadius,
+                  //         items[index].startColor, items[index].endColor),
+                  //   ),
+                  // ),
                   Positioned.fill(
                     child: Row(
                       children: <Widget>[
@@ -133,7 +138,7 @@ class _Card5State extends State<Card5> {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700),
                               ),
-                              RatingBar(rating: items[index].rating),
+                              //RatingBar(rating: items[index].rating),
                             ],
                           ),
                         ),
