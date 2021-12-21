@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobial/Ticket.dart';
 import 'package:mobial/car_service.dart';
+import 'package:mobial/chat_home.dart';
 import 'package:mobial/custom_duty.dart';
 import 'package:mobial/meet.dart';
-import 'package:mobial/qr_scan.dart';
+//import 'package:mobial/qr_scan.dart';
 
 class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
@@ -37,9 +38,10 @@ class _HomeState extends State<Home> {
         children: [
           Ticket(),
           Custom_duty(),
-          ChatPage(),
+          //ChatPage(),
+          ChatHome(),
           CarService(),
-          QRScan(),
+          //QRScan(),
         ],
         controller: _pageController,
         onPageChanged: onPageChange,
