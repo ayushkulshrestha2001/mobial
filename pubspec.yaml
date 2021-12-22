@@ -45,6 +45,8 @@ dev_dependencies:
   uuid:
   google_maps_flutter: ^2.1.1
   carousel_slider: ^4.0.0
+  qrscan: ^0.3.2
+  flutter_barcode_scanner: ^2.0.0
 
 
 # For information on the generic Dart part of this file, see the

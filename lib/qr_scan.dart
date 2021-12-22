@@ -1,186 +1,113 @@
-// import 'dart:io';
-// import 'dart:developer';
+import 'package:flutter/material.dart';
+//import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:mobial/widgets/button_widget.dart';
 
-//
-// import 'package:flutter/foundation.dart';
-// import 'package:flutter/material.dart';
-// import 'package:mobial/widgets/drawer.dart';
-// import 'package:mobial/widgets/header.dart';
-// import 'package:qr_code_scanner/qr_code_scanner.dart';
-
-// class QRScan extends StatefulWidget {
-//   QRScan({Key? key}) : super(key: key);
+// class QrScan extends StatefulWidget {
+//   QrScan({Key? key}) : super(key: key);
 
 //   @override
-//   _QRScanState createState() => _QRScanState();
+//   _QrScanState createState() => _QrScanState();
 // }
 
-//
-// class QRScan extends StatefulWidget {
-//   QRScan({Key? key}) : super(key: key);
-//
-//   @override
-//   _QRScanState createState() => _QRScanState();
-// }
-//
-// class _QRScanState extends State<QRScan> {
-//   Barcode? result;
-//   QRViewController? controller;
-//   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-//   @override
-//   void reassemble() {
-//     super.reassemble();
-//     if (Platform.isAndroid) {
-//       controller!.pauseCamera();
+// class _QrScanState extends State<QrScan> {
+//   String result = "Hello World...!";
+//   Future _scanQR() async {
+//     try {
+//       String? cameraScanResult = await scanner.scan();
+//       setState(() {
+//         result =
+//             cameraScanResult!; // setting string result with cameraScanResult
+//       });
+//     } on PlatformException catch (e) {
+//       print(e);
 //     }
-//     controller!.resumeCamera();
 //   }
 
-//
 //   @override
 //   Widget build(BuildContext context) {
-//     return Center(
-//       child: Scaffold(
-//         appBar: header(context),
-//         drawer: drawer(context),
-//         body: Column(
-//           children: <Widget>[
-//             Expanded(flex: 4, child: _buildQrView(context)),
-//             Expanded(
-//               flex: 1,
-//               child: FittedBox(
-//                 fit: BoxFit.contain,
-//                 child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                   children: <Widget>[
-//                     if (result != null)
-//                       Text(
-//                           'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-//                     else
-//                       const Text('Scan a code'),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       crossAxisAlignment: CrossAxisAlignment.center,
-//                       children: <Widget>[
-//                         Container(
-//                           margin: const EdgeInsets.all(8),
-//                           child: ElevatedButton(
-//                               onPressed: () async {
-//                                 await controller?.toggleFlash();
-//                                 setState(() {});
-//                               },
-//                               child: FutureBuilder(
-//                                 future: controller?.getFlashStatus(),
-//                                 builder: (context, snapshot) {
-//                                   return Text('Flash: ${snapshot.data}');
-//                                 },
-//                               )),
-//                         ),
-//                         Container(
-//                           margin: const EdgeInsets.all(8),
-//                           child: ElevatedButton(
-//                               onPressed: () async {
-//                                 await controller?.flipCamera();
-//                                 setState(() {});
-//                               },
-//                               child: FutureBuilder(
-//                                 future: controller?.getCameraInfo(),
-//                                 builder: (context, snapshot) {
-//                                   if (snapshot.data != null) {
-//                                     return Text(
-//                                         'Camera facing ${describeEnum(snapshot.data!)}');
-//                                   } else {
-//                                     return const Text('loading');
-//                                   }
-//                                 },
-//                               )),
-//                         )
-//                       ],
-//                     ),
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       crossAxisAlignment: CrossAxisAlignment.center,
-//                       children: <Widget>[
-//                         Container(
-//                           margin: const EdgeInsets.all(8),
-//                           child: ElevatedButton(
-//                             onPressed: () async {
-//                               await controller?.pauseCamera();
-//                             },
-//                             child: const Text('pause',
-//                                 style: TextStyle(fontSize: 20)),
-//                           ),
-//                         ),
-//                         Container(
-//                           margin: const EdgeInsets.all(8),
-//                           child: ElevatedButton(
-//                             onPressed: () async {
-//                               await controller?.resumeCamera();
-//                             },
-//                             child: const Text('resume',
-//                                 style: TextStyle(fontSize: 20)),
-//                           ),
-//                         )
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             )
-//           ],
-//         ),
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text("QR Scanner Example In Flutter"),
 //       ),
+//       body: Center(
+//         child: Text(result), // Here the scanned result will be shown
+//       ),
+//       floatingActionButton: FloatingActionButton.extended(
+//           icon: Icon(Icons.camera_alt),
+//           onPressed: () {
+//             _scanQR(); // calling a function when user click on button
+//           },
+//           label: Text("Scan")),
+//       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 //     );
-//   }
-
-//
-//   Widget _buildQrView(BuildContext context) {
-//     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-//     var scanArea = (MediaQuery.of(context).size.width < 400 ||
-//             MediaQuery.of(context).size.height < 400)
-//         ? 150.0
-//         : 300.0;
-//     // To ensure the Scanner view is properly sizes after rotation
-//     // we need to listen for Flutter SizeChanged notification and update controller
-//     return QRView(
-//       key: qrKey,
-//       onQRViewCreated: _onQRViewCreated,
-//       overlay: QrScannerOverlayShape(
-//           borderColor: Colors.red,
-//           borderRadius: 10,
-//           borderLength: 30,
-//           borderWidth: 10,
-//           cutOutSize: scanArea),
-//       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
-//     );
-//   }
-
-//
-//   void _onQRViewCreated(QRViewController controller) {
-//     setState(() {
-//       this.controller = controller;
-//     });
-//     controller.scannedDataStream.listen((scanData) {
-//       setState(() {
-//         result = scanData;
-//       });
-//     });
-//   }
-
-//
-//   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-//     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-//     if (!p) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(content: Text('no Permission')),
-//       );
-//     }
-//   }
-
-//
-//   @override
-//   void dispose() {
-//     controller?.dispose();
-//     super.dispose();
 //   }
 // }
+
+class QrScan extends StatefulWidget {
+  QrScan({Key? key}) : super(key: key);
+
+  @override
+  _QrScanState createState() => _QrScanState();
+}
+
+class _QrScanState extends State<QrScan> {
+  String qrCode = 'Unknown';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("QR Scan"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Scan Result',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white54,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              '$qrCode',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 72),
+            ButtonWidget(
+              text: 'Start QR scan',
+              onClicked: () => scanQRCode(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> scanQRCode() async {
+    try {
+      final qrCode = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666',
+        'Cancel',
+        true,
+        ScanMode.QR,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        this.qrCode = qrCode;
+      });
+    } on PlatformException {
+      qrCode = 'Failed to get platform version.';
+    }
+  }
+}

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mobial/card.dart';
+import 'package:mobial/qr_scan.dart';
 import 'package:mobial/redeem_coupons.dart';
 import 'package:mobial/redeemed_coupons.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'dart:ui' as ui;
-import 'package:mobial/widgets/common_widgets.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 
 class QrHome extends StatefulWidget {
   QrHome({Key? key}) : super(key: key);
@@ -136,6 +135,25 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Text(
                     "Redeemed Coupons",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            child: TextButton(
+              onPressed: () => {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => QrScan()))
+              },
+              child: Column(
+                children: [
+                  Text(
+                    "Scan Qr Code",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,
