@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobial/ticket_info.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 
@@ -9,6 +10,7 @@ class Ticket extends StatefulWidget {
 
 class _TicketState extends State<Ticket> {
   int _selectedIndex = 0;
+  TextEditingController text_controller = TextEditingController();
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -40,7 +42,13 @@ class _TicketState extends State<Ticket> {
   }
 
   void onSearch() {
-    print('Hadoop');
+    if (text_controller.text != "") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  TicketInfo(ticketNumber: text_controller.text)));
+    }
   }
 
   @override
@@ -54,11 +62,10 @@ class _TicketState extends State<Ticket> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
             child: TextFormField(
+              controller: text_controller,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
-                  onPressed: () {
-                    print("helo");
-                  },
+                  onPressed: onSearch,
                   icon: Icon(Icons.search),
                 ),
                 border: UnderlineInputBorder(),
