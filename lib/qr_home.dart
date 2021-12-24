@@ -6,6 +6,8 @@ import 'package:mobial/redeemed_coupons.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'dart:ui' as ui;
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 
 class QrHome extends StatefulWidget {
   QrHome({Key? key}) : super(key: key);
@@ -16,18 +18,15 @@ class QrHome extends StatefulWidget {
 
 class _QrHomeState extends State<QrHome> {
   final double _borderRadius = 24;
-  var items = [
-    PlaceInfo('Dubai Mall Food Court', Color(0xff6DC8F3), Color(0xff73A1F9),
-        4.4, 'Dubai · In The Dubai Mall', 'Cosy · Casual · Good for kids'),
-    PlaceInfo('Hamriyah Food Court', Color(0xffFFB157), Color(0xffFFA057), 3.7,
-        'Sharjah', 'All you can eat · Casual · Groups'),
-    PlaceInfo('Gate of Food Court', Color(0xffFF5B95), Color(0xffF8556D), 4.5,
-        'Dubai · Near Dubai Aquarium', 'Casual · Groups'),
-    PlaceInfo('Express Food Court', Color(0xffD76EF5), Color(0xff8F7AFE), 4.1,
-        'Dubai', 'Casual · Good for kids · Delivery'),
-    PlaceInfo('BurJuman Food Court', Color(0xff42E695), Color(0xff3BB2B8), 4.2,
-        'Dubai · In BurJuman', '...'),
-  ];
+  final LatLng bialLocation = new LatLng(77, 13);
+  double latitude = 77.70;
+  double longitude = 13.198;
+  @override
+  void initState() {
+    //bialLocation = LatLng(latitude, longitude);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,58 +162,38 @@ class _QrHomeState extends State<QrHome> {
               ),
             ),
           ),
+          //   Card(
+          //     child: FlutterMap(
+          //       options: new MapOptions(
+          //         center: LatLng(latitude, longitude),
+          //         zoom: 13.0,
+          //       ),
+          //       layers: [
+          //         new TileLayerOptions(
+          //           urlTemplate:
+          //               "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          //           subdomains: ['a', 'b', 'c'],
+          //           attributionBuilder: (_) {
+          //             return Text("© MoBIAL");
+          //           },
+          //         ),
+          //         MarkerLayerOptions(
+          //           markers: [
+          //             new Marker(
+          //               width: 80.0,
+          //               height: 80.0,
+          //               point: LatLng(latitude, longitude),
+          //               builder: (ctx) => Container(
+          //                 child: FlutterLogo(),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ),
         ],
       ),
     );
-  }
-}
-
-class PlaceInfo {
-  final String name;
-  final String category;
-  final String location;
-  final double rating;
-  final Color startColor;
-  final Color endColor;
-
-  PlaceInfo(this.name, this.startColor, this.endColor, this.rating,
-      this.location, this.category);
-}
-
-class CustomCardShapePainter extends CustomPainter {
-  final double radius;
-  final Color startColor;
-  final Color endColor;
-
-  CustomCardShapePainter(this.radius, this.startColor, this.endColor);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var radius = 24.0;
-
-    var paint = Paint();
-    paint.shader = ui.Gradient.linear(
-        Offset(0, 0), Offset(size.width, size.height), [
-      HSLColor.fromColor(startColor).withLightness(0.8).toColor(),
-      endColor
-    ]);
-
-    var path = Path()
-      ..moveTo(0, size.height)
-      ..lineTo(size.width - radius, size.height)
-      ..quadraticBezierTo(
-          size.width, size.height, size.width, size.height - radius)
-      ..lineTo(size.width, radius)
-      ..quadraticBezierTo(size.width, 0, size.width - radius, 0)
-      ..lineTo(size.width - 1.5 * radius, 0)
-      ..quadraticBezierTo(-radius, 2 * radius, 0, size.height)
-      ..close();
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
   }
 }
