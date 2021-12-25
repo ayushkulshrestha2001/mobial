@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobial/widgets/specific_card.dart';
 
-class CarDetail extends StatelessWidget {
+class LendCarDetails extends StatelessWidget {
   final MainHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 30);
 
   final SubHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
@@ -15,7 +15,7 @@ class CarDetail extends StatelessWidget {
   final String? brand;
   final String? path;
 
-  CarDetail(
+  LendCarDetails(
       {this.title,
       this.price,
       this.color,
@@ -89,17 +89,6 @@ class CarDetail extends StatelessWidget {
               )
             ],
           ),
-          SizedBox(height: 10),
-          RaisedButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            disabledColor: Theme.of(context).accentColor,
-            onPressed: null,
-            child: Text(
-              'Book Now',
-              style: TextStyle(fontSize: 20, color: Colors.white),
-            ),
-          )
         ],
       ),
     );

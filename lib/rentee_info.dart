@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:mobial/widgets/drawer.dart';
 // import 'package:mobial/widgets/header.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobial/home.dart';
+import 'package:mobial/rent_car_info.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:mobial/widgets/widget_button.dart';
@@ -302,25 +304,40 @@ class _RenteeInfoState extends State<RenteeInfo> {
                             Colors.white,
                           ],
                           onPressed: () async {
-                            if (_firstnamekey.currentState!.validate()) {
-                              if (_lastNamekey.currentState!.validate()) {
-                                if (_emailKey.currentState!.validate()) {
-                                  if (_passwordKey.currentState!.validate()) {
-                                    if (_confirmPasswordKey.currentState!
-                                        .validate()) {
-                                      if (checkedValue == false) {
-                                        buildSnackError(
-                                            'Accept our Privacy Policy and Term Of Use',
-                                            context,
-                                            size);
-                                      } else {
-                                        print('register');
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            }
+                            // if (_firstnamekey.currentState!.validate()) {
+                            //   if (_lastNamekey.currentState!.validate()) {
+                            //     if (_emailKey.currentState!.validate()) {
+                            //       if (_passwordKey.currentState!.validate()) {
+                            //         if (_confirmPasswordKey.currentState!
+                            //             .validate()) {
+                            //           if (checkedValue == false) {
+                            //             buildSnackError(
+                            //                 'Accept our Privacy Policy and Term Of Use',
+                            //                 context,
+                            //                 size);
+                            //           } else {
+                            //             Navigator.push(
+                            //                 context,
+                            //                 MaterialPageRoute(
+                            //                     builder: (context) => Home()));
+                            //           }
+                            //         }
+                            //       }
+                            //     }
+                            //   }
+                            // }
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LendCarDetails(
+                                          title: "WagonR",
+                                          price: 1000,
+                                          color: "white",
+                                          gearbox: "Manual",
+                                          fuel: "Petrol",
+                                          brand: "MAryti Suzuki",
+                                          path: "assets/img/login_logo.png",
+                                        )));
                           },
                         ),
                       ),
