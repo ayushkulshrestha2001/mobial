@@ -25,7 +25,7 @@ class _CarServiceState extends State<CarService> {
             child: TextButton(
               onPressed: () => {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RenteeInfo()))
+                    MaterialPageRoute(builder: (context) => RenterInfo()))
                 // print("Renter Info")
               },
               child: Column(

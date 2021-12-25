@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:mobial/widgets/drawer.dart';
 // import 'package:mobial/widgets/header.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobial/widgets/drawer.dart';
+import 'package:mobial/widgets/header.dart';
 import 'package:mobial/widgets/widget_button.dart';
 import 'package:date_field/date_field.dart';
 
@@ -36,6 +38,8 @@ class _RenteeInfoState extends State<RenteeInfo> {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
     return Scaffold(
+      appBar: header(context),
+      drawer: drawer(context),
       body: Center(
         child: Container(
           height: size.height,
@@ -202,28 +206,6 @@ class _RenteeInfoState extends State<RenteeInfo> {
                       ),
                       Form(
                         child: buildTextField(
-                          "Availability",
-                          Icons.lock_outline,
-                          false,
-                          size,
-                          (valuepassword) {
-                            if (valuepassword.length < 6) {
-                              buildSnackError(
-                                'Invalid password',
-                                context,
-                                size,
-                              );
-                              return '';
-                            }
-                            return null;
-                          },
-                          _passwordKey,
-                          3,
-                          isDarkMode,
-                        ),
-                      ),
-                      Form(
-                        child: buildTextField(
                           "Description",
                           Icons.description_outlined,
                           false,
@@ -244,46 +226,6 @@ class _RenteeInfoState extends State<RenteeInfo> {
                           isDarkMode,
                         ),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.only(top: size.height * 0.025),
-                      //   child: Container(
-                      //     width: size.width * 0.9,
-                      //     height: size.height * 0.05,
-                      //     decoration: BoxDecoration(
-                      //       color: isDarkMode
-                      //           ? Colors.black
-                      //           : const Color(0xffF7F8F8),
-                      //       borderRadius:
-                      //           const BorderRadius.all(Radius.circular(15)),
-                      //     ),
-                      //     child: Row(
-                      //       //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      //       children: [
-                      //         SizedBox(
-                      //           width: 10.0,
-                      //         ),
-                      //         Icon(
-                      //           Icons.calendar_today_outlined,
-                      //           color: Colors.grey,
-                      //         ),
-                      //         SizedBox(
-                      //           width: 10.0,
-                      //         ),
-                      //         DateTimeFormField(
-                      //           decoration: InputDecoration(
-                      //             hintStyle: TextStyle(color: Colors.black),
-                      //             errorStyle:
-                      //                 TextStyle(color: Colors.redAccent),
-                      //             suffixIcon: Icon(
-                      //               Icons.event_note,
-                      //               color: Colors.black,
-                      //             ),
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                       Padding(
                         padding: EdgeInsets.only(top: size.height * 0.025),
                         child: Container(
@@ -296,12 +238,13 @@ class _RenteeInfoState extends State<RenteeInfo> {
                           ),
                           child: DateTimeFormField(
                             decoration: const InputDecoration(
+                              hintText: "From",
                               hintStyle: TextStyle(color: Colors.white),
                               errorStyle: TextStyle(color: Colors.redAccent),
                               border: OutlineInputBorder(),
                               suffixIcon:
-                                  Icon(Icons.event_note, color: Colors.black),
-                              labelText: 'Only time',
+                                  Icon(Icons.event_note, color: Colors.grey),
+                              labelText: 'From',
                             ),
                             mode: DateTimeFieldPickerMode.dateAndTime,
                             autovalidateMode: AutovalidateMode.always,
@@ -313,25 +256,38 @@ class _RenteeInfoState extends State<RenteeInfo> {
                             },
                           ),
                         ),
-                        // child: DateTimeFormField(
-                        //   decoration: const InputDecoration(
-                        //     hintStyle: TextStyle(color: Colors.black45),
-                        //     errorStyle: TextStyle(color: Colors.redAccent),
-                        //     border: OutlineInputBorder(),
-                        //     suffixIcon: Icon(Icons.event_note),
-                        //     labelText: 'Only time',
-                        //   ),
-                        //   mode: DateTimeFieldPickerMode.time,
-                        //   autovalidateMode: AutovalidateMode.always,
-                        //   validator: (e) => (e?.day ?? 0) == 1
-                        //       ? 'Please not the first day'
-                        //       : null,
-                        //   onDateSelected: (DateTime value) {
-                        //     print(value);
-                        //   },
-                        // ),
                       ),
-
+                      Padding(
+                        padding: EdgeInsets.only(top: size.height * 0.025),
+                        child: Container(
+                          width: size.width * 0.9,
+                          height: size.height * 0.05,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                          ),
+                          child: DateTimeFormField(
+                            decoration: const InputDecoration(
+                              hintText: "From",
+                              hintStyle: TextStyle(color: Colors.white),
+                              errorStyle: TextStyle(color: Colors.redAccent),
+                              border: OutlineInputBorder(),
+                              suffixIcon:
+                                  Icon(Icons.event_note, color: Colors.grey),
+                              labelText: 'To',
+                            ),
+                            mode: DateTimeFieldPickerMode.dateAndTime,
+                            autovalidateMode: AutovalidateMode.always,
+                            validator: (e) => (e?.day ?? 0) == 1
+                                ? 'Please not the first day'
+                                : null,
+                            onDateSelected: (DateTime value) {
+                              print(value);
+                            },
+                          ),
+                        ),
+                      ),
                       AnimatedPadding(
                         duration: const Duration(milliseconds: 500),
                         padding: EdgeInsets.only(top: size.height * 0.025),
