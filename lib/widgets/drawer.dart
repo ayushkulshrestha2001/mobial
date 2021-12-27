@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:mobial/page/profile_page.dart';
 import 'package:mobial/settings.dart';
 
 Widget drawer(BuildContext context) {
@@ -27,7 +28,7 @@ Widget drawer(BuildContext context) {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return Settings();
+                  return ProfilePage();
                 },
               ),
             );
@@ -44,10 +45,14 @@ Widget drawer(BuildContext context) {
             },
           ),
           onTap: () {
-            // Update the state of the app
-            // ...
-            // Then close the drawer
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return Settings();
+                },
+              ),
+            );
           },
         ),
         ListTile(
