@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -44,34 +47,47 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     print(loginEmailController.text.toString());
     print(loginPasswordController.text.toString());
     var url = Uri.parse("http://192.168.109.1:3001/api/signin");
-    var response = await http.post(url, body: {
-      'email': loginEmailController.text.toString(),
-      'password': loginPasswordController.text.toString(),
-    });
+    var response = await http.post(url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({
+          'email': loginEmailController.text.toString(),
+          'password': loginPasswordController.text.toString(),
+        }));
     print('Response status: ${response.statusCode}');
     print('Response body: ${response.body}');
     if (response.statusCode == 200) {
       print(response.body);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Home(email: loginEmailController.text.toString())));
     } else {
       print("Error while logging in");
     }
   }
 
   handleSignUp() async {
-    print(signupEmailController.text.toString());
-    print(signupNameController.text.toString());
-    print(signupPasswordController.text.toString());
-    print(phoneController.text.toString());
     if (signupPasswordController.text.toString() ==
         signupConfirmPasswordController.text.toString()) {
       var url = Uri.parse("http://192.168.109.1:3001/api/signup");
-      var response = await http.post(url, body: {
-        'email': signupEmailController.text.toString(),
-        'password': signupConfirmPasswordController.toString(),
-        'name': signupNameController.text.toString(),
-        //'username': signupEmailController.text.toString(),
-        'phone': phoneController.toString(),
-      });
+      var response = await http.post(url,
+          headers: <String, String>{
+            'content-type': 'application/json',
+            "Accept": "application/json",
+            "charset": "utf-8"
+          },
+          body: json.encode({
+            'email': signupEmailController.text.toString(),
+            'password': signupConfirmPasswordController.text.toString(),
+            'name': signupNameController.text.toString(),
+            //'username': signupEmailController.text.toString(),
+            'phone': phoneController.text.toString(),
+          }));
 
       if (response.statusCode == 200) {
         print(response.body);
