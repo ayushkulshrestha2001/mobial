@@ -35,6 +35,7 @@ dev_dependencies:
   latlong2: ^0.8.0
   google_fonts: ^2.1.1
   date_field: ^2.1.3
+  http: ^0.13.4
 
 flutter:
   uses-material-design: true

@@ -10,13 +10,22 @@ import 'package:mobial/chat_home.dart';
 //import 'package:mobial/qr_scan.dart';
 
 class Home extends StatefulWidget {
-  Home({Key? key}) : super(key: key);
+  final String email;
+  Home({required this.email});
 
   @override
-  _HomeState createState() => _HomeState();
+  _HomeState createState() => _HomeState(email: email);
 }
 
 class _HomeState extends State<Home> {
+  final String email;
+  _HomeState({required this.email});
+  @override
+  void initState() {
+    super.initState();
+    print(email);
+  }
+
   PageController _pageController = PageController();
   int pageIndex = 0;
   void onPageChange(int pageIndex) {

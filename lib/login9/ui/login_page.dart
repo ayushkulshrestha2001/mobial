@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobial/Ticket.dart';
 import 'package:mobial/home.dart';
 import 'package:mobial/login9/utils/bubble_indication_painter.dart';
+import 'package:http/http.dart' as http;
 
 class Login9 extends StatefulWidget {
   @override
@@ -32,11 +33,59 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   TextEditingController signupPasswordController = new TextEditingController();
   TextEditingController signupConfirmPasswordController =
       new TextEditingController();
+  TextEditingController phoneController = new TextEditingController();
 
   PageController _pageController = PageController();
 
   Color left = Colors.black;
   Color right = Colors.white;
+
+  handleSignIn() async {
+    print(loginEmailController.text.toString());
+    print(loginPasswordController.text.toString());
+    var url = Uri.parse("http://192.168.109.1:3001/api/signin");
+    var response = await http.post(url, body: {
+      'email': loginEmailController.text.toString(),
+      'password': loginPasswordController.text.toString(),
+    });
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print("Error while logging in");
+    }
+  }
+
+  handleSignUp() async {
+    print(signupEmailController.text.toString());
+    print(signupNameController.text.toString());
+    print(signupPasswordController.text.toString());
+    print(phoneController.text.toString());
+    if (signupPasswordController.text.toString() ==
+        signupConfirmPasswordController.text.toString()) {
+      var url = Uri.parse("http://192.168.109.1:3001/api/signup");
+      var response = await http.post(url, body: {
+        'email': signupEmailController.text.toString(),
+        'password': signupConfirmPasswordController.toString(),
+        'name': signupNameController.text.toString(),
+        //'username': signupEmailController.text.toString(),
+        'phone': phoneController.toString(),
+      });
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    Home(email: signupEmailController.text.toString())));
+      } else {
+        print('Response status: ${response.statusCode}');
+        print('Response body: ${response.body}');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +166,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     myFocusNodePassword.dispose();
     myFocusNodeEmail.dispose();
     myFocusNodeName.dispose();
-    _pageController?.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -200,7 +249,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
 
   Widget _buildSignIn(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 23.0),
+      padding: EdgeInsets.only(top: 20.0),
       child: Column(
         children: <Widget>[
           Stack(
@@ -215,7 +264,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                 ),
                 child: Container(
                   width: 300.0,
-                  height: 190.0,
+                  height: 210.0,
                   child: Column(
                     children: <Widget>[
                       Padding(
@@ -238,7 +287,9 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                             ),
                             hintText: "Email Address",
                             hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 17.0,
+                                color: Colors.black),
                           ),
                         ),
                       ),
@@ -267,7 +318,9 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                             ),
                             hintText: "Password",
                             hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 17.0),
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 17.0,
+                                color: Colors.black),
                             suffixIcon: GestureDetector(
                               onTap: _toggleLogin,
                               child: Icon(
@@ -324,14 +377,15 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return Home();
-                        },
-                      ),
-                    );
+                    handleSignIn();
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) {
+                    //       return Home();
+                    //     },
+                    //   ),
+                    // );
                   },
                 ),
               ),
@@ -464,7 +518,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
                         child: TextField(
                           focusNode: myFocusNodeName,
                           controller: signupNameController,
@@ -482,7 +536,9 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                             ),
                             hintText: "Name",
                             hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 16.0,
+                                color: Colors.black),
                           ),
                         ),
                       ),
@@ -493,7 +549,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
                         child: TextField(
                           focusNode: myFocusNodeEmail,
                           controller: signupEmailController,
@@ -510,7 +566,9 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                             ),
                             hintText: "Email Address",
                             hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 16.0,
+                                color: Colors.black),
                           ),
                         ),
                       ),
@@ -521,7 +579,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
                         child: TextField(
                           focusNode: myFocusNodePassword,
                           controller: signupPasswordController,
@@ -538,7 +596,9 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                             ),
                             hintText: "Password",
                             hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 16.0,
+                                color: Colors.black),
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignup,
                               child: Icon(
@@ -559,7 +619,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: 20.0, bottom: 20.0, left: 25.0, right: 25.0),
+                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
                         child: TextField(
                           controller: signupConfirmPasswordController,
                           obscureText: _obscureTextSignupConfirm,
@@ -573,9 +633,11 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                               FontAwesomeIcons.lock,
                               color: Colors.black,
                             ),
-                            hintText: "Confirmation",
+                            hintText: "Confirm Password",
                             hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold", fontSize: 16.0),
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 16.0,
+                                color: Colors.black),
                             suffixIcon: GestureDetector(
                               onTap: _toggleSignupConfirm,
                               child: Icon(
@@ -586,6 +648,35 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                                 color: Colors.black,
                               ),
                             ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 250.0,
+                        height: 1.0,
+                        color: Colors.grey[400],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
+                        child: TextField(
+                          controller: phoneController,
+                          //obscureText: _obscureTextSignupConfirm,
+                          style: TextStyle(
+                              fontFamily: "WorkSansSemiBold",
+                              fontSize: 16.0,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            icon: Icon(
+                              FontAwesomeIcons.phone,
+                              color: Colors.black,
+                            ),
+                            hintText: "Phone Number",
+                            hintStyle: TextStyle(
+                                fontFamily: "WorkSansSemiBold",
+                                fontSize: 16.0,
+                                color: Colors.black),
                           ),
                         ),
                       ),
@@ -617,21 +708,22 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                       tileMode: TileMode.clamp),
                 ),
                 child: MaterialButton(
-                    highlightColor: Colors.transparent,
-                    splashColor: Color(0xFFf7418c),
-                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 42.0),
-                      child: Text(
-                        "SIGN UP",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 25.0,
-                            fontFamily: "WorkSansBold"),
-                      ),
+                  highlightColor: Colors.transparent,
+                  splashColor: Color(0xFFf7418c),
+                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 42.0),
+                    child: Text(
+                      "SIGN UP",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontFamily: "WorkSansBold"),
                     ),
-                    onPressed: () => showInSnackBar("SignUp button pressed")),
+                  ),
+                  onPressed: handleSignUp,
+                ),
               ),
             ],
           ),
@@ -646,7 +738,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   }
 
   void _onSignUpButtonPress() {
-    _pageController?.animateToPage(1,
+    _pageController.animateToPage(1,
         duration: Duration(milliseconds: 500), curve: Curves.decelerate);
   }
 

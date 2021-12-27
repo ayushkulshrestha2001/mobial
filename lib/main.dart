@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobial/home.dart';
 import 'package:mobial/login9/ui/login_page.dart';
-import 'Ticket.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
           //     onError: Colors.red,
           //     brightness: Brightness.dark),
           colorScheme: ColorScheme.dark()),
-      home: Home(),
+      home: Login9(),
     );
   }
 }
