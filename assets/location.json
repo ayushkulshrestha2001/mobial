@@ -1,0 +1,18 @@
+{
+  "City": "Bengaluru",
+  "DBTZ": "A",
+  "Name": "Bengaluru International Airport Limited",
+  "Country": "India",
+  "IATA/FAA": "YSO",
+  "Longitude": "-59.785278",
+  "ICAO": "CCD4",
+  "Airport ID": "7252",
+  "Latitude": "54.910278",
+  "Timezone": "223",
+  "DST": "-4",
+  "destinations": [
+    "5492",
+    "188",
+    "5502"
+  ]
+}

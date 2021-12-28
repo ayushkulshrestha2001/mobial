@@ -1,10 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:mobial/Ticket.dart';
 import 'package:mobial/home.dart';
 import 'package:mobial/login9/utils/bubble_indication_painter.dart';
 import 'package:http/http.dart' as http;

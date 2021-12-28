@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobial/card.dart';
+import 'package:mobial/map.dart';
 import 'package:mobial/qr_scan.dart';
 import 'package:mobial/redeem_coupons.dart';
 import 'package:mobial/redeemed_coupons.dart';
@@ -153,6 +154,25 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Text(
                     "Scan Qr Code",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Card(
+            child: TextButton(
+              onPressed: () => {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MapDisplay()))
+              },
+              child: Column(
+                children: [
+                  Text(
+                    "map",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 20.0,

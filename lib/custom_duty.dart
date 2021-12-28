@@ -60,34 +60,32 @@ class _Custom_dutyState extends State<Custom_duty> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Scaffold(
-        appBar: header(context),
-        drawer: drawer(context),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      print("helo");
-                    },
-                    icon: Icon(Icons.search),
-                  ),
-                  border: UnderlineInputBorder(),
-                  labelText: 'Enter item name',
+    return Scaffold(
+      appBar: header(context),
+      drawer: drawer(context),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+            child: TextFormField(
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    print("helo");
+                  },
+                  icon: Icon(Icons.search),
                 ),
+                border: UnderlineInputBorder(),
+                labelText: 'Enter item name',
               ),
             ),
-            IconButton(
-              onPressed: () => {_showPicker(context)},
-              icon: Icon(Icons.add_a_photo),
-            ),
-          ],
-        ),
+          ),
+          IconButton(
+            onPressed: () => {_showPicker(context)},
+            icon: Icon(Icons.add_a_photo),
+          ),
+        ],
       ),
     );
   }
