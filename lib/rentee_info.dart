@@ -1,11 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-// import 'package:mobial/widgets/drawer.dart';
-// import 'package:mobial/widgets/header.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mobial/widgets/drawer.dart';
+import 'package:mobial/widgets/header.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobial/home.dart';
 import 'package:mobial/rent_car_info.dart';
-import 'package:mobial/widgets/drawer.dart';
-import 'package:mobial/widgets/header.dart';
 import 'package:mobial/widgets/widget_button.dart';
 import 'package:date_field/date_field.dart';
 
@@ -27,12 +27,56 @@ class _RenteeInfoState extends State<RenteeInfo> {
     "", //brand
     "", //charges
   ];
-
+  File? selectedImage;
   final _firstnamekey = GlobalKey<FormState>();
   final _lastNamekey = GlobalKey<FormState>();
   final _emailKey = GlobalKey<FormState>();
   final _passwordKey = GlobalKey<FormState>();
   final _confirmPasswordKey = GlobalKey<FormState>();
+  handleCamera() async {
+    Navigator.pop(context);
+    XFile? file = await ImagePicker()
+        .pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 690);
+    setState(() {
+      this.selectedImage = File(file!.path);
+    });
+  }
+
+  handleChooseFromGallery() async {
+    Navigator.pop(context);
+    XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      this.selectedImage = File(file!.path);
+    });
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Container(
+              child: new Wrap(
+                children: <Widget>[
+                  new ListTile(
+                      leading: new Icon(Icons.photo_library),
+                      title: new Text('Camera'),
+                      onTap: () {
+                        handleCamera();
+                      }),
+                  new ListTile(
+                    leading: new Icon(Icons.photo_camera),
+                    title: new Text('Photo Gallery'),
+                    onTap: () {
+                      handleChooseFromGallery();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -288,6 +332,13 @@ class _RenteeInfoState extends State<RenteeInfo> {
                               print(value);
                             },
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: size.height * 0.025),
+                        child: IconButton(
+                          onPressed: () => {_showPicker(context)},
+                          icon: Icon(Icons.add_a_photo),
                         ),
                       ),
                       AnimatedPadding(

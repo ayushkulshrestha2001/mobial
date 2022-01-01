@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-
 import 'package:mobial/car_info.dart';
 
 class RenterInfo extends StatefulWidget {
@@ -25,6 +24,7 @@ class _RenterInfoState extends State<RenterInfo> {
     PlaceInfo('BurJuman Food Court', Color(0xff42E695), Color(0xff3BB2B8), 120,
         'Dubai · In BurJuman', '...'),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
