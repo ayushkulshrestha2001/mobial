@@ -4,47 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:mobial/widgets/button_widget.dart';
 
-// class QrScan extends StatefulWidget {
-//   QrScan({Key? key}) : super(key: key);
-
-//   @override
-//   _QrScanState createState() => _QrScanState();
-// }
-
-// class _QrScanState extends State<QrScan> {
-//   String result = "Hello World...!";
-//   Future _scanQR() async {
-//     try {
-//       String? cameraScanResult = await scanner.scan();
-//       setState(() {
-//         result =
-//             cameraScanResult!; // setting string result with cameraScanResult
-//       });
-//     } on PlatformException catch (e) {
-//       print(e);
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text("QR Scanner Example In Flutter"),
-//       ),
-//       body: Center(
-//         child: Text(result), // Here the scanned result will be shown
-//       ),
-//       floatingActionButton: FloatingActionButton.extended(
-//           icon: Icon(Icons.camera_alt),
-//           onPressed: () {
-//             _scanQR(); // calling a function when user click on button
-//           },
-//           label: Text("Scan")),
-//       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-//     );
-//   }
-// }
-
 class QrScan extends StatefulWidget {
   QrScan({Key? key}) : super(key: key);
 
@@ -54,6 +13,10 @@ class QrScan extends StatefulWidget {
 
 class _QrScanState extends State<QrScan> {
   String qrCode = 'Unknown';
+  handleQrScan() {
+    print("Qr code");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

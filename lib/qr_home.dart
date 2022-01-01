@@ -6,8 +6,6 @@ import 'package:mobial/redeem_coupons.dart';
 import 'package:mobial/redeemed_coupons.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
-import 'dart:ui' as ui;
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class QrHome extends StatefulWidget {
