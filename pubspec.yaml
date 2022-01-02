@@ -38,6 +38,8 @@ dev_dependencies:
   http:
   syncfusion_flutter_maps:
   animated_theme_switcher:
+  cloud_firestore: ^3.1.5
+  firebase_core: ^1.10.6
 
 flutter:
   uses-material-design: true

@@ -1,34 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+final _firestore = FirebaseFirestore.instance;
 
 class ChatScreen extends StatefulWidget {
-  String name;
-  ChatScreen(this.name);
+  final String? logInUser;
+  final String? sender;
+  final String? reciever;
+  ChatScreen({this.sender, this.reciever, this.logInUser});
   @override
-  State createState() => new ChatScreenState();
+  State createState() => new ChatScreenState(
+      logInUser: logInUser, sender: sender, reciever: reciever);
 }
 
 class ChatScreenState extends State<ChatScreen> {
+  final String? logInUser;
+  final String? sender;
+  final String? reciever;
+  ChatScreenState({this.logInUser, this.sender, this.reciever});
   final TextEditingController textEditingController =
       new TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
+  @override
+  void initState() {
+    super.initState();
+    getMessageStream();
+  }
+
+  getMessageStream() async {
+    await for (var snapshot in _firestore.collection('messages').snapshots()) {
+      for (var text in snapshot.docs) {
+        print(text.data());
+      }
+    }
+  }
 
   void _handleSubmit(String text) {
-    textEditingController.clear();
-    ChatMessage chatMessage1 = new ChatMessage(
-      text: text,
-      name: widget.name,
-      isMe: false,
-    );
-    ChatMessage chatMessage2 = new ChatMessage(
-      text: text,
-      name: "Binay",
-      isMe: true,
-    );
-    setState(() {
-      //used to rebuild our widget
-      _messages.insert(0, chatMessage1);
-      _messages.insert(0, chatMessage2);
+    // textEditingController.clear();
+    // ChatMessage chatMessage1 = new ChatMessage(
+    //   text: text,
+    //   sender: sender!,
+    //   reciever: reciever!,
+    // );
+    // ChatMessage chatMessage2 = new ChatMessage(
+    //   text: text,
+    //   sender: reciever!,
+    //   reciever: sender!,
+    // );
+    // setState(() {
+    //   //used to rebuild our widget
+    //   _messages.insert(0, chatMessage1);
+    //   _messages.insert(0, chatMessage2);
+    // });
+
+    _firestore.collection('messages').add({
+      'message': textEditingController.text,
+      'sender': sender,
+      'reciever': reciever
     });
+    textEditingController.clear();
   }
 
   Widget _textComposerWidget() {
@@ -63,16 +94,37 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.name),
+        title: Text("$reciever"),
       ),
       body: new Column(
         children: <Widget>[
           new Flexible(
-            child: new ListView.builder(
-              padding: new EdgeInsets.all(8.0),
-              reverse: true,
-              itemBuilder: (_, int index) => _messages[index],
-              itemCount: _messages.length,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore.collection('messages').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  final messages = snapshot.data!.docs.reversed;
+                  print(messages.length);
+                  List<ChatMessage> messageWidgets = [];
+                  for (var message in messages) {
+                    final messageText = message['message'];
+                    final messageSender = message['sender'];
+                    final messageReciever = message['reciever'];
+                    messageWidgets.add(ChatMessage(
+                        logInUser: logInUser!,
+                        text: messageText,
+                        sender: messageSender,
+                        reciever: messageReciever));
+                  }
+                  return Expanded(
+                      child: ListView(
+                    reverse: true,
+                    padding: EdgeInsets.zero,
+                    children: messageWidgets,
+                  ));
+                }
+                return Container();
+              },
             ),
           ),
           new Divider(
@@ -91,29 +143,34 @@ class ChatScreenState extends State<ChatScreen> {
 }
 
 class ChatMessage extends StatelessWidget {
+  String logInUser;
   String text;
-  String name;
-  bool isMe;
+  String sender;
+  String reciever;
   //for optional params we use curly braces
-  ChatMessage({required this.text, required this.name, required this.isMe});
+  ChatMessage(
+      {required this.logInUser,
+      required this.text,
+      required this.sender,
+      required this.reciever});
   @override
   Widget build(BuildContext context) {
     String txt = getPrettyString(text);
-    if (isMe) {
+    if (sender == logInUser) {
       return Card(
         elevation: 0.5,
         child: ListTile(
-          isThreeLine: true,
+          isThreeLine: false,
           trailing: new CircleAvatar(
             child: new Text(
-              name[0],
+              sender[0],
             ),
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(" "),
-              Text(name, style: Theme.of(context).textTheme.subtitle1),
+              Text(sender, style: Theme.of(context).textTheme.subtitle1),
             ],
           ),
           subtitle: Row(
@@ -132,9 +189,9 @@ class ChatMessage extends StatelessWidget {
       ),
       isThreeLine: true,
       leading: new CircleAvatar(
-        child: new Text(name[0]),
+        child: new Text(sender![0]),
       ),
-      title: Text(name, style: Theme.of(context).textTheme.subtitle1),
+      title: Text(sender, style: Theme.of(context).textTheme.subtitle1),
       subtitle: Text("$txt"),
     );
   }

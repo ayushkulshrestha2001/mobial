@@ -51,7 +51,9 @@ class _HomeState extends State<Home> {
           Custom_duty(),
           //ChatPage(),
           //ChatPage(),
-          ChatHome(),
+          ChatHome(
+            logInUser: email,
+          ),
           CarService(),
           QrHome(),
           //QRScan(),

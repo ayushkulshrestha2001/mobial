@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "109889701868",
+    "project_id": "mobial",
+    "storage_bucket": "mobial.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:109889701868:android:b2fc4f2efefaea2ca862c9",
+        "android_client_info": {
+          "package_name": "com.example.mobial"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "109889701868-canbbnh6kj9370uajrtpckej8ha26scd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAofhfrlS38kygzIVuiexF6DQtwQWj-Sn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "109889701868-canbbnh6kj9370uajrtpckej8ha26scd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
