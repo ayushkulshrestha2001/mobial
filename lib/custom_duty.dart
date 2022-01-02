@@ -26,7 +26,7 @@ class _Custom_dutyState extends State<Custom_duty> {
   }
 
   handleSearch() async {
-    var url = Uri.parse("http://192.168.1.10:3001/api/get_cduty");
+    var url = Uri.parse("https://mobial.herokuapp.com/api/get_cduty");
     var response = await http.get(url);
     print(response.statusCode);
     print(response.body);

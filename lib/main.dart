@@ -19,10 +19,10 @@ class MyApp extends StatelessWidget {
       title: 'MoBIAL',
       theme: ThemeData(
           backgroundColor: Color(0xff1b262c), colorScheme: ColorScheme.dark()),
-      home: Home(
-        email: 'vulcan@gmail.com',
-      ),
-      //home: Login9(),
+      // home: Home(
+      //   email: 'vulcan@gmail.com',
+      // ),
+      home: Login9(),
     );
   }
 }

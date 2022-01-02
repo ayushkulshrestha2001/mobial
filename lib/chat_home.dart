@@ -57,7 +57,7 @@ class ChatScreenState extends State<ChatHome> {
   }
 
   getUsers() async {
-    var url = Uri.parse('http://192.168.1.10:3001/api/users');
+    var url = Uri.parse('https://mobial.herokuapp.com/api/users');
     http.Response response = await http.get(url);
     print(response.body);
     var decodedData = jsonDecode(response.body);
