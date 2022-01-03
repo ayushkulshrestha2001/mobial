@@ -315,7 +315,7 @@ class _RenteeInfoState extends State<RenteeInfo> {
                           ),
                           child: DateTimeFormField(
                             decoration: const InputDecoration(
-                              hintText: "From",
+                              hintText: "to",
                               hintStyle: TextStyle(color: Colors.white),
                               errorStyle: TextStyle(color: Colors.redAccent),
                               border: OutlineInputBorder(),

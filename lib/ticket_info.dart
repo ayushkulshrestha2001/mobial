@@ -3,16 +3,21 @@ import 'package:mobial/widgets/widgets.dart';
 import 'package:mobial/global.dart';
 
 class TicketInfo extends StatefulWidget {
-  final String? ticketNumber;
-  TicketInfo({this.ticketNumber});
+  var details;
+  TicketInfo({required this.details});
 
   @override
-  _TicketInfoState createState() => _TicketInfoState(ticketInfo: ticketNumber);
+  _TicketInfoState createState() => _TicketInfoState(details: details);
 }
 
 class _TicketInfoState extends State<TicketInfo> {
-  final String? ticketInfo;
-  _TicketInfoState({this.ticketInfo});
+  var details;
+  _TicketInfoState({required this.details});
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +25,7 @@ class _TicketInfoState extends State<TicketInfo> {
         backgroundColor: blueColor,
         automaticallyImplyLeading: true,
         centerTitle: true,
-        title: Text("BOARDING PASS"),
+        title: Text("FLIGHT INFO"),
         elevation: 0.0,
         actions: <Widget>[
           IconButton(
@@ -87,7 +92,7 @@ class _TicketInfoState extends State<TicketInfo> {
                                   Icon(Icons.airplanemode_active,
                                       color: Colors.white),
                                   Text(
-                                    "1h31min",
+                                    "1:30h",
                                     // style: Theme.of(context)
                                     //     .textTheme
                                     //     .subtitle
@@ -203,7 +208,6 @@ class FlightInfoRow extends StatelessWidget {
     );
   }
 }
-
 
 // Scaffold(
 //       appBar: header(context),
