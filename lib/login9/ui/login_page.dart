@@ -5,8 +5,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobial/home.dart';
 import 'package:mobial/login9/utils/bubble_indication_painter.dart';
 import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 
 class Login9 extends StatefulWidget {
+  final LocalStorage storage = new LocalStorage('mobial');
   @override
   _Login9State createState() => new _Login9State();
 }
