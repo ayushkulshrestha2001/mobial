@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:http/http.dart' as http;
+import 'package:azblob/azblob.dart';
+import 'package:mime/mime.dart';
 
 class Custom_duty extends StatefulWidget {
   Custom_duty({Key? key}) : super(key: key);
@@ -16,13 +18,39 @@ class Custom_duty extends StatefulWidget {
 class _Custom_dutyState extends State<Custom_duty> {
   TextEditingController searchText = TextEditingController();
   File? selectedImage;
-  handleCamera() async {
+  handleCamera(BuildContext context) async {
     Navigator.pop(context);
     XFile? file = await ImagePicker()
         .pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 690);
     setState(() {
       this.selectedImage = File(file!.path);
     });
+    var name = selectedImage!.path.split("/").last;
+    print(name);
+
+    var storage = AzureStorage.parse(
+        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
+    await storage.putBlob('/mobialc/$name',
+        bodyBytes: selectedImage!.readAsBytesSync(),
+        contentType: lookupMimeType('$name'),
+        type: BlobType.BlockBlob);
+
+    String selectedPath = '/mobialc/$name';
+
+    var val = storage.uri();
+    String finalUrl = "$val" + "mobialc/$name";
+    print(finalUrl);
+
+    var b_url = Uri.parse("https://mobial.herokuapp.com/api/scan_cduty");
+    var response = await http.post(b_url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({'url': finalUrl}));
+    print(response.statusCode);
+    print(response.body);
   }
 
   handleSearch() async {
@@ -32,27 +60,38 @@ class _Custom_dutyState extends State<Custom_duty> {
     print(response.body);
   }
 
-  // handleSearch() async {
-  //   var url = Uri.parse("http://192.168.109.1:3001/api/addcdutyitem");
-  //   var response = await http.post(url,
-  //       headers: <String, String>{
-  //         'content-type': 'application/json',
-  //         "Accept": "application/json",
-  //         "charset": "utf-8"
-  //       },
-  //       body: json.encode({
-  //         'item': searchText.text.toString(),
-  //       }));
-  //   print(response.statusCode);
-  //   print(response.body);
-  // }
-
-  handleChooseFromGallery() async {
+  handleChooseFromGallery(BuildContext context) async {
     Navigator.pop(context);
     XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       this.selectedImage = File(file!.path);
     });
+    var name = selectedImage!.path.split("/").last;
+    print(name);
+
+    var storage = AzureStorage.parse(
+        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
+    await storage.putBlob('/mobialc/$name',
+        bodyBytes: selectedImage!.readAsBytesSync(),
+        contentType: lookupMimeType('$name'),
+        type: BlobType.BlockBlob);
+
+    String selectedPath = '/mobialc/$name';
+
+    var val = storage.uri();
+    String finalUrl = "$val" + "mobialc/$name";
+    print(finalUrl);
+
+    var b_url = Uri.parse("https://mobial.herokuapp.com/api/scan_cduty");
+    var response = await http.post(b_url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({'url': finalUrl}));
+    print(response.statusCode);
+    print(response.body);
   }
 
   void _showPicker(context) {
@@ -67,13 +106,13 @@ class _Custom_dutyState extends State<Custom_duty> {
                       leading: new Icon(Icons.photo_library),
                       title: new Text('Camera'),
                       onTap: () {
-                        handleCamera();
+                        handleCamera(context);
                       }),
                   new ListTile(
                     leading: new Icon(Icons.photo_camera),
                     title: new Text('Photo Gallery'),
                     onTap: () {
-                      handleChooseFromGallery();
+                      handleChooseFromGallery(context);
                     },
                   ),
                 ],
