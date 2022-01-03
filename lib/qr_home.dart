@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mobial/card.dart';
 import 'package:mobial/map.dart';
@@ -7,23 +10,61 @@ import 'package:mobial/redeemed_coupons.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http;
 
 class QrHome extends StatefulWidget {
-  QrHome({Key? key}) : super(key: key);
+  final String logInUser;
+  QrHome({required this.logInUser});
 
   @override
-  _QrHomeState createState() => _QrHomeState();
+  _QrHomeState createState() => _QrHomeState(logInUser: logInUser);
 }
 
 class _QrHomeState extends State<QrHome> {
+  final String logInUser;
+  _QrHomeState({required this.logInUser});
   final double _borderRadius = 24;
   final LatLng bialLocation = new LatLng(77, 13);
   double latitude = 77.70;
   double longitude = 13.198;
+  String name = "";
+  num points = 0;
+  List<dynamic> codes = [];
   @override
   void initState() {
     //bialLocation = LatLng(latitude, longitude);
+
     super.initState();
+    getUserDetails();
+  }
+
+  getUserDetails() async {
+    num rewards = 0;
+    var url = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+    http.Response response = await http.post(url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({
+          'email': logInUser,
+        }));
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+    var decodedData = jsonDecode(response.body);
+    print(decodedData['qrcodes']);
+    setState(() {
+      codes = decodedData['qrcodes'];
+    });
+    codes.forEach((e) {
+      rewards = rewards + e['reward'];
+    });
+    print(rewards);
+    setState(() {
+      points = rewards;
+      name = decodedData['name'];
+    });
   }
 
   @override
@@ -55,7 +96,7 @@ class _QrHomeState extends State<QrHome> {
                         width: 10.0,
                       ),
                       Text(
-                        "USERNAME",
+                        "$name",
                         style: TextStyle(
                           fontSize: 50.0,
                         ),
@@ -76,7 +117,7 @@ class _QrHomeState extends State<QrHome> {
                         width: 10.0,
                       ),
                       Text(
-                        "220",
+                        "$points",
                         style: TextStyle(fontSize: 40.0),
                       ),
                     ],
@@ -89,7 +130,11 @@ class _QrHomeState extends State<QrHome> {
             child: TextButton(
               onPressed: () => {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Card5()))
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Card5(
+                              codes: this.codes,
+                            )))
               },
               child: Column(
                 children: [

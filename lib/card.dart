@@ -1,13 +1,35 @@
 import 'dart:ui' as ui;
 import 'package:mobial/widgets/common_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 
 class Card5 extends StatefulWidget {
+  List<dynamic> codes;
+  Card5({required this.codes});
   @override
-  _Card5State createState() => _Card5State();
+  _Card5State createState() => _Card5State(codes: codes);
 }
 
 class _Card5State extends State<Card5> {
+  List<dynamic> codes;
+  _Card5State({required this.codes});
+  List<PlaceInfo> scanned = [];
+  @override
+  void initState() {
+    super.initState();
+    getCodeList();
+  }
+
+  getCodeList() {
+    codes.forEach((e) {
+      //List<Placemark> loc = await placemarkFromCoordinates(e[''], longitude)
+
+      PlaceInfo info = new PlaceInfo(e['name'], Colors.black, Colors.white,
+          e['reward'], 'location', 'food');
+      scanned.add(info);
+    });
+  }
+
   final double _borderRadius = 24;
 
   var items = [
@@ -34,7 +56,7 @@ class _Card5State extends State<Card5> {
         title: Text('History'),
       ),
       body: ListView.builder(
-        itemCount: items.length,
+        itemCount: scanned.length,
         itemBuilder: (context, index) {
           return Center(
             child: Padding(
@@ -87,14 +109,14 @@ class _Card5State extends State<Card5> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                items[index].name,
+                                scanned[index].name,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Avenir',
                                     fontWeight: FontWeight.w700),
                               ),
                               Text(
-                                items[index].category,
+                                scanned[index].category,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Avenir',
@@ -113,7 +135,7 @@ class _Card5State extends State<Card5> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      items[index].location,
+                                      scanned[index].location,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Avenir',
@@ -131,7 +153,7 @@ class _Card5State extends State<Card5> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text(
-                                items[index].rating.toString(),
+                                scanned[index].rating.toString(),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Avenir',
@@ -159,7 +181,7 @@ class PlaceInfo {
   final String name;
   final String category;
   final String location;
-  final double rating;
+  final int rating;
   final Color startColor;
   final Color endColor;
 
