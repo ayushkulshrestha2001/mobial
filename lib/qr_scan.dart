@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 //import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:mobial/widgets/button_widget.dart';
+import 'package:http/http.dart' as http;
 
 class QrScan extends StatefulWidget {
   QrScan({Key? key}) : super(key: key);
@@ -13,8 +16,24 @@ class QrScan extends StatefulWidget {
 
 class _QrScanState extends State<QrScan> {
   String qrCode = 'Unknown';
-  handleQrScan() {
+  handleQrScan() async {
     print("Qr code");
+    setState(() {
+      this.qrCode = qrCode;
+    });
+    var url = Uri.parse("https://mobial.herokuapp.com/api/scan_qrcode");
+    http.Response response = await http.post(url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({
+          'email': 'vulcan@gmail.com',
+          'id': this.qrCode,
+        }));
+    print(response.statusCode);
+    print(response.body);
   }
 
   @override
@@ -65,10 +84,7 @@ class _QrScanState extends State<QrScan> {
       );
 
       if (!mounted) return;
-
-      setState(() {
-        this.qrCode = qrCode;
-      });
+      handleQrScan();
     } on PlatformException {
       qrCode = 'Failed to get platform version.';
     }

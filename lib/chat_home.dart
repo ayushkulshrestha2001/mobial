@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobial/chat_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobial/widgets/drawer.dart';
+import 'package:mobial/widgets/header.dart';
 
 // List<ChatModel> dummyData = [
 //   ChatModel(
@@ -70,57 +72,61 @@ class ChatScreenState extends State<ChatHome> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, i) {
-          ChatModel newUser = ChatModel(
-            name: users[i]['name'],
-            message: users[i]['username'],
-            time: users[i]['phone'],
-          );
-          return Column(
-            children: <Widget>[
-              Divider(
-                height: 10.0,
-              ),
-              ListTile(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ChatScreen(
-                              logInUser: logInUser,
-                              sender: logInUser,
-                              reciever: newUser.name,
-                            ))),
-                leading: CircleAvatar(
-                  foregroundColor: Theme.of(context).primaryColor,
-                  backgroundColor: Colors.grey,
-                  //backgroundImage: NetworkImage(dummyData[i].avatarUrl),
+    return Scaffold(
+      appBar: header(context),
+      drawer: drawer(context),
+      body: ListView.builder(
+          itemCount: users.length,
+          itemBuilder: (context, i) {
+            ChatModel newUser = ChatModel(
+              name: users[i]['name'],
+              message: users[i]['username'],
+              time: users[i]['phone'],
+            );
+            return Column(
+              children: <Widget>[
+                Divider(
+                  height: 10.0,
                 ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      newUser.name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      newUser.time,
-                      style: TextStyle(color: Colors.grey, fontSize: 14.0),
-                    ),
-                  ],
-                ),
-                subtitle: Container(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    newUser.message,
-                    style: TextStyle(color: Colors.grey, fontSize: 15.0),
+                ListTile(
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChatScreen(
+                                logInUser: logInUser,
+                                sender: logInUser,
+                                reciever: newUser.name,
+                              ))),
+                  leading: CircleAvatar(
+                    foregroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Colors.grey,
+                    //backgroundImage: NetworkImage(dummyData[i].avatarUrl),
                   ),
-                ),
-              )
-            ],
-          );
-        });
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        newUser.name,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        newUser.time,
+                        style: TextStyle(color: Colors.grey, fontSize: 14.0),
+                      ),
+                    ],
+                  ),
+                  subtitle: Container(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    child: Text(
+                      newUser.message,
+                      style: TextStyle(color: Colors.grey, fontSize: 15.0),
+                    ),
+                  ),
+                )
+              ],
+            );
+          }),
+    );
   }
 }
 

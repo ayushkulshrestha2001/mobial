@@ -55,7 +55,9 @@ class _HomeState extends State<Home> {
             logInUser: email,
           ),
           CarService(),
-          QrHome(),
+          QrHome(
+            logInUser: email,
+          ),
           //QRScan(),
         ],
         controller: _pageController,
