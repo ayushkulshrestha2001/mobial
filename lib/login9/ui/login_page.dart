@@ -71,7 +71,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   handleSignUp() async {
     if (signupPasswordController.text.toString() ==
         signupConfirmPasswordController.text.toString()) {
-      var url = Uri.parse("http://192.168.109.1:3001/api/signup");
+      var url = Uri.parse("https://mobial.herokuapp.com/api/signup");
       var response = await http.post(url,
           headers: <String, String>{
             'content-type': 'application/json',

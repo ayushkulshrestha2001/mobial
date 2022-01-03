@@ -62,7 +62,9 @@ class ChatScreenState extends State<ChatHome> {
     print(response.body);
     var decodedData = jsonDecode(response.body);
     print(decodedData);
-    users = decodedData;
+    setState(() {
+      users = decodedData;
+    });
     print(users);
   }
 
