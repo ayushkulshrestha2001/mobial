@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:mobial/page/profile_page.dart';
+import 'package:mobial/login9/ui/login_page.dart';
 import 'package:mobial/settings.dart';
+import 'package:localstorage/localstorage.dart';
 
 Widget drawer(BuildContext context) {
+  final LocalStorage storage = new LocalStorage('mobial');
   return Drawer(
     child: ListView(
       padding: EdgeInsets.zero,
@@ -70,6 +73,27 @@ Widget drawer(BuildContext context) {
             // ...
             // Then close the drawer
             Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          title: const Text('Log Out'),
+          leading: IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a Logout button')));
+            },
+          ),
+          onTap: () {
+            storage.deleteItem('user');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return Login9();
+                },
+              ),
+            );
           },
         ),
       ],

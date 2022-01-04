@@ -8,14 +8,13 @@ import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 
 class Login9 extends StatefulWidget {
-  final LocalStorage storage = new LocalStorage('mobial');
   @override
   _Login9State createState() => new _Login9State();
 }
 
 class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  final LocalStorage storage = new LocalStorage('mobial');
   final FocusNode myFocusNodeEmailLogin = FocusNode();
   final FocusNode myFocusNodePasswordLogin = FocusNode();
 
@@ -42,6 +41,12 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   Color left = Colors.black;
   Color right = Colors.white;
 
+  void addItemsToLocalStorage(var data) async {
+    await storage.setItem('user', data);
+    print("hello");
+    print(storage.getItem('user'));
+  }
+
   handleSignIn() async {
     print(loginEmailController.text.toString());
     print(loginPasswordController.text.toString());
@@ -60,6 +65,8 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     print('Response body: ${response.body}');
     if (response.statusCode == 200) {
       print(response.body);
+      var data = jsonDecode(response.body);
+      addItemsToLocalStorage(data);
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -90,6 +97,8 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
 
       if (response.statusCode == 200) {
         print(response.body);
+        var data = jsonDecode(response.body);
+        addItemsToLocalStorage(data);
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -185,10 +194,23 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
+  Future<void> awaitReady() async {
+    await storage.ready;
+    print(storage.getItem('user'));
+    if (storage.getItem('user') != null) {
+      print(storage.getItem('user'));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  Home(email: storage.getItem('user')["email"])));
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-
+    awaitReady();
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
