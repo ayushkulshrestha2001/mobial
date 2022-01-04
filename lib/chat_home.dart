@@ -6,39 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 
-// List<ChatModel> dummyData = [
-//   ChatModel(
-//       name: "Bikal Thapa",
-//       message: "Hello chat ui",
-//       time: "10:34",
-//       avatarUrl: "http://www.binaythapa.com.np/img/about.jpg"),
-//   ChatModel(
-//       name: "Neeraj Neupane",
-//       message: "Hi when should we fix meeting",
-//       time: "6:20",
-//       avatarUrl: "http://www.binaythapa.com.np/img/about.jpg"),
-//   ChatModel(
-//       name: "Prem Pun",
-//       message: "Hi Binay",
-//       time: "7:40",
-//       avatarUrl: "http://www.binaythapa.com.np/img/about.jpg"),
-//   ChatModel(
-//       name: "Bipin Pandey",
-//       message: "Hello",
-//       time: "1:10",
-//       avatarUrl: "http://www.binaythapa.com.np/img/about.jpg"),
-//   ChatModel(
-//       name: "Manjar Hussain",
-//       message: "Hello Binay Can we talk",
-//       time: "4:00",
-//       avatarUrl: "http://www.binaythapa.com.np/img/about.jpg"),
-//   ChatModel(
-//       name: "Henric Siemsen",
-//       message: "Binay can we have a chat",
-//       time: "3:15",
-//       avatarUrl: "http://www.binaythapa.com.np/img/about.jpg"),
-// ];
-
 class ChatHome extends StatefulWidget {
   final String? logInUser;
   ChatHome({this.logInUser});
@@ -82,6 +49,7 @@ class ChatScreenState extends State<ChatHome> {
               name: users[i]['name'],
               message: users[i]['username'],
               time: users[i]['phone'],
+              email: users[i]['email'],
             );
             return Column(
               children: <Widget>[
@@ -96,6 +64,7 @@ class ChatScreenState extends State<ChatHome> {
                                 logInUser: logInUser,
                                 sender: logInUser,
                                 reciever: newUser.name,
+                                recieverEmail: newUser.email,
                               ))),
                   leading: CircleAvatar(
                     foregroundColor: Theme.of(context).primaryColor,
@@ -134,10 +103,12 @@ class ChatModel {
   final String name;
   final String message;
   final String time;
+  final String email;
 
   ChatModel({
     required this.name,
     required this.message,
     required this.time,
+    required this.email,
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:mobial/userProfile.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -8,17 +9,23 @@ class ChatScreen extends StatefulWidget {
   final String? logInUser;
   final String? sender;
   final String? reciever;
-  ChatScreen({this.sender, this.reciever, this.logInUser});
+  final String? recieverEmail;
+  ChatScreen({this.sender, this.reciever, this.logInUser, this.recieverEmail});
   @override
   State createState() => new ChatScreenState(
-      logInUser: logInUser, sender: sender, reciever: reciever);
+      logInUser: logInUser,
+      sender: sender,
+      reciever: reciever,
+      recieverEmail: recieverEmail);
 }
 
 class ChatScreenState extends State<ChatScreen> {
   final String? logInUser;
   final String? sender;
   final String? reciever;
-  ChatScreenState({this.logInUser, this.sender, this.reciever});
+  final String? recieverEmail;
+  ChatScreenState(
+      {this.logInUser, this.sender, this.reciever, this.recieverEmail});
   final TextEditingController textEditingController =
       new TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
@@ -57,7 +64,8 @@ class ChatScreenState extends State<ChatScreen> {
     _firestore.collection('messages').add({
       'message': textEditingController.text,
       'sender': sender,
-      'reciever': reciever
+      'reciever': reciever,
+      'timestamp': FieldValue.serverTimestamp(),
     });
     textEditingController.clear();
   }
@@ -90,17 +98,30 @@ class ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  showProfile() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => UserProfile(
+              recieverEmail: recieverEmail,
+            )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("$reciever"),
+        title: GestureDetector(
+          onTap: showProfile,
+          child: Text("$reciever"),
+        ),
       ),
       body: new Column(
         children: <Widget>[
           new Flexible(
             child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('messages').snapshots(),
+              stream: _firestore
+                  .collection('messages')
+                  .orderBy('timestamp')
+                  .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!.docs.reversed;
