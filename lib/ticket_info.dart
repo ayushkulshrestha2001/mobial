@@ -3,16 +3,66 @@ import 'package:mobial/widgets/widgets.dart';
 import 'package:mobial/global.dart';
 
 class TicketInfo extends StatefulWidget {
-  var details;
-  TicketInfo({required this.details});
+  String cityDept;
+  String cityArr;
+  String status;
+  String flight;
+  String iata;
+  String Dept;
+  String Arr;
+  String duration;
+  String airArr;
+  String airDept;
+  TicketInfo(
+      {required this.airDept,
+      required this.airArr,
+      required this.cityDept,
+      required this.cityArr,
+      required this.status,
+      required this.flight,
+      required this.iata,
+      required this.Dept,
+      required this.Arr,
+      required this.duration});
 
   @override
-  _TicketInfoState createState() => _TicketInfoState(details: details);
+  _TicketInfoState createState() => _TicketInfoState(
+        cityDept: cityDept,
+        cityArr: cityArr,
+        status: status,
+        iata: iata,
+        flight: flight,
+        Dept: Dept,
+        Arr: Arr,
+        duration: duration,
+        airDept: airDept,
+        airArr: airArr,
+      );
 }
 
 class _TicketInfoState extends State<TicketInfo> {
-  var details;
-  _TicketInfoState({required this.details});
+  String cityDept;
+  String cityArr;
+  String Dept;
+  String Arr;
+  String status;
+  String flight;
+  String iata;
+  String airDept;
+  String airArr;
+  String duration;
+
+  _TicketInfoState(
+      {required this.airDept,
+      required this.airArr,
+      required this.Dept,
+      required this.status,
+      required this.flight,
+      required this.iata,
+      required this.Arr,
+      required this.cityDept,
+      required this.cityArr,
+      required this.duration});
   @override
   void initState() {
     super.initState();
@@ -70,14 +120,14 @@ class _TicketInfoState extends State<TicketInfo> {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 15.0, vertical: 25.0),
+                        horizontal: 15.0, vertical: 100.0),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15.0),
                           topRight: Radius.circular(15.0)),
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+                        end: Alignment.bottomRight,
                         colors: [blueColor, Color(0xfff7f9ff)],
                       ),
                     ),
@@ -85,126 +135,140 @@ class _TicketInfoState extends State<TicketInfo> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            FlightDetailColumn(),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "$Dept",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .subhead
+                                    //     .apply(color: textColor ?? Colors.white),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "$airDept",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .subhead
+                                    //     .apply(color: textColor ?? Colors.white),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "$cityDept",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .title
+                                    //     .apply(color: textColor ?? Colors.white, fontWeightDelta: 2),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 25),
+                        Row(
+                          children: <Widget>[
                             Expanded(
                               child: Column(
                                 children: <Widget>[
                                   Icon(Icons.airplanemode_active,
                                       color: Colors.white),
                                   Text(
-                                    "1:30h",
+                                    "$duration",
                                     // style: Theme.of(context)
                                     //     .textTheme
                                     //     .subtitle
                                     //     .apply(color: Colors.white),
-                                  )
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Status: $status",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .subhead
+                                    //     .apply(color: textColor ?? Colors.white),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "IATA: $iata",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .subhead
+                                    //     .apply(color: textColor ?? Colors.white),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Flight: $flight",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .subhead
+                                    //     .apply(color: textColor ?? Colors.white),
+                                  ),
                                 ],
                               ),
                             ),
-                            FlightDetailColumn(),
                           ],
                         ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 15.0),
-                          height: 100,
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned.fill(
-                                child: Image.network(cloudImg),
+                        const SizedBox(height: 25),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    "$Arr",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .subhead
+                                    //     .apply(color: textColor ?? Colors.white),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "$airArr",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .subhead
+                                    //     .apply(color: textColor ?? Colors.white),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "$cityArr",
+                                    // style: Theme.of(context)
+                                    //     .textTheme
+                                    //     .title
+                                    //     .apply(color: textColor ?? Colors.white, fontWeightDelta: 2),
+                                  ),
+                                ],
                               ),
-                              Positioned.fill(
-                                child: Image.network(airplaneImg),
-                              ),
-                            ],
-                          ),
-                        )
+                            ),
+                          ],
+                        ),
+                        // Container(
+                        //   margin: EdgeInsets.symmetric(vertical: 15.0),
+                        //   height: 100,
+                        //   child: Stack(
+                        //     children: <Widget>[
+                        //       Positioned.fill(
+                        //         child: Image.network(cloudImg),
+                        //       ),
+                        //       Positioned.fill(
+                        //         child: Image.network(airplaneImg),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // )
                       ],
                     ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: FlightInfoRow(
-                          title: "Flight",
-                          content: "LF713",
-                        ),
-                      ),
-                      Expanded(
-                        child: FlightInfoRow(
-                          title: "Class",
-                          content: "First",
-                        ),
-                      ),
-                      Expanded(
-                        child: FlightInfoRow(
-                          title: "Boarding",
-                          content: "09:11",
-                        ),
-                      ),
-                      Expanded(
-                        child: FlightInfoRow(
-                          title: "Terminal",
-                          content: "12A",
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(vertical: 15.0),
-                    padding: const EdgeInsets.all(15.0),
-                    color: Colors.white,
-                    child: Column(
-                      children: <Widget>[
-                        PassengerContainer(
-                          age: "21",
-                          imageUrl:
-                              "https://lh3.googleusercontent.com/-GELaWFBRPnQ/We3KfYBqTuI/AAAAAAAAAqE/wQDXxVI6nFoox1gOKfvIjmH1_5LKUhKzACEwYBhgL/w140-h140-p/20376010_1795833643775120_614181264397520443_n%2B%25281%2529.jpg",
-                          fullName: "Amazigh Halzoun",
-                          gender: "MALE",
-                          seat: "18A",
-                        ),
-                        Divider(),
-                        PassengerContainer(
-                          age: "21",
-                          imageUrl: userimageUrl,
-                          fullName: "CYBDOM TECH",
-                          gender: "MALE",
-                          seat: "17A",
-                        ),
-                      ],
-                    ),
-                  ),
-                  Image.network(boardingpassImg),
                 ],
               ),
             ),
           )
         ],
       ),
-    );
-  }
-}
-
-class FlightInfoRow extends StatelessWidget {
-  final String? title, content;
-
-  const FlightInfoRow({this.title, this.content});
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          "$title",
-          //style: Theme.of(context).textTheme.body1.apply(color: Colors.black45),
-        ),
-        SizedBox(
-          height: 3.0,
-        ),
-        Text(
-          "$content",
-          //style: Theme.of(context).textTheme.title.apply(color: Colors.black87),
-        )
-      ],
     );
   }
 }

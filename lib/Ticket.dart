@@ -52,6 +52,9 @@ class _TicketState extends State<Ticket> {
     }
   }
 
+  format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
+  formatTime(DateTime d) => d.toString().split('.').first.padLeft(8, "0");
+
   getDetails() async {
     DateFormat dateFormat = DateFormat("yyyy-MM-ddTHH:mm:ss+00:00");
     String timeString = dateFormat.format(time);
@@ -71,10 +74,34 @@ class _TicketState extends State<Ticket> {
     if (response.statusCode == 200) {
       print(response.body);
       var data = jsonDecode(response.body);
+      DateTime dept = DateTime.parse(data["departure"]["actual"]);
+      DateTime arr = DateTime.parse(data["arrival"]["actual"]);
+      Duration dur = arr.difference(dept);
+      String cityDept = data["departure"]["iata"];
+      String cityArr = data["arrival"]["iata"];
+      String airArr = data["arrival"]["airport"];
+      String airDept = data["departure"]["airport"];
+      String status = data["flight_status"];
+      String flight = data["airline"]["name"];
+      String iata = data["flight"]["iata"];
+      print(formatTime(dept));
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TicketInfo(details: response.body)));
+        context,
+        MaterialPageRoute(
+          builder: (context) => TicketInfo(
+            cityDept: cityDept,
+            cityArr: cityArr,
+            Dept: formatTime(dept),
+            Arr: formatTime(arr),
+            airDept: airDept,
+            airArr: airArr,
+            duration: format(dur),
+            status: status,
+            flight: flight,
+            iata: iata,
+          ),
+        ),
+      );
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
