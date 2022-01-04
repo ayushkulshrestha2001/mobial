@@ -1,13 +1,16 @@
 import 'package:mobial/model/user.dart';
+import 'package:localstorage/localstorage.dart';
+
+final LocalStorage storage = new LocalStorage('mobial');
 
 class UserPreferences {
-  static const myUser = User(
+  static User myUser = User(
     imagePath:
-        'https://images.unsplash.com/photo-1554151228-14d9def656e4?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=333&q=80',
-    name: 'Sarah Abs',
-    email: 'sarah.abs@gmail.com',
-    about:
-        'Certified Personal Trainer and Nutritionist with years of experience in creating effective diets and training plans focused on achieving individual customers goals in a smooth way.',
+        'https://firebasestorage.googleapis.com/v0/b/shrink4shrink.appspot.com/o/663328.png?alt=media&token=2bcd32f3-9872-40f3-b59d-eee666ff2b79',
+    name: "${storage.getItem('user')["name"]}",
+    email: "${storage.getItem('user')["email"]}",
+    phone: "${storage.getItem('user')["phone"]}",
+    username: "${storage.getItem('user')["username"]}",
     isDarkMode: false,
   );
 }

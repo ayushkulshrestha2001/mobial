@@ -16,7 +16,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final user = UserPreferences.myUser;
+    var user = UserPreferences.myUser;
 
     return Center(
       child: Builder(
@@ -35,10 +35,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 24),
               buildName(user),
-              const SizedBox(height: 24),
-              Center(child: buildUpgradeButton()),
-              const SizedBox(height: 24),
-              NumbersWidget(),
               const SizedBox(height: 48),
               buildAbout(user),
             ],
@@ -62,26 +58,41 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       );
 
-  Widget buildUpgradeButton() => ButtonWidget(
-        text: 'Upgrade To PRO',
-        onClicked: () {},
-      );
-
   Widget buildAbout(User user) => Container(
         padding: EdgeInsets.symmetric(horizontal: 48),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'About',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              user.about,
-              style: TextStyle(fontSize: 16, height: 1.4),
-            ),
-          ],
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Phone',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Text(
+                  user.phone,
+                  style: TextStyle(fontSize: 16, height: 1.4),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: Text(
+                  'Username',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Text(
+                  user.username,
+                  style: TextStyle(fontSize: 16, height: 1.4),
+                ),
+              ),
+            ],
+          ),
         ),
       );
 }

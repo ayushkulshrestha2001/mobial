@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:mobial/page/profile_page.dart';
 import 'package:mobial/login9/ui/login_page.dart';
+import 'package:mobial/privacy_policy.dart';
 import 'package:mobial/settings.dart';
 import 'package:localstorage/localstorage.dart';
 
@@ -69,10 +70,14 @@ Widget drawer(BuildContext context) {
             },
           ),
           onTap: () {
-            // Update the state of the app
-            // ...
-            // Then close the drawer
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return PrivacyPolicy();
+                },
+              ),
+            );
           },
         ),
         ListTile(

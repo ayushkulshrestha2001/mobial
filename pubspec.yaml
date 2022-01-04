@@ -44,6 +44,7 @@ dev_dependencies:
   geocoding: ^2.0.1
   azblob: ^2.0.0
   path: ^1.8.0
+  flutter_markdown:
 
 flutter:
   uses-material-design: true
