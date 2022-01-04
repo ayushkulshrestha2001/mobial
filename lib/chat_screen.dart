@@ -44,29 +44,14 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void _handleSubmit(String text) {
-    // textEditingController.clear();
-    // ChatMessage chatMessage1 = new ChatMessage(
-    //   text: text,
-    //   sender: sender!,
-    //   reciever: reciever!,
-    // );
-    // ChatMessage chatMessage2 = new ChatMessage(
-    //   text: text,
-    //   sender: reciever!,
-    //   reciever: sender!,
-    // );
-    // setState(() {
-    //   //used to rebuild our widget
-    //   _messages.insert(0, chatMessage1);
-    //   _messages.insert(0, chatMessage2);
-    // });
-
-    _firestore.collection('messages').add({
-      'message': textEditingController.text,
-      'sender': sender,
-      'reciever': reciever,
-      'timestamp': FieldValue.serverTimestamp(),
-    });
+    if (textEditingController.text != "") {
+      _firestore.collection('messages').add({
+        'message': textEditingController.text,
+        'sender': sender,
+        'reciever': recieverEmail,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
     textEditingController.clear();
   }
 
@@ -120,6 +105,7 @@ class ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream: _firestore
                   .collection('messages')
+                  .where('reciever', arrayContains: [sender, recieverEmail])
                   .orderBy('timestamp')
                   .snapshots(),
               builder: (context, snapshot) {
