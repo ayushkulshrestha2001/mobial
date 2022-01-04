@@ -91,6 +91,7 @@ Widget drawer(BuildContext context) {
           ),
           onTap: () {
             storage.deleteItem('user');
+            storage.clear();
             Navigator.push(
               context,
               MaterialPageRoute(
