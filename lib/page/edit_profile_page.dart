@@ -48,7 +48,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         },
         body: json.encode({
           'email': user.email,
-          'name': user.username,
+          'username': user.username,
         }));
 
     if (response.statusCode == 200) {
@@ -69,7 +69,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         },
         body: json.encode({
           'email': user.email,
-          'name': user.phone,
+          'phone': user.phone,
         }));
 
     if (response.statusCode == 200) {
