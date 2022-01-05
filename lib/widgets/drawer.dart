@@ -13,10 +13,23 @@ Widget drawer(BuildContext context) {
       padding: EdgeInsets.zero,
       children: [
         const DrawerHeader(
+          margin: EdgeInsets.zero,
+          padding: EdgeInsets.zero,
           decoration: BoxDecoration(
-            color: Colors.blue,
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: AssetImage('assets/img/headerbg.jpg'),
+            ),
           ),
-          child: Text('moBIAL'),
+          child: Center(
+            child: Text(
+              "moBIAL",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w800),
+            ),
+          ),
         ),
         ListTile(
           title: const Text('Account'),

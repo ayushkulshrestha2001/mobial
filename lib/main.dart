@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobial/home.dart';
+import 'package:mobial/landing.dart';
 import 'package:mobial/login9/ui/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MoBIAL',
       theme: ThemeData(
-          backgroundColor: Color(0xff1b262c), colorScheme: ColorScheme.dark()),
+          backgroundColor: Color(0xff1b262c),
+          colorScheme: ColorScheme.highContrastDark()),
       // home: Home(
       //   email: 'vulcan@gmail.com',
       // ),

@@ -45,6 +45,7 @@ dev_dependencies:
   azblob: ^2.0.0
   path: ^1.8.0
   flutter_markdown:
+  dropdown_search: ^0.6.3
 
 flutter:
   uses-material-design: true
