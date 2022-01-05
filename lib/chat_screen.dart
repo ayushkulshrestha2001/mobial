@@ -1,7 +1,8 @@
-import 'dart:async';
-
+import 'dart:io' show Platform;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mobial/model/message.dart';
 import 'package:mobial/userProfile.dart';
 
 final _firestore = FirebaseFirestore.instance;
@@ -12,6 +13,7 @@ class ChatScreen extends StatefulWidget {
   final String? reciever;
   final String? recieverEmail;
   ChatScreen({this.sender, this.reciever, this.logInUser, this.recieverEmail});
+
   @override
   State createState() => new ChatScreenState(
       logInUser: logInUser,
@@ -29,6 +31,7 @@ class ChatScreenState extends State<ChatScreen> {
       {this.logInUser, this.sender, this.reciever, this.recieverEmail});
   final TextEditingController textEditingController =
       new TextEditingController();
+  List<MessageModel> translate = [];
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,49 @@ class ChatScreenState extends State<ChatScreen> {
       }
     }
   }
+
+  //to_lang
+  String value = 'English';
+  // String selectLanguage = 'English';
+  // List<String> languages = ['Engilsh', 'French', 'Arabic', 'German'];
+  // DropdownButton<String> androidDropdown() {
+  //   List<DropdownMenuItem<String>> dropdownItems = [];
+  //   for (String language in languages) {
+  //     var newItem = DropdownMenuItem(
+  //       child: Text(language),
+  //       value: language,
+  //     );
+  //     dropdownItems.add(newItem);
+  //   }
+
+  //   return DropdownButton<String>(
+  //     value: selectLanguage,
+  //     items: dropdownItems,
+  //     onChanged: (value) {
+  //       setState(() {
+  //         selectLanguage = value!;
+  //       });
+  //     },
+  //   );
+  // }
+
+  // CupertinoPicker iOSPicker() {
+  //   List<Text> pickerItems = [];
+  //   for (String language in languages) {
+  //     pickerItems.add(Text(language));
+  //   }
+
+  //   return CupertinoPicker(
+  //     backgroundColor: Colors.lightBlue,
+  //     itemExtent: 32.0,
+  //     onSelectedItemChanged: (selectedIndex) {
+  //       setState(() {
+  //         selectLanguage = languages[selectedIndex];
+  //       });
+  //     },
+  //     children: pickerItems,
+  //   );
+  // }
 
   void _handleSubmit(String text) {
     if (textEditingController.text != "") {
@@ -90,6 +136,19 @@ class ChatScreenState extends State<ChatScreen> {
             )));
   }
 
+  // showPicker() {
+  //   return Platform.isIOS ? iOSPicker() : androidDropdown();
+  // }
+
+  // void _showPicker(context) {
+  //   showModalBottomSheet(
+  //       context: context,
+  //       builder: (BuildContext bc) {
+  //         return SafeArea(
+  //             child: Platform.isIOS ? iOSPicker() : androidDropdown());
+  //       });
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,6 +157,29 @@ class ChatScreenState extends State<ChatScreen> {
           onTap: showProfile,
           child: Text("$reciever"),
         ),
+        // actions: [
+        //   DropdownButton<String>(
+        //     value: value,
+        //     icon: const Icon(
+        //       Icons.arrow_downward,
+        //       color: Colors.grey,
+        //     ),
+        //     //elevation: 16,
+        //     style: const TextStyle(color: Colors.grey),
+        //     onChanged: (String? newValue) {
+        //       setState(() {
+        //         value = newValue!;
+        //       });
+        //     },
+        //     items: <String>['Engilsh', 'French', 'Arabic', 'German']
+        //         .map<DropdownMenuItem<String>>((String value) {
+        //       return DropdownMenuItem<String>(
+        //         value: value,
+        //         child: Text(value),
+        //       );
+        //     }).toList(),
+        //   ),
+        // ],
       ),
       body: new Column(
         children: <Widget>[
@@ -112,10 +194,21 @@ class ChatScreenState extends State<ChatScreen> {
                   final messages = snapshot.data!.docs.reversed;
                   print(messages.length);
                   List<ChatMessage> messageWidgets = [];
+
                   for (var message in messages) {
                     final messageText = message['message'];
                     final messageSender = message['sender'];
                     final messageReciever = message['reciever'];
+                    final messageTime = message['timestamp'].toString();
+                    translate.add(MessageModel(
+                        sender: messageSender,
+                        text: messageText,
+                        reciever: messageReciever,
+                        timestamp: messageTime));
+                    // translate.every((element) {
+                    //   print(element);
+                    //   return element.text != "";
+                    // });
                     if ((messageSender == logInUser &&
                             messageReciever == recieverEmail) ||
                         (messageSender == recieverEmail &&
