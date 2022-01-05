@@ -117,7 +117,7 @@ class _TicketState extends State<Ticket> {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/img/bg1.jpg'),
+            image: AssetImage('assets/img/airport.png'),
             fit: BoxFit.cover,
           ),
         ),
@@ -137,10 +137,10 @@ class _TicketState extends State<Ticket> {
                 child: DateTimeFormField(
                   decoration: const InputDecoration(
                     hintText: "Departure Time",
-                    hintStyle: TextStyle(color: Colors.white),
+                    hintStyle: TextStyle(color: Colors.black),
                     errorStyle: TextStyle(color: Colors.redAccent),
                     border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.event_note, color: Colors.grey),
+                    suffixIcon: Icon(Icons.event_note, color: Colors.black),
                     labelText: 'Departure Time',
                   ),
                   mode: DateTimeFieldPickerMode.dateAndTime,
