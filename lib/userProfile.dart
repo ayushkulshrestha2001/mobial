@@ -26,6 +26,8 @@ class _ProfiUserProfile extends State<UserProfile> {
   String email = "";
   String phone = "";
   String username = "";
+  String picture =
+      'https://firebasestorage.googleapis.com/v0/b/shrink4shrink.appspot.com/o/663328.png?alt=media&token=2bcd32f3-9872-40f3-b59d-eee666ff2b79';
   @override
   void initState() {
     super.initState();
@@ -53,6 +55,7 @@ class _ProfiUserProfile extends State<UserProfile> {
       email = data['email'];
       phone = data['phone'];
       username = data['username'];
+      picture = data['picture'];
     });
   }
 
@@ -68,7 +71,7 @@ class _ProfiUserProfile extends State<UserProfile> {
             physics: BouncingScrollPhysics(),
             children: [
               ProfileWidget(
-                imagePath: user.imagePath,
+                imagePath: picture,
                 onClicked: () {},
               ),
               const SizedBox(height: 24),

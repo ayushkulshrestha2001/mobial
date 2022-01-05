@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:mobial/userProfile.dart';
 
 final _firestore = FirebaseFirestore.instance;
@@ -28,7 +29,6 @@ class ChatScreenState extends State<ChatScreen> {
       {this.logInUser, this.sender, this.reciever, this.recieverEmail});
   final TextEditingController textEditingController =
       new TextEditingController();
-  final List<ChatMessage> _messages = <ChatMessage>[];
   @override
   void initState() {
     super.initState();
@@ -105,7 +105,6 @@ class ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder<QuerySnapshot>(
               stream: _firestore
                   .collection('messages')
-                  .where('reciever', arrayContains: [sender, recieverEmail])
                   .orderBy('timestamp')
                   .snapshots(),
               builder: (context, snapshot) {
@@ -117,11 +116,18 @@ class ChatScreenState extends State<ChatScreen> {
                     final messageText = message['message'];
                     final messageSender = message['sender'];
                     final messageReciever = message['reciever'];
-                    messageWidgets.add(ChatMessage(
+                    if ((messageSender == logInUser &&
+                            messageReciever == recieverEmail) ||
+                        (messageSender == recieverEmail &&
+                            messageReciever == logInUser)) {
+                      messageWidgets.add(ChatMessage(
                         logInUser: logInUser!,
                         text: messageText,
                         sender: messageSender,
-                        reciever: messageReciever));
+                        reciever: messageReciever,
+                        recieverEmail: recieverEmail!,
+                      ));
+                    }
                   }
                   return Expanded(
                       child: ListView(
@@ -154,12 +160,14 @@ class ChatMessage extends StatelessWidget {
   String text;
   String sender;
   String reciever;
+  String recieverEmail;
   //for optional params we use curly braces
   ChatMessage(
       {required this.logInUser,
       required this.text,
       required this.sender,
-      required this.reciever});
+      required this.reciever,
+      required this.recieverEmail});
   @override
   Widget build(BuildContext context) {
     String txt = getPrettyString(text);

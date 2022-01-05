@@ -50,6 +50,7 @@ class ChatScreenState extends State<ChatHome> {
               message: users[i]['username'],
               time: users[i]['phone'],
               email: users[i]['email'],
+              picture: users[i]['picture'],
             );
             return Column(
               children: <Widget>[
@@ -69,7 +70,8 @@ class ChatScreenState extends State<ChatHome> {
                   leading: CircleAvatar(
                     foregroundColor: Theme.of(context).primaryColor,
                     backgroundColor: Colors.grey,
-                    //backgroundImage: NetworkImage(dummyData[i].avatarUrl),
+                    backgroundImage: NetworkImage(newUser.picture ??
+                        "https://firebasestorage.googleapis.com/v0/b/shrink4shrink.appspot.com/o/663328.png?alt=media&token=2bcd32f3-9872-40f3-b59d-eee666ff2b79"),
                   ),
                   title: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,11 +106,13 @@ class ChatModel {
   final String message;
   final String time;
   final String email;
+  final String? picture;
 
   ChatModel({
     required this.name,
     required this.message,
     required this.time,
     required this.email,
+    this.picture,
   });
 }
