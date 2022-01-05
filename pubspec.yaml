@@ -32,6 +32,7 @@ dev_dependencies:
   qrscan:
   flutter_barcode_scanner:
   flutter_map:
+  flutter_map_marker_cluster: any
   latlong2:
   google_fonts:
   date_field:
@@ -51,6 +52,6 @@ flutter:
 
   assets:
     - assets/img/
-    - assets/location.json
+    - assets/bial_location.json
 
  
