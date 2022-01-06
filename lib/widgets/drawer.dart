@@ -5,10 +5,12 @@ import 'package:mobial/login9/ui/login_page.dart';
 import 'package:mobial/privacy_policy.dart';
 import 'package:mobial/settings.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Widget drawer(BuildContext context) {
   final LocalStorage storage = new LocalStorage('mobial');
   return Drawer(
+    backgroundColor: Color(0xff8CCEC8),
     child: ListView(
       padding: EdgeInsets.zero,
       children: [
@@ -23,7 +25,7 @@ Widget drawer(BuildContext context) {
           ),
           child: Center(
             child: Text(
-              "moBIAL",
+              "MoBIAL",
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 20.0,
@@ -32,9 +34,17 @@ Widget drawer(BuildContext context) {
           ),
         ),
         ListTile(
-          title: const Text('Account'),
+          title: Text(
+            'Account',
+            style: GoogleFonts.signika(
+              fontSize: 17.0,
+            ),
+          ),
           leading: IconButton(
-            icon: const Icon(Icons.account_circle_outlined),
+            icon: const Icon(
+              Icons.account_circle_outlined,
+              color: Colors.black,
+            ),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('This is a Account button')));
@@ -52,9 +62,17 @@ Widget drawer(BuildContext context) {
           },
         ),
         ListTile(
-          title: const Text('Settings'),
+          title: Text(
+            'Settings',
+            style: GoogleFonts.signika(
+              fontSize: 17.0,
+            ),
+          ),
           leading: IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.black,
+            ),
             tooltip: 'Show Snackbar',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -73,9 +91,15 @@ Widget drawer(BuildContext context) {
           },
         ),
         ListTile(
-          title: const Text('Privacy Policy'),
+          title: Text('Privacy Policy',
+              style: GoogleFonts.signika(
+                fontSize: 17.0,
+              )),
           leading: IconButton(
-            icon: const Icon(Icons.privacy_tip),
+            icon: const Icon(
+              Icons.privacy_tip,
+              color: Colors.black,
+            ),
             tooltip: 'Show Snackbar',
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -94,9 +118,15 @@ Widget drawer(BuildContext context) {
           },
         ),
         ListTile(
-          title: const Text('Log Out'),
+          title: Text('Log Out',
+              style: GoogleFonts.signika(
+                fontSize: 17.0,
+              )),
           leading: IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.black,
+            ),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('This is a Logout button')));

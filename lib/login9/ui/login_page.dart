@@ -127,7 +127,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                 : 775.0,
             decoration: new BoxDecoration(
               gradient: new LinearGradient(
-                  colors: [Color(0xFFfbab66), Color(0xFFf7418c)],
+                  colors: [Color(0xFFfc8c1b), Color(0xffFD5F08)],
                   begin: const FractionalOffset(0.0, 0.0),
                   end: const FractionalOffset(1.0, 1.0),
                   stops: [0.0, 1.0],
@@ -142,7 +142,8 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                       width: 250.0,
                       height: 191.0,
                       fit: BoxFit.fill,
-                      image: new AssetImage('assets/img/login_logo.png')),
+                      image:
+                          new AssetImage('assets/img/bial_logo-removebg.png')),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20.0),
@@ -392,7 +393,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                     ),
                   ],
                   gradient: new LinearGradient(
-                      colors: [Color(0xFFf7418c), Color(0xFFfbab66)],
+                      colors: [Color(0xFFfc8c1b), Color(0xffFD5F08)],
                       begin: const FractionalOffset(0.2, 0.2),
                       end: const FractionalOffset(1.0, 1.0),
                       stops: [0.0, 1.0],
@@ -430,19 +431,6 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
           ),
           Padding(
             padding: EdgeInsets.only(top: 10.0),
-            child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  "Forgot Password?",
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontFamily: "WorkSansMedium"),
-                )),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -461,21 +449,11 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                   width: 100.0,
                   height: 1.0,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                  child: Text(
-                    "Or",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontFamily: "WorkSansMedium"),
-                  ),
-                ),
                 Container(
                   decoration: BoxDecoration(
                     gradient: new LinearGradient(
                         colors: [
-                          Colors.white,
+                          Colors.black,
                           Colors.white10,
                         ],
                         begin: const FractionalOffset(0.0, 0.0),
@@ -488,45 +466,6 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                 ),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 10.0, right: 40.0),
-                child: GestureDetector(
-                  onTap: () => showInSnackBar("Facebook button pressed"),
-                  child: Container(
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: new Icon(
-                      FontAwesomeIcons.facebookF,
-                      color: Color(0xFF0084ff),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: GestureDetector(
-                  onTap: () => showInSnackBar("Google button pressed"),
-                  child: Container(
-                    padding: const EdgeInsets.all(15.0),
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: new Icon(
-                      FontAwesomeIcons.google,
-                      color: Color(0xFF0084ff),
-                    ),
-                  ),
-                ),
-              ),
-            ],
           ),
         ],
       ),
@@ -738,7 +677,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                     ),
                   ],
                   gradient: new LinearGradient(
-                      colors: [Color(0xFFf7418c), Color(0xFFfbab66)],
+                      colors: [Color(0xFFfc8c1b), Color(0xffFD5F08)],
                       begin: const FractionalOffset(0.2, 0.2),
                       end: const FractionalOffset(1.0, 1.0),
                       stops: [0.0, 1.0],
