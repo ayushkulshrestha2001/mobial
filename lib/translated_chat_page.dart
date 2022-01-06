@@ -26,6 +26,7 @@ class _TranslatedChatState extends State<TranslatedChat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: AppBar(
         title: Text("Chat translated to $language"),
         leading: IconButton(

@@ -19,8 +19,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'MoBIAL',
       theme: ThemeData(
-          backgroundColor: Color(0xff1b262c),
-          colorScheme: ColorScheme.highContrastDark()),
+        backgroundColor: Color(0xffd5e4e1),
+        colorScheme: ColorScheme.light(),
+      ),
       // home: Home(
       //   email: 'vulcan@gmail.com',
       // ),

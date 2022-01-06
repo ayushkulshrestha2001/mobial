@@ -6,6 +6,7 @@ import 'package:mobial/translated_chat_page.dart';
 import 'package:mobial/userProfile.dart';
 import 'package:http/http.dart' as http;
 import 'model/language.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -151,7 +152,9 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: AppBar(
+        backgroundColor: Color(0xff12928f),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -179,7 +182,11 @@ class ChatScreenState extends State<ChatScreen> {
               items: languages.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
-                  child: Text(value),
+                  child: Text(
+                    value,
+                    style: GoogleFonts.signika(
+                        fontSize: 15.0, color: Colors.black),
+                  ),
                 );
               }).toList(),
             ),
@@ -268,7 +275,8 @@ class ChatMessage extends StatelessWidget {
     String txt = getPrettyString(text);
     if (sender == logInUser) {
       return Card(
-        elevation: 0.5,
+        color: Color(0xffd5e4e1),
+        elevation: 0,
         child: ListTile(
           isThreeLine: false,
           trailing: new CircleAvatar(
@@ -280,14 +288,20 @@ class ChatMessage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(" "),
-              Text(sender, style: Theme.of(context).textTheme.subtitle1),
+              Text(
+                sender,
+                style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black),
+              ),
             ],
           ),
           subtitle: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(" "),
-              Text("$txt"),
+              Text(
+                "$txt",
+                style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+              )
             ],
           ),
         ),
@@ -301,8 +315,12 @@ class ChatMessage extends StatelessWidget {
       leading: new CircleAvatar(
         child: new Text(sender[0]),
       ),
-      title: Text(sender, style: Theme.of(context).textTheme.subtitle1),
-      subtitle: Text("$txt"),
+      title: Text(sender,
+          style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black)),
+      subtitle: Text(
+        "$txt",
+        style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+      ),
     );
   }
 

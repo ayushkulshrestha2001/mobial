@@ -6,6 +6,7 @@ import 'package:mobial/ticket_info.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:date_field/date_field.dart';
+import 'package:mobial/widgets/progress.dart';
 
 class Ticket extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class Ticket extends StatefulWidget {
 }
 
 class _TicketState extends State<Ticket> {
+  bool isLoading = false;
   int _selectedIndex = 0;
   DateTime time = DateTime.now();
   TextEditingController text_controller = TextEditingController();
@@ -56,6 +58,9 @@ class _TicketState extends State<Ticket> {
   formatTime(DateTime d) => d.toString().split('.').first.padLeft(8, "0");
 
   getDetails() async {
+    setState(() {
+      isLoading = true;
+    });
     DateFormat dateFormat = DateFormat("yyyy-MM-ddTHH:mm:ss+00:00");
     String timeString = dateFormat.format(time);
     print(timeString);
@@ -85,6 +90,9 @@ class _TicketState extends State<Ticket> {
       String flight = data["airline"]["name"];
       String iata = data["flight"]["iata"];
       print(formatTime(dept));
+      setState(() {
+        isLoading = false;
+      });
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -112,65 +120,69 @@ class _TicketState extends State<Ticket> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: header(context),
-      drawer: drawer(context),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(top: size.height * 0.025),
-            child: Container(
-              width: size.width,
-              height: size.height * 0.1,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: const BorderRadius.all(Radius.circular(15)),
-              ),
-              child: DateTimeFormField(
-                decoration: const InputDecoration(
-                  hintText: "Departure Time",
-                  hintStyle: TextStyle(color: Colors.black),
-                  errorStyle: TextStyle(color: Colors.redAccent),
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.event_note, color: Colors.black),
-                  labelText: 'Departure Time',
-                ),
-                mode: DateTimeFieldPickerMode.dateAndTime,
-                autovalidateMode: AutovalidateMode.always,
-                validator: (e) =>
-                    (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
-                onDateSelected: (DateTime value) {
-                  print(value);
-                  setState(() {
-                    time = value;
-                  });
-                },
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            child: TextFormField(
-              controller: text_controller,
-              decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  onPressed: onSearch,
-                  icon: Icon(Icons.search),
-                ),
-                border: UnderlineInputBorder(),
-                labelText: 'Enter your Flight IATA Number',
-              ),
-            ),
-          ),
-          Expanded(
-            child: Image(
-              image: AssetImage('assets/img/airport.png'),
-              fit: BoxFit.fitHeight,
-            ),
-          ),
-        ],
-      ),
-    );
+        backgroundColor: Color(0xffd5e4e1),
+        appBar: header(context),
+        drawer: drawer(context),
+        body: !isLoading
+            ? (Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: size.height * 0.025),
+                    child: Container(
+                      width: size.width,
+                      height: size.height * 0.1,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(15)),
+                      ),
+                      child: DateTimeFormField(
+                        decoration: const InputDecoration(
+                          hintText: "Departure Time",
+                          hintStyle: TextStyle(color: Colors.black),
+                          errorStyle: TextStyle(color: Colors.redAccent),
+                          border: OutlineInputBorder(),
+                          suffixIcon:
+                              Icon(Icons.event_note, color: Colors.black),
+                          labelText: 'Departure Time',
+                        ),
+                        mode: DateTimeFieldPickerMode.dateAndTime,
+                        autovalidateMode: AutovalidateMode.always,
+                        validator: (e) => (e?.day ?? 0) == 1
+                            ? 'Please not the first day'
+                            : null,
+                        onDateSelected: (DateTime value) {
+                          print(value);
+                          setState(() {
+                            time = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    child: TextFormField(
+                      controller: text_controller,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: onSearch,
+                          icon: Icon(Icons.search),
+                        ),
+                        border: UnderlineInputBorder(),
+                        labelText: 'Enter your Flight IATA Number',
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Image(
+                      image: AssetImage('assets/img/flight_info.png'),
+                    ),
+                  ),
+                ],
+              ))
+            : circularProgress());
   }
 }

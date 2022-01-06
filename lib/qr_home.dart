@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mobial/card.dart';
@@ -11,6 +10,10 @@ import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+final LocalStorage storage = LocalStorage('mobial');
 
 class QrHome extends StatefulWidget {
   final String logInUser;
@@ -70,6 +73,7 @@ class _QrHomeState extends State<QrHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: header(context),
       drawer: drawer(context),
       body: Column(
@@ -80,7 +84,7 @@ class _QrHomeState extends State<QrHome> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
             margin: EdgeInsets.all(8.0),
-            color: Colors.black12,
+            color: Color(0xff4255db),
             child: Padding(
               padding: EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
               child: Column(
@@ -88,18 +92,19 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Row(
                     children: [
-                      Icon(
-                        Icons.account_circle,
-                        size: 50.0,
+                      CircleAvatar(
+                        foregroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Colors.grey,
+                        backgroundImage:
+                            NetworkImage(storage.getItem('user')['picture']),
                       ),
                       SizedBox(
                         width: 10.0,
                       ),
                       Text(
                         "$name",
-                        style: TextStyle(
-                          fontSize: 50.0,
-                        ),
+                        style: GoogleFonts.signika(
+                            fontSize: 50.0, color: Color(0xffe5f7ff)),
                       ),
                     ],
                   ),
@@ -111,14 +116,15 @@ class _QrHomeState extends State<QrHome> {
                       Icon(
                         Icons.api_rounded,
                         size: 40.0,
-                        color: Colors.yellow,
+                        color: Color(0xfff9c508),
                       ),
                       SizedBox(
                         width: 10.0,
                       ),
                       Text(
                         "$points",
-                        style: TextStyle(fontSize: 40.0),
+                        style: GoogleFonts.signika(
+                            fontSize: 40.0, color: Color(0xffe5f7ff)),
                       ),
                     ],
                   )
@@ -140,10 +146,10 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Text(
                     "History",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
+                    style: GoogleFonts.signika(
+                        fontSize: 20.0,
+                        color: Color(0xff30302e),
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -159,10 +165,10 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Text(
                     "Redeem Coupons",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
+                    style: GoogleFonts.signika(
+                        fontSize: 20.0,
+                        color: Color(0xff30302e),
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -178,10 +184,10 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Text(
                     "Redeemed Coupons",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
+                    style: GoogleFonts.signika(
+                        fontSize: 20.0,
+                        color: Color(0xff30302e),
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -197,10 +203,10 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Text(
                     "Scan Qr Code",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
+                    style: GoogleFonts.signika(
+                        fontSize: 20.0,
+                        color: Color(0xff30302e),
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -216,10 +222,10 @@ class _QrHomeState extends State<QrHome> {
                 children: [
                   Text(
                     "map",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
+                    style: GoogleFonts.signika(
+                        fontSize: 20.0,
+                        color: Color(0xff30302e),
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),

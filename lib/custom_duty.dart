@@ -171,6 +171,7 @@ class _Custom_dutyState extends State<Custom_duty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: header(context),
       drawer: drawer(context),
       body: Column(
@@ -201,8 +202,7 @@ class _Custom_dutyState extends State<Custom_duty> {
               ? (info_item[selectedItem]!)
               : Expanded(
                   child: Image(
-                  image: AssetImage('assets/img/airport.png'),
-                  fit: BoxFit.fitHeight,
+                  image: AssetImage('assets/img/duty.png'),
                 )),
         ],
       ),

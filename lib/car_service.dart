@@ -3,6 +3,7 @@ import 'package:mobial/rentee_info.dart';
 import 'package:mobial/renter_info.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CarService extends StatefulWidget {
   CarService({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _CarServiceState extends State<CarService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: header(context),
       drawer: drawer(context),
       body: Column(
@@ -32,10 +34,10 @@ class _CarServiceState extends State<CarService> {
                 children: [
                   Text(
                     "Rent a Car",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
+                    style: GoogleFonts.signika(
+                        fontSize: 20.0,
+                        color: Color(0xff30302e),
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -52,10 +54,10 @@ class _CarServiceState extends State<CarService> {
                 children: [
                   Text(
                     "lend a Car",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                    ),
+                    style: GoogleFonts.signika(
+                        fontSize: 20.0,
+                        color: Color(0xff30302e),
+                        fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
