@@ -118,6 +118,7 @@ class ChatScreenState extends State<ChatScreen> {
     var data = jsonDecode(response.body);
     var messages = data.toList();
     setState(() {
+      translate = [];
       this.isTranslated = true;
       translated = data;
       translatedToList();
@@ -125,6 +126,9 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   translatedToList() {
+    setState(() {
+      translatedMessages = [];
+    });
     print("in final message function");
     translated.forEach((message) {
       translatedMessages.add(ChatMessage(
@@ -133,6 +137,9 @@ class ChatScreenState extends State<ChatScreen> {
           sender: message['sender'],
           reciever: message['reciever'],
           recieverEmail: recieverEmail!));
+    });
+    setState(() {
+      translated = [];
     });
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => TranslatedChat(
