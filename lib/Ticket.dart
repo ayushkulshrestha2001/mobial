@@ -114,64 +114,62 @@ class _TicketState extends State<Ticket> {
     return Scaffold(
       appBar: header(context),
       drawer: drawer(context),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/img/airport.png'),
-            fit: BoxFit.cover,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(top: size.height * 0.025),
+            child: Container(
+              width: size.width,
+              height: size.height * 0.1,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+              ),
+              child: DateTimeFormField(
+                decoration: const InputDecoration(
+                  hintText: "Departure Time",
+                  hintStyle: TextStyle(color: Colors.black),
+                  errorStyle: TextStyle(color: Colors.redAccent),
+                  border: OutlineInputBorder(),
+                  suffixIcon: Icon(Icons.event_note, color: Colors.black),
+                  labelText: 'Departure Time',
+                ),
+                mode: DateTimeFieldPickerMode.dateAndTime,
+                autovalidateMode: AutovalidateMode.always,
+                validator: (e) =>
+                    (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
+                onDateSelected: (DateTime value) {
+                  print(value);
+                  setState(() {
+                    time = value;
+                  });
+                },
+              ),
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: size.height * 0.025),
-              child: Container(
-                width: size.width,
-                height: size.height * 0.1,
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8),
+            child: TextFormField(
+              controller: text_controller,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: onSearch,
+                  icon: Icon(Icons.search),
                 ),
-                child: DateTimeFormField(
-                  decoration: const InputDecoration(
-                    hintText: "Departure Time",
-                    hintStyle: TextStyle(color: Colors.black),
-                    errorStyle: TextStyle(color: Colors.redAccent),
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.event_note, color: Colors.black),
-                    labelText: 'Departure Time',
-                  ),
-                  mode: DateTimeFieldPickerMode.dateAndTime,
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: (e) =>
-                      (e?.day ?? 0) == 1 ? 'Please not the first day' : null,
-                  onDateSelected: (DateTime value) {
-                    print(value);
-                    setState(() {
-                      time = value;
-                    });
-                  },
-                ),
+                border: UnderlineInputBorder(),
+                labelText: 'Enter your Flight IATA Number',
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-              child: TextFormField(
-                controller: text_controller,
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: onSearch,
-                    icon: Icon(Icons.search),
-                  ),
-                  border: UnderlineInputBorder(),
-                  labelText: 'Enter your Flight IATA Number',
-                ),
-              ),
+          ),
+          Expanded(
+            child: Image(
+              image: AssetImage('assets/img/airport.png'),
+              fit: BoxFit.fitHeight,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

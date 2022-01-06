@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:azblob/azblob.dart';
 import 'package:mime/mime.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:mobial/widgets/info_card.dart';
 
 class Custom_duty extends StatefulWidget {
   Custom_duty({Key? key}) : super(key: key);
@@ -21,6 +22,13 @@ class _Custom_dutyState extends State<Custom_duty> {
   File? selectedImage;
   var list;
   List<String> item = [];
+  bool isShow = false;
+  List<InfoCard> cardWidgets = [];
+  Map<String, InfoCard> info_item = {};
+  String selectedItem = "";
+  InfoCard cardWidget = InfoCard(
+    title: "",
+  );
   handleCamera(BuildContext context) async {
     Navigator.pop(context);
     XFile? file = await ImagePicker()
@@ -63,6 +71,13 @@ class _Custom_dutyState extends State<Custom_duty> {
     print(response.body);
     setState(() {
       list = jsonDecode(response.body);
+      for (int i = 0; i < list.length; i++) {
+        info_item[list[i]['name']] = InfoCard(
+          title: list[i]['name'],
+          body: list[i]['description'],
+          subInfoText: list[i]['duty'],
+        );
+      }
       for (int i = 0; i < list.length; i++) {
         item.add(list[i]["name"]);
       }
@@ -131,6 +146,22 @@ class _Custom_dutyState extends State<Custom_duty> {
         });
   }
 
+  onSelectItem(String? selectedItem) {
+    for (var i in list) {
+      if (i['name'] == selectedItem) {
+        print(i);
+        cardWidgets.add(InfoCard(
+          title: i['name'],
+          subInfoText: i['duty'],
+          body: i['description'],
+        ));
+        setState(() {
+          isShow = true;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     getList();
@@ -154,7 +185,10 @@ class _Custom_dutyState extends State<Custom_duty> {
               items: item,
               label: "Items",
               onChanged: (String? item) => {
-                print(item),
+                setState(() {
+                  selectedItem = item!;
+                  isShow = true;
+                })
               },
               selectedItem: "Select Item",
             ),
@@ -163,6 +197,13 @@ class _Custom_dutyState extends State<Custom_duty> {
             onPressed: () => {_showPicker(context)},
             icon: Icon(Icons.add_a_photo),
           ),
+          this.isShow
+              ? (info_item[selectedItem]!)
+              : Expanded(
+                  child: Image(
+                  image: AssetImage('assets/img/airport.png'),
+                  fit: BoxFit.fitHeight,
+                )),
         ],
       ),
     );

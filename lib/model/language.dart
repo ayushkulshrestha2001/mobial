@@ -1,0 +1,32 @@
+var languageCode = {
+  'English': 'en',
+  'Hindi': 'hi',
+  'Arabic': 'ar',
+  'Chinese': 'lzh',
+  'Dutch': 'nl',
+  'French': 'fr',
+  'German': 'de',
+  'Italian': 'it',
+  'Japanese': 'ja',
+  'Malayalam': 'ml',
+  'Marathi': 'mr',
+  'Punjabi': 'pa',
+  'Russian': 'ru',
+  'Spanish': 'es',
+};
+var languages = [
+  'English',
+  'Hindi',
+  'Arabic',
+  'Chinese',
+  'Dutch',
+  'French',
+  'German',
+  'Italian',
+  'Japanese',
+  'Malayalam',
+  'Marathi',
+  'Punjabi',
+  'Russian',
+  'Spanish'
+];
