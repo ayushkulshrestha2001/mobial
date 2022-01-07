@@ -5,6 +5,7 @@ class User {
   final String phone;
   final String username;
   final bool isDarkMode;
+  final String dob;
 
   const User({
     required this.imagePath,
@@ -13,5 +14,6 @@ class User {
     required this.phone,
     required this.username,
     required this.isDarkMode,
+    required this.dob,
   });
 }

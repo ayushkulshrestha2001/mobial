@@ -26,6 +26,7 @@ class _ProfiUserProfile extends State<UserProfile> {
   String email = "";
   String phone = "";
   String username = "";
+  String dob = "";
   String picture =
       'https://firebasestorage.googleapis.com/v0/b/shrink4shrink.appspot.com/o/663328.png?alt=media&token=2bcd32f3-9872-40f3-b59d-eee666ff2b79';
   @override
@@ -56,6 +57,7 @@ class _ProfiUserProfile extends State<UserProfile> {
       phone = data['phone'];
       username = data['username'];
       picture = data['picture'];
+      dob = data['dob'];
     });
   }
 
@@ -129,6 +131,20 @@ class _ProfiUserProfile extends State<UserProfile> {
               Center(
                 child: Text(
                   '$username',
+                  style: TextStyle(fontSize: 16, height: 1.4),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: Text(
+                  'DOB',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Text(
+                  '$dob',
                   style: TextStyle(fontSize: 16, height: 1.4),
                 ),
               ),

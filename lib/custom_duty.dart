@@ -10,6 +10,7 @@ import 'package:mime/mime.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:mobial/widgets/info_card.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobial/widgets/progress.dart';
 
 class Custom_duty extends StatefulWidget {
   Custom_duty({Key? key}) : super(key: key);
@@ -19,6 +20,7 @@ class Custom_duty extends StatefulWidget {
 }
 
 class _Custom_dutyState extends State<Custom_duty> {
+  bool isLoading = false;
   TextEditingController searchText = TextEditingController();
   File? selectedImage;
   var list;
@@ -66,6 +68,9 @@ class _Custom_dutyState extends State<Custom_duty> {
   }
 
   getList() async {
+    setState(() {
+      isLoading = true;
+    });
     var url = Uri.parse("https://mobial.herokuapp.com/api/get_cduty");
     var response = await http.get(url);
     print(response.statusCode);
@@ -82,6 +87,7 @@ class _Custom_dutyState extends State<Custom_duty> {
       for (int i = 0; i < list.length; i++) {
         item.add(list[i]["name"]);
       }
+      isLoading = false;
     });
   }
 
@@ -189,59 +195,60 @@ class _Custom_dutyState extends State<Custom_duty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffd5e4e1),
-      appBar: header(context),
-      drawer: drawer(context),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: DropdownSearch<String>(
-              mode: Mode.DIALOG,
-              showSearchBox: true,
-              showSelectedItem: true,
-              searchBoxDecoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.list,
-                    color: Colors.blueAccent,
-                  ),
-                  fillColor: Color(0xff12928f)),
-              items: item,
-              label: "Items",
-              onChanged: (String? item) => {
-                setState(() {
-                  selectedItem = item!;
-                  isShow = true;
-                })
-              },
-              selectedItem: "Select Item",
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: ElevatedButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add_a_photo),
-                    SizedBox(
-                      width: 10.0,
+        backgroundColor: Color(0xffd5e4e1),
+        appBar: header(context),
+        drawer: drawer(context),
+        body: !isLoading
+            ? (Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    child: DropdownSearch<String>(
+                      mode: Mode.DIALOG,
+                      showSearchBox: true,
+                      showSelectedItem: true,
+                      searchBoxDecoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.list,
+                            color: Colors.blueAccent,
+                          ),
+                          fillColor: Color(0xff12928f)),
+                      items: item,
+                      label: "Items",
+                      onChanged: (String? item) => {
+                        setState(() {
+                          selectedItem = item!;
+                          isShow = true;
+                        })
+                      },
+                      selectedItem: "Select Item",
                     ),
-                    Text('Click a photo')
-                  ],
-                ),
-                onPressed: () => {_showPicker(context)},
-              )),
-          this.isShow
-              ? (info_item[selectedItem]!)
-              : Expanded(
-                  child: Image(
-                  image: AssetImage('assets/img/duty.png'),
-                )),
-        ],
-      ),
-    );
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      child: ElevatedButton(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.add_a_photo),
+                            SizedBox(
+                              width: 10.0,
+                            ),
+                            Text('Click a photo')
+                          ],
+                        ),
+                        onPressed: () => {_showPicker(context)},
+                      )),
+                  this.isShow
+                      ? (info_item[selectedItem]!)
+                      : Expanded(
+                          child: Image(
+                          image: AssetImage('assets/img/duty.png'),
+                        )),
+                ],
+              ))
+            : circularProgress());
   }
 }
 

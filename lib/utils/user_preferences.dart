@@ -12,5 +12,6 @@ class UserPreferences {
     phone: "${storage.getItem('user')["phone"]}",
     username: "${storage.getItem('user')["username"]}",
     isDarkMode: false,
+    dob: "${storage.getItem('user')["dob"]}" ?? "11-04-2001",
   );
 }

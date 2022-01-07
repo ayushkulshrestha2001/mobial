@@ -21,6 +21,7 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   User user = UserPreferences.myUser;
   TextEditingController? nameController;
+  TextEditingController? dobController;
   TextEditingController? phoneController;
   TextEditingController? usernameController;
   @override
@@ -29,6 +30,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     nameController = TextEditingController(text: user.name);
     phoneController = TextEditingController(text: user.phone);
     usernameController = TextEditingController(text: user.username);
+    dobController = TextEditingController(text: user.dob);
   }
 
   TextEditingController searchText = TextEditingController();
@@ -102,7 +104,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
           'picture': finalUrl,
         }));
     print(response.statusCode);
-    print(response.body);
+
+    setState(() {
+      print(response.body);
+    });
   }
 
   editName() async {
@@ -121,7 +126,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (response.statusCode == 200) {
       print(response.body);
-      storage.getItem("user")['name'] = nameController!.text;
+      setState(() {
+        storage.getItem("user")['name'] = nameController!.text;
+      });
+    } else {
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  }
+
+  editDob() async {
+    print(dobController!.text);
+    var url = Uri.parse("https://mobial.herokuapp.com/api/update_profile");
+    var response = await http.post(url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({
+          'email': user.email,
+          'dob': dobController!.text,
+        }));
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      setState(() {
+        storage.getItem("user")['dob'] = dobController!.text;
+      });
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
@@ -144,6 +176,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (response.statusCode == 200) {
       print(response.body);
+      setState(() {
+        storage.getItem("user")['username'] = usernameController!.text;
+      });
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
@@ -166,6 +201,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (response.statusCode == 200) {
       print(response.body);
+      setState(() {
+        storage.getItem("user")['phone'] = phoneController!.text;
+      });
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
@@ -239,7 +277,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   onPressed: () {
                     editName();
                   },
-                  icon: const Icon(Icons.upload),
+                  icon: const Icon(Icons.check),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,7 +303,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   onPressed: () {
                     editPhone();
                   },
-                  icon: const Icon(Icons.upload),
+                  icon: const Icon(Icons.check),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,7 +329,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   onPressed: () {
                     editUsername();
                   },
-                  icon: const Icon(Icons.upload),
+                  icon: const Icon(Icons.check),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'DOB(dd-mm-yyyy)',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: dobController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                IconButton(
+                  onPressed: () {
+                    editDob();
+                  },
+                  icon: const Icon(Icons.check),
                 ),
               ],
             ),

@@ -79,8 +79,8 @@ class _TicketState extends State<Ticket> {
     if (response.statusCode == 200) {
       print(response.body);
       var data = jsonDecode(response.body);
-      DateTime dept = DateTime.parse(data["departure"]["actual"]);
-      DateTime arr = DateTime.parse(data["arrival"]["actual"]);
+      DateTime dept = DateTime.parse(data["departure"]["estimated"]);
+      DateTime arr = DateTime.parse(data["arrival"]["estimated"]);
       Duration dur = arr.difference(dept);
       String cityDept = data["departure"]["iata"];
       String cityArr = data["arrival"]["iata"];
