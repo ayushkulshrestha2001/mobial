@@ -9,6 +9,7 @@ import 'package:azblob/azblob.dart';
 import 'package:mime/mime.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:mobial/widgets/info_card.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Custom_duty extends StatefulWidget {
   Custom_duty({Key? key}) : super(key: key);
@@ -120,6 +121,7 @@ class _Custom_dutyState extends State<Custom_duty> {
 
   void _showPicker(context) {
     showModalBottomSheet(
+        backgroundColor: Color(0xff12928f),
         context: context,
         builder: (BuildContext bc) {
           return SafeArea(
@@ -127,14 +129,30 @@ class _Custom_dutyState extends State<Custom_duty> {
               child: new Wrap(
                 children: <Widget>[
                   new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Camera'),
+                      leading: new Icon(
+                        Icons.photo_library,
+                        color: Colors.black,
+                      ),
+                      title: new Text(
+                        'Camera',
+                        style: GoogleFonts.signika(
+                          fontSize: 17.0,
+                        ),
+                      ),
                       onTap: () {
                         handleCamera(context);
                       }),
                   new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Photo Gallery'),
+                    leading: new Icon(
+                      Icons.photo_camera,
+                      color: Colors.black,
+                    ),
+                    title: new Text(
+                      'Photo Gallery',
+                      style: GoogleFonts.signika(
+                        fontSize: 17.0,
+                      ),
+                    ),
                     onTap: () {
                       handleChooseFromGallery(context);
                     },
@@ -183,6 +201,12 @@ class _Custom_dutyState extends State<Custom_duty> {
               mode: Mode.DIALOG,
               showSearchBox: true,
               showSelectedItem: true,
+              searchBoxDecoration: InputDecoration(
+                  prefixIcon: Icon(
+                    Icons.list,
+                    color: Colors.blueAccent,
+                  ),
+                  fillColor: Color(0xff12928f)),
               items: item,
               label: "Items",
               onChanged: (String? item) => {
@@ -194,10 +218,21 @@ class _Custom_dutyState extends State<Custom_duty> {
               selectedItem: "Select Item",
             ),
           ),
-          IconButton(
-            onPressed: () => {_showPicker(context)},
-            icon: Icon(Icons.add_a_photo),
-          ),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
+              child: ElevatedButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add_a_photo),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text('Click a photo')
+                  ],
+                ),
+                onPressed: () => {_showPicker(context)},
+              )),
           this.isShow
               ? (info_item[selectedItem]!)
               : Expanded(

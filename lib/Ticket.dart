@@ -129,25 +129,50 @@ class _TicketState extends State<Ticket> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: size.height * 0.025),
+                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 2.0),
                     child: Container(
                       width: size.width,
-                      height: size.height * 0.1,
+                      height: 50,
                       decoration: BoxDecoration(
                         color: Colors.transparent,
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15)),
                       ),
                       child: DateTimeFormField(
-                        decoration: const InputDecoration(
-                          hintText: "Departure Time",
-                          hintStyle: TextStyle(color: Colors.black),
-                          errorStyle: TextStyle(color: Colors.redAccent),
-                          border: OutlineInputBorder(),
-                          suffixIcon:
-                              Icon(Icons.event_note, color: Colors.black),
-                          labelText: 'Departure Time',
-                        ),
+                        decoration: InputDecoration(
+                            hintText: "Departure Time",
+                            errorStyle: TextStyle(color: Colors.redAccent),
+                            suffixIcon: Icon(Icons.event_note,
+                                color: Colors.blueAccent),
+                            labelText: 'Departure Time',
+                            hintStyle:
+                                TextStyle(color: Colors.grey.withOpacity(.75)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 20.0),
+                            border: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            errorBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            )),
                         mode: DateTimeFieldPickerMode.dateAndTime,
                         autovalidateMode: AutovalidateMode.always,
                         validator: (e) => (e?.day ?? 0) == 1
@@ -163,19 +188,63 @@ class _TicketState extends State<Ticket> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: TextFormField(
-                      controller: text_controller,
-                      decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                          onPressed: onSearch,
-                          icon: Icon(Icons.search),
+                      padding: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
+                      child: Container(
+                        height: 50,
+                        decoration: BoxDecoration(boxShadow: [
+                          BoxShadow(
+                              offset: const Offset(12, 26),
+                              blurRadius: 50,
+                              spreadRadius: 0,
+                              color: Colors.grey.withOpacity(.1)),
+                        ]),
+                        child: TextFormField(
+                          controller: text_controller,
+                          onChanged: (value) {
+                            //Do something wi
+                          },
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black),
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(
+                              Icons.flight_takeoff,
+                              color: Colors.blueAccent,
+                            ),
+                            suffixIcon: IconButton(
+                                onPressed: onSearch, icon: Icon(Icons.search)),
+                            filled: true,
+                            hintText: 'Enter the IATA number',
+                            hintStyle:
+                                TextStyle(color: Colors.grey.withOpacity(.75)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 0.0, horizontal: 20.0),
+                            border: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            focusedBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            errorBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            enabledBorder: const OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.blue, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                          ),
                         ),
-                        border: UnderlineInputBorder(),
-                        labelText: 'Enter your Flight IATA Number',
-                      ),
-                    ),
-                  ),
+                      )),
                   Expanded(
                     child: Image(
                       image: AssetImage('assets/img/flight_info.png'),
