@@ -7,21 +7,21 @@ class LendCarDetails extends StatelessWidget {
   final SubHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
 
   final BasicHeading = TextStyle(fontSize: 15);
-  final String? title;
-  final double? price;
-  final String? color;
-  final String? gearbox;
-  final String? fuel;
-  final String? brand;
+  final String? vehicle_name;
+  final String? price;
+  final String? rentee_email;
+  final String? vehicle_number;
+  final String? description;
+  final String? vehicle_type;
   final String? path;
 
   LendCarDetails(
-      {this.title,
+      {this.vehicle_name,
       this.price,
-      this.color,
-      this.gearbox,
-      this.fuel,
-      this.brand,
+      this.rentee_email,
+      this.vehicle_number,
+      this.description,
+      this.vehicle_type,
       this.path});
 
   @override
@@ -39,32 +39,32 @@ class LendCarDetails extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Text("$title", style: MainHeading),
+          Text("$vehicle_name", style: MainHeading),
           Text(
-            "$brand",
+            "$vehicle_type",
             style: BasicHeading,
           ),
-          Hero(tag: "$title", child: Image.asset("$path")),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              SpecificsCard(
-                name: '12 Month',
-                price: price! * 12,
-                name2: 'Dollars',
-              ),
-              SpecificsCard(
-                name: '6 Month',
-                price: price! * 6,
-                name2: 'Dollars',
-              ),
-              SpecificsCard(
-                name: '1 Month',
-                price: price! * 1,
-                name2: 'Dollars',
-              )
-            ],
-          ),
+          Hero(tag: "$vehicle_name", child: Image.asset("$path")),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: [
+          //     SpecificsCard(
+          //       name: '12 Month',
+          //       price: price! * 12,
+          //       name2: 'Dollars',
+          //     ),
+          //     SpecificsCard(
+          //       name: '6 Month',
+          //       price: price! * 6,
+          //       name2: 'Dollars',
+          //     ),
+          //     SpecificsCard(
+          //       name: '1 Month',
+          //       price: price! * 1,
+          //       name2: 'Dollars',
+          //     )
+          //   ],
+          // ),
           SizedBox(height: 20),
           Text(
             'SPECIFICATIONS',
@@ -77,15 +77,15 @@ class LendCarDetails extends StatelessWidget {
             children: [
               SpecificsCard(
                 name: 'Color',
-                name2: color,
+                name2: rentee_email,
               ),
               SpecificsCard(
                 name: 'Gearbox',
-                name2: gearbox,
+                name2: vehicle_number,
               ),
               SpecificsCard(
                 name: 'Fuel',
-                name2: fuel,
+                name2: description,
               )
             ],
           ),

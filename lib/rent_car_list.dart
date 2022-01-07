@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:mobial/rent_car_info.dart';
 import 'dart:ui' as ui;
 import 'package:mobial/widgets/progress.dart';
 
@@ -52,7 +53,19 @@ class _RentCarListState extends State<RentCarList> {
                 itemCount: list.length,
                 itemBuilder: (context, index) {
                   return GestureDetector(
-                    onTap: () => print(list[index]),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LendCarDetails(
+                          vehicle_number: list[index]["vehicle_number"],
+                          price: list[index]["expected_charge"],
+                          rentee_email: list[index]["rentee_email"],
+                          vehicle_name: list[index]["vehicle_name"],
+                          vehicle_type: list[index]["vehicle_type"],
+                          description: list[index]["description"],
+                        ),
+                      ),
+                    ),
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),

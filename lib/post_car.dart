@@ -409,12 +409,12 @@ class _PostCarState extends State<PostCar> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => LendCarDetails(
-                                          title: "WagonR",
-                                          price: 1000,
-                                          color: "white",
-                                          gearbox: "Manual",
-                                          fuel: "Petrol",
-                                          brand: "MAryti Suzuki",
+                                          vehicle_name: "WagonR",
+                                          //price: 1000,
+                                          rentee_email: "white",
+                                          vehicle_number: "Manual",
+                                          description: "Petrol",
+                                          vehicle_type: "MAryti Suzuki",
                                           path: "assets/img/login_logo.png",
                                         )));
                           },
