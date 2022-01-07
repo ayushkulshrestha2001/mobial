@@ -48,7 +48,9 @@ class _Card5State extends State<Card5> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: AppBar(
+        backgroundColor: Color(0xff12928f),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => {Navigator.pop(context)},
@@ -67,7 +69,7 @@ class _Card5State extends State<Card5> {
                     height: 150,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(_borderRadius),
-                      color: Color(0xff393e46),
+                      color: Color(0xff072227),
                       // gradient: LinearGradient(colors: [
                       //   items[index].startColor,
                       //   items[index].endColor
@@ -96,7 +98,7 @@ class _Card5State extends State<Card5> {
                       children: <Widget>[
                         Expanded(
                           child: Image.asset(
-                            'assets/icon.png',
+                            'assets/img/login_logo.png',
                             height: 64,
                             width: 64,
                           ),

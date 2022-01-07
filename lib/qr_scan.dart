@@ -39,7 +39,9 @@ class _QrScanState extends State<QrScan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: AppBar(
+        backgroundColor: Color(0xff12928f),
         title: Text("QR Scan"),
       ),
       body: Center(
@@ -50,7 +52,7 @@ class _QrScanState extends State<QrScan> {
               'Scan Result',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white54,
+                color: Color(0xffd5e4e1),
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -60,7 +62,7 @@ class _QrScanState extends State<QrScan> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Color(0xffd5e4e1),
               ),
             ),
             SizedBox(height: 72),

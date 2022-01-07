@@ -1,11 +1,10 @@
 import 'dart:convert';
-
+import 'package:mobial/widgets/progress.dart';
 import 'package:flutter/material.dart';
 import 'package:mobial/card.dart';
 import 'package:mobial/map.dart';
 import 'package:mobial/qr_scan.dart';
 import 'package:mobial/redeem_coupons.dart';
-import 'package:mobial/redeemed_coupons.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:latlong2/latlong.dart';
@@ -24,6 +23,7 @@ class QrHome extends StatefulWidget {
 }
 
 class _QrHomeState extends State<QrHome> {
+  bool isLoading = false;
   final String logInUser;
   _QrHomeState({required this.logInUser});
   final double _borderRadius = 24;
@@ -42,6 +42,9 @@ class _QrHomeState extends State<QrHome> {
   }
 
   getUserDetails() async {
+    setState(() {
+      isLoading = true;
+    });
     num rewards = 0;
     var url = Uri.parse("https://mobial.herokuapp.com/api/userdata");
     http.Response response = await http.post(url,
@@ -67,202 +70,194 @@ class _QrHomeState extends State<QrHome> {
     setState(() {
       points = rewards;
       name = decodedData['name'];
+      isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffd5e4e1),
-      appBar: header(context),
-      drawer: drawer(context),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0))),
-            margin: EdgeInsets.all(8.0),
-            color: Color(0xff4255db),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
-              child: Column(
+        backgroundColor: Color(0xffd5e4e1),
+        appBar: header(context),
+        drawer: drawer(context),
+        body: !isLoading
+            ? (Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        foregroundColor: Theme.of(context).primaryColor,
-                        backgroundColor: Colors.grey,
-                        backgroundImage:
-                            NetworkImage(storage.getItem('user')['picture']),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    margin: EdgeInsets.all(8.0),
+                    color: Color(0xff4255db),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                foregroundColor: Theme.of(context).primaryColor,
+                                backgroundColor: Colors.grey,
+                                backgroundImage: NetworkImage(
+                                    storage.getItem('user')['picture']),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "$name",
+                                  style: GoogleFonts.signika(
+                                      fontSize: 50.0, color: Color(0xffe5f7ff)),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.api_rounded,
+                                size: 40.0,
+                                color: Color(0xfff9c508),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Text(
+                                "$points",
+                                style: GoogleFonts.signika(
+                                    fontSize: 40.0, color: Color(0xffe5f7ff)),
+                              ),
+                            ],
+                          )
+                        ],
                       ),
-                      SizedBox(
-                        width: 10.0,
-                      ),
-                      Text(
-                        "$name",
-                        style: GoogleFonts.signika(
-                            fontSize: 50.0, color: Color(0xffe5f7ff)),
-                      ),
-                    ],
+                    ),
                   ),
                   SizedBox(
-                    height: 10.0,
+                    height: 35.0,
                   ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.api_rounded,
-                        size: 40.0,
-                        color: Color(0xfff9c508),
+                  Card(
+                    child: TextButton(
+                      onPressed: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Card5(
+                                      codes: this.codes,
+                                    )))
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            "History",
+                            style: GoogleFonts.signika(
+                                fontSize: 20.0,
+                                color: Color(0xff30302e),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 10.0,
+                    ),
+                  ),
+                  Card(
+                    child: TextButton(
+                      onPressed: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RedeemCoupons()))
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            "Redeem Coupons",
+                            style: GoogleFonts.signika(
+                                fontSize: 20.0,
+                                color: Color(0xff30302e),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                      Text(
-                        "$points",
-                        style: GoogleFonts.signika(
-                            fontSize: 40.0, color: Color(0xffe5f7ff)),
+                    ),
+                  ),
+                  Card(
+                    child: TextButton(
+                      onPressed: () => {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => QrScan()))
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            "Scan Qr Code",
+                            style: GoogleFonts.signika(
+                                fontSize: 20.0,
+                                color: Color(0xff30302e),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ),
-          Card(
-            child: TextButton(
-              onPressed: () => {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Card5(
-                              codes: this.codes,
-                            )))
-              },
-              child: Column(
-                children: [
-                  Text(
-                    "History",
-                    style: GoogleFonts.signika(
-                        fontSize: 20.0,
-                        color: Color(0xff30302e),
-                        fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            child: TextButton(
-              onPressed: () => {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RedeemCoupons()))
-              },
-              child: Column(
-                children: [
-                  Text(
-                    "Redeem Coupons",
-                    style: GoogleFonts.signika(
-                        fontSize: 20.0,
-                        color: Color(0xff30302e),
-                        fontWeight: FontWeight.bold),
+                  Card(
+                    child: TextButton(
+                      onPressed: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MapDisplay()))
+                      },
+                      child: Column(
+                        children: [
+                          Text(
+                            "map",
+                            style: GoogleFonts.signika(
+                                fontSize: 20.0,
+                                color: Color(0xff30302e),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                  //   Card(
+                  //     child: FlutterMap(
+                  //       options: new MapOptions(
+                  //         center: LatLng(latitude, longitude),
+                  //         zoom: 13.0,
+                  //       ),
+                  //       layers: [
+                  //         new TileLayerOptions(
+                  //           urlTemplate:
+                  //               "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  //           subdomains: ['a', 'b', 'c'],
+                  //           attributionBuilder: (_) {
+                  //             return Text("© MoBIAL");
+                  //           },
+                  //         ),
+                  //         MarkerLayerOptions(
+                  //           markers: [
+                  //             new Marker(
+                  //               width: 80.0,
+                  //               height: 80.0,
+                  //               point: LatLng(latitude, longitude),
+                  //               builder: (ctx) => Container(
+                  //                 child: FlutterLogo(),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
                 ],
-              ),
-            ),
-          ),
-          Card(
-            child: TextButton(
-              onPressed: () => {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RedeemedCoupons()))
-              },
-              child: Column(
-                children: [
-                  Text(
-                    "Redeemed Coupons",
-                    style: GoogleFonts.signika(
-                        fontSize: 20.0,
-                        color: Color(0xff30302e),
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            child: TextButton(
-              onPressed: () => {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => QrScan()))
-              },
-              child: Column(
-                children: [
-                  Text(
-                    "Scan Qr Code",
-                    style: GoogleFonts.signika(
-                        fontSize: 20.0,
-                        color: Color(0xff30302e),
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Card(
-            child: TextButton(
-              onPressed: () => {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MapDisplay()))
-              },
-              child: Column(
-                children: [
-                  Text(
-                    "map",
-                    style: GoogleFonts.signika(
-                        fontSize: 20.0,
-                        color: Color(0xff30302e),
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          //   Card(
-          //     child: FlutterMap(
-          //       options: new MapOptions(
-          //         center: LatLng(latitude, longitude),
-          //         zoom: 13.0,
-          //       ),
-          //       layers: [
-          //         new TileLayerOptions(
-          //           urlTemplate:
-          //               "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          //           subdomains: ['a', 'b', 'c'],
-          //           attributionBuilder: (_) {
-          //             return Text("© MoBIAL");
-          //           },
-          //         ),
-          //         MarkerLayerOptions(
-          //           markers: [
-          //             new Marker(
-          //               width: 80.0,
-          //               height: 80.0,
-          //               point: LatLng(latitude, longitude),
-          //               builder: (ctx) => Container(
-          //                 child: FlutterLogo(),
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-        ],
-      ),
-    );
+              ))
+            : circularProgress());
   }
 }

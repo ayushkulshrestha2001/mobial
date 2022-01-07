@@ -11,27 +11,31 @@ class _RedeemCouponsState extends State<RedeemCoupons> {
   final double _borderRadius = 24;
 
   var items = [
-    PlaceInfo('Dubai Mall Food Court', Colors.black, Colors.white, 120,
-        'Dubai · In The Dubai Mall', 'Cosy · Casual · Good for kids'),
-    PlaceInfo('Hamriyah Food Court', Color(0xffFFB157), Color(0xffFFA057), 120,
-        'Sharjah', 'All you can eat · Casual · Groups'),
-    PlaceInfo('Gate of Food Court', Color(0xffFF5B95), Color(0xffF8556D), 120,
-        'Dubai · Near Dubai Aquarium', 'Casual · Groups'),
-    PlaceInfo('Express Food Court', Color(0xffD76EF5), Color(0xff8F7AFE), 120,
-        'Dubai', 'Casual · Good for kids · Delivery'),
-    PlaceInfo('BurJuman Food Court', Color(0xff42E695), Color(0xff3BB2B8), 120,
-        'Dubai · In BurJuman', '...'),
+    PlaceInfo('Sleeping Lounge', Colors.black, Colors.white, 30,
+        'Bangalore · In BIAL', 'Cosy · Secure'),
+    PlaceInfo('Baby Care Rooms', Color(0xffFFB157), Color(0xffFFA057), 40,
+        'Bangalore · In BIAL', 'Joyous'),
+    PlaceInfo('Smoking Lounge', Color(0xffFF5B95), Color(0xffF8556D), 100,
+        'Bangalore · In BIAL', 'Casual'),
+    PlaceInfo('Buggy Service', Color(0xffD76EF5), Color(0xff8F7AFE), 75,
+        'Bangalore · In BIAL', 'Transport'),
+    PlaceInfo('Taj Bangalore', Color(0xff42E695), Color(0xff3BB2B8), 200,
+        'Bangalore', ' luxurious rooms · restaurants · banquet facilities'),
+    PlaceInfo('080 Transit Hotel', Color(0xff42E695), Color(0xff3BB2B8), 250,
+        'Bangalore', 'dream destination'),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: AppBar(
+        backgroundColor: Color(0xff12928f),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => {Navigator.pop(context)},
         ),
-        title: Text('History'),
+        title: Text('REDEEM COUPONS'),
       ),
       body: ListView.builder(
         itemCount: items.length,
@@ -45,7 +49,7 @@ class _RedeemCouponsState extends State<RedeemCoupons> {
                     height: 150,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(_borderRadius),
-                      color: Color(0xff393e46),
+                      color: Color(0xff072227),
                       // gradient: LinearGradient(colors: [
                       //   items[index].startColor,
                       //   items[index].endColor
@@ -74,7 +78,7 @@ class _RedeemCouponsState extends State<RedeemCoupons> {
                       children: <Widget>[
                         Expanded(
                           child: Image.asset(
-                            'assets/icon.png',
+                            'assets/img/bial_logo_bg.png',
                             height: 64,
                             width: 64,
                           ),
