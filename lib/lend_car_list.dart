@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:mobial/widgets/header.dart';
+import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
+
+final LocalStorage storage = LocalStorage('mobial');
 
 class LendCarList extends StatefulWidget {
   LendCarList({Key? key}) : super(key: key);
@@ -10,22 +16,57 @@ class LendCarList extends StatefulWidget {
 }
 
 class _LendCarListState extends State<LendCarList> {
+  List<PlaceInfo> cars = [];
+  @override
+  void initState() {
+    super.initState();
+    getList();
+  }
+
+  getList() async {
+    var url = Uri.parse("https://mobial.herokuapp.com/api/previous_car");
+    http.Response response = await http.post(url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({
+          "rentee": true,
+          "rentee_email": storage.getItem('user')['email'],
+        }));
+    print(response.statusCode);
+    print(response.body);
+    var data = jsonDecode(response.body);
+    setState(() {
+      for (int i = 0; i < data.length; i++) {
+        cars.add(PlaceInfo(
+            data[i]['vehicle_name'],
+            Colors.black,
+            Colors.black,
+            data[i]['expected_charge'] ?? '0',
+            data[i]['vehicle_number'] ?? '223',
+            data[i]['vehilce_type'] ?? 'car'));
+      }
+    });
+  }
+
   final double _borderRadius = 24;
 
-  var items = [
-    PlaceInfo('Sleeping Lounge', Colors.black, Colors.white, 30,
-        'Bangalore · In BIAL', 'Cosy · Secure'),
-    PlaceInfo('Baby Care Rooms', Color(0xffFFB157), Color(0xffFFA057), 40,
-        'Bangalore · In BIAL', 'Joyous'),
-    PlaceInfo('Smoking Lounge', Color(0xffFF5B95), Color(0xffF8556D), 100,
-        'Bangalore · In BIAL', 'Casual'),
-    PlaceInfo('Buggy Service', Color(0xffD76EF5), Color(0xff8F7AFE), 75,
-        'Bangalore · In BIAL', 'Transport'),
-    PlaceInfo('Taj Bangalore', Color(0xff42E695), Color(0xff3BB2B8), 200,
-        'Bangalore', ' luxurious rooms · restaurants · banquet facilities'),
-    PlaceInfo('080 Transit Hotel', Color(0xff42E695), Color(0xff3BB2B8), 250,
-        'Bangalore', 'dream destination'),
-  ];
+  // var items = [
+  //   PlaceInfo('Sleeping Lounge', Colors.black, Colors.white, 30,
+  //       'Bangalore · In BIAL', 'Cosy · Secure'),
+  //   PlaceInfo('Baby Care Rooms', Color(0xffFFB157), Color(0xffFFA057), 40,
+  //       'Bangalore · In BIAL', 'Joyous'),
+  //   PlaceInfo('Smoking Lounge', Color(0xffFF5B95), Color(0xffF8556D), 100,
+  //       'Bangalore · In BIAL', 'Casual'),
+  //   PlaceInfo('Buggy Service', Color(0xffD76EF5), Color(0xff8F7AFE), 75,
+  //       'Bangalore · In BIAL', 'Transport'),
+  //   PlaceInfo('Taj Bangalore', Color(0xff42E695), Color(0xff3BB2B8), 200,
+  //       'Bangalore', ' luxurious rooms · restaurants · banquet facilities'),
+  //   PlaceInfo('080 Transit Hotel', Color(0xff42E695), Color(0xff3BB2B8), 250,
+  //       'Bangalore', 'dream destination'),
+  // ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +80,7 @@ class _LendCarListState extends State<LendCarList> {
         title: Text('Lend Car List'),
       ),
       body: ListView.builder(
-        itemCount: items.length,
+        itemCount: cars.length,
         itemBuilder: (context, index) {
           return Center(
             child: Padding(
@@ -92,14 +133,14 @@ class _LendCarListState extends State<LendCarList> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                items[index].name,
+                                cars[index].name,
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Avenir',
                                     fontWeight: FontWeight.w700),
                               ),
                               Text(
-                                items[index].category,
+                                cars[index].category,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Avenir',
@@ -118,7 +159,7 @@ class _LendCarListState extends State<LendCarList> {
                                   ),
                                   Flexible(
                                     child: Text(
-                                      items[index].location,
+                                      cars[index].location,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Avenir',
@@ -136,7 +177,7 @@ class _LendCarListState extends State<LendCarList> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text(
-                                items[index].rating.toString(),
+                                cars[index].rating.toString(),
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Avenir',
@@ -164,7 +205,7 @@ class PlaceInfo {
   final String name;
   final String category;
   final String location;
-  final double rating;
+  final String rating;
   final Color startColor;
   final Color endColor;
 
