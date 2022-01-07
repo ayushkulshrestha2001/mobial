@@ -10,6 +10,7 @@ import 'package:mime/mime.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:mobial/widgets/info_card.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobial/widgets/progress.dart';
 
 class Custom_duty extends StatefulWidget {
   Custom_duty({Key? key}) : super(key: key);
@@ -24,18 +25,23 @@ class _Custom_dutyState extends State<Custom_duty> {
   var list;
   List<String> item = [];
   bool isShow = false;
+  bool isPhoto = false;
   List<InfoCard> cardWidgets = [];
   Map<String, InfoCard> info_item = {};
   String selectedItem = "";
+  bool isLoading = false;
   InfoCard cardWidget = InfoCard(
     title: "",
   );
+  String finalImageUrl = "";
+
   handleCamera(BuildContext context) async {
     Navigator.pop(context);
     XFile? file = await ImagePicker()
         .pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 690);
     setState(() {
       this.selectedImage = File(file!.path);
+      isLoading = true;
     });
     var name = selectedImage!.path.split("/").last;
     print(name);
@@ -63,6 +69,18 @@ class _Custom_dutyState extends State<Custom_duty> {
         body: json.encode({'url': finalUrl}));
     print(response.statusCode);
     print(response.body);
+    var data = jsonDecode(response.body);
+    setState(() {
+      for (int i = 0; i < data.length; i++) {
+        if (info_item[data['name']] != null) {
+          cardWidgets.add(info_item[data['name']]!);
+        }
+      }
+      finalImageUrl = finalUrl;
+      isLoading = false;
+      isShow = true;
+      isPhoto = true;
+    });
   }
 
   getList() async {
@@ -90,6 +108,7 @@ class _Custom_dutyState extends State<Custom_duty> {
     XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
       this.selectedImage = File(file!.path);
+      isLoading = true;
     });
     var name = selectedImage!.path.split("/").last;
     print(name);
@@ -117,6 +136,18 @@ class _Custom_dutyState extends State<Custom_duty> {
         body: json.encode({'url': finalUrl}));
     print(response.statusCode);
     print(response.body);
+    var data = jsonDecode(response.body);
+    setState(() {
+      for (int i = 0; i < data.length; i++) {
+        if (info_item[data[i]['name']] != null) {
+          cardWidgets.add(info_item[data[i]['name']]!);
+        }
+      }
+      finalImageUrl = finalUrl;
+      isLoading = false;
+      isShow = true;
+      isPhoto = true;
+    });
   }
 
   void _showPicker(context) {
@@ -233,12 +264,32 @@ class _Custom_dutyState extends State<Custom_duty> {
                 ),
                 onPressed: () => {_showPicker(context)},
               )),
-          this.isShow
-              ? (info_item[selectedItem]!)
-              : Expanded(
-                  child: Image(
-                  image: AssetImage('assets/img/duty.png'),
-                )),
+          !isLoading
+              ? (this.isShow
+                  ? (this.isPhoto
+                      ? Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                  height: 200.0,
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: Image(
+                                        image: NetworkImage(finalImageUrl),
+                                        fit: BoxFit.fill,
+                                      ))),
+                              Column(
+                                children: cardWidgets,
+                              ),
+                            ],
+                          ),
+                        )
+                      : (info_item[selectedItem]!))
+                  : Expanded(
+                      child: Image(
+                      image: AssetImage('assets/img/duty.png'),
+                    )))
+              : circularProgress(),
         ],
       ),
     );

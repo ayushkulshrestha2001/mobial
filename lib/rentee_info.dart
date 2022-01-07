@@ -179,7 +179,7 @@ class _RenteeInfoState extends State<RenteeInfo> {
                         ),
                       ),
                       buildTextField(
-                        "Vehicle Type",
+                        "Expencted Charge",
                         Icons.person_outlined,
                         false,
                         size,
