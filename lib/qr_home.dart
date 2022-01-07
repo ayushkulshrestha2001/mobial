@@ -11,6 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 final LocalStorage storage = LocalStorage('mobial');
 
@@ -33,6 +34,7 @@ class _QrHomeState extends State<QrHome> {
   String name = "";
   num points = 0;
   List<dynamic> codes = [];
+  List<Marker> markers = [];
   @override
   void initState() {
     //bialLocation = LatLng(latitude, longitude);
@@ -44,6 +46,25 @@ class _QrHomeState extends State<QrHome> {
   getUserDetails() async {
     setState(() {
       isLoading = true;
+    });
+    var getUrl = Uri.parse("https://mobial.herokuapp.com/api/get_qrcodes");
+    http.Response markerResponse = await http.get(getUrl);
+    var markerData = jsonDecode(markerResponse.body);
+    setState(() {
+      for (int i = 0; i < markerData.length; i++) {
+        String latitude = markerData[i]['location'].split(', ').first;
+        String longitude = markerData[i]['location'].split(', ').last;
+        double lat = double.parse(latitude);
+        double long = double.parse(longitude);
+        markers.add(Marker(
+          height: 80.0,
+          width: 80.0,
+          point: LatLng(lat, long),
+          builder: (ctx) => Container(
+            child: Icon(Icons.location_on, color: Colors.black),
+          ),
+        ));
+      }
     });
     num rewards = 0;
     var url = Uri.parse("https://mobial.herokuapp.com/api/userdata");
@@ -65,6 +86,21 @@ class _QrHomeState extends State<QrHome> {
     });
     codes.forEach((e) {
       rewards = rewards + e['reward'];
+      String latitude = e['location'].split(', ').first;
+      String longitude = e['location'].split(', ').last;
+      double lat = double.parse(latitude);
+      double long = double.parse(longitude);
+      setState(() {
+        markers.add(Marker(
+            height: 80.0,
+            width: 80.0,
+            point: LatLng(lat, long),
+            builder: (ctx) => Container(
+                    child: Icon(
+                  Icons.star,
+                  color: Color(0xffdaa520),
+                ))));
+      });
     });
     print(rewards);
     setState(() {
@@ -211,7 +247,9 @@ class _QrHomeState extends State<QrHome> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MapDisplay()))
+                                builder: (context) => MapDisplay(
+                                      markers: markers,
+                                    )))
                       },
                       child: Column(
                         children: [

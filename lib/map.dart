@@ -7,15 +7,17 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:http/http.dart' as http;
 
 class MapDisplay extends StatefulWidget {
-  MapDisplay({Key? key}) : super(key: key);
+  List<Marker> markers;
+
+  MapDisplay({required this.markers});
 
   @override
-  _MapDisplayState createState() => _MapDisplayState();
+  _MapDisplayState createState() => _MapDisplayState(markers: markers);
 }
 
 class _MapDisplayState extends State<MapDisplay> {
-  // List<dynamic> qrMarkers = [];
-  // List<Marker> markers = [];
+  List<Marker> markers;
+  _MapDisplayState({required this.markers});
   @override
   void initState() {
     super.initState();
@@ -50,46 +52,46 @@ class _MapDisplayState extends State<MapDisplay> {
   //   });
   // }
 
-  List<Marker> markers = [
-    Marker(
-      width: 80.0,
-      height: 80.0,
-      point: LatLng(13.199379, 77.710136),
-      builder: (ctx) => Container(
-        child: Icon(Icons.location_on, color: Colors.black),
-      ),
-    ),
-    Marker(
-      anchorPos: AnchorPos.align(AnchorAlign.center),
-      width: 80.0,
-      height: 80.0,
-      point: LatLng(13.198465052455404, 77.70745378642731),
-      builder: (ctx) => Container(
-        child: Icon(Icons.location_on, color: Colors.black),
-      ),
-    ),
-    Marker(
-      anchorPos: AnchorPos.align(AnchorAlign.center),
-      width: 80.0,
-      height: 80.0,
-      point: LatLng(13.200235379999054, 77.70852205083513),
-      builder: (ctx) => Container(
-        child: Icon(Icons.location_on, color: Colors.black),
-      ),
-    ),
-    Marker(
-      anchorPos: AnchorPos.align(AnchorAlign.center),
-      width: 80.0,
-      height: 80.0,
-      point: LatLng(13.200074666613734, 77.70951250043967),
-      builder: (ctx) => Container(
-        child: Icon(
-          Icons.location_on,
-          color: Colors.black,
-        ),
-      ),
-    ),
-  ];
+  // List<Marker> markers = [
+  //   Marker(
+  //     width: 80.0,
+  //     height: 80.0,
+  //     point: LatLng(13.199379, 77.710136),
+  //     builder: (ctx) => Container(
+  //       child: Icon(Icons.location_on, color: Colors.black),
+  //     ),
+  //   ),
+  //   Marker(
+  //     anchorPos: AnchorPos.align(AnchorAlign.center),
+  //     width: 80.0,
+  //     height: 80.0,
+  //     point: LatLng(13.198465052455404, 77.70745378642731),
+  //     builder: (ctx) => Container(
+  //       child: Icon(Icons.location_on, color: Colors.black),
+  //     ),
+  //   ),
+  //   Marker(
+  //     anchorPos: AnchorPos.align(AnchorAlign.center),
+  //     width: 80.0,
+  //     height: 80.0,
+  //     point: LatLng(13.200235379999054, 77.70852205083513),
+  //     builder: (ctx) => Container(
+  //       child: Icon(Icons.location_on, color: Colors.black),
+  //     ),
+  //   ),
+  //   Marker(
+  //     anchorPos: AnchorPos.align(AnchorAlign.center),
+  //     width: 80.0,
+  //     height: 80.0,
+  //     point: LatLng(13.200074666613734, 77.70951250043967),
+  //     builder: (ctx) => Container(
+  //       child: Icon(
+  //         Icons.location_on,
+  //         color: Colors.black,
+  //       ),
+  //     ),
+  //   ),
+  // ];
   @override
   Widget build(BuildContext context) {
     return FlutterMap(

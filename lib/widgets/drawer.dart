@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:mobial/check_list.dart';
 import 'package:mobial/page/profile_page.dart';
 import 'package:mobial/login9/ui/login_page.dart';
 import 'package:mobial/privacy_policy.dart';
@@ -56,6 +57,35 @@ Widget drawer(BuildContext context) {
               MaterialPageRoute(
                 builder: (context) {
                   return ProfilePage();
+                },
+              ),
+            );
+          },
+        ),
+        ListTile(
+          title: Text(
+            'Check List',
+            style: GoogleFonts.signika(
+              fontSize: 17.0,
+            ),
+          ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.list,
+              color: Colors.black,
+            ),
+            tooltip: 'Show Snackbar',
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('This is a snackbar')));
+            },
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return TodoLIst();
                 },
               ),
             );
