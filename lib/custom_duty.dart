@@ -20,6 +20,7 @@ class Custom_duty extends StatefulWidget {
 }
 
 class _Custom_dutyState extends State<Custom_duty> {
+  bool isLoading = false;
   TextEditingController searchText = TextEditingController();
   File? selectedImage;
   var list;
@@ -29,7 +30,6 @@ class _Custom_dutyState extends State<Custom_duty> {
   List<InfoCard> cardWidgets = [];
   Map<String, InfoCard> info_item = {};
   String selectedItem = "";
-  bool isLoading = false;
   InfoCard cardWidget = InfoCard(
     title: "",
   );
@@ -84,6 +84,9 @@ class _Custom_dutyState extends State<Custom_duty> {
   }
 
   getList() async {
+    setState(() {
+      isLoading = true;
+    });
     var url = Uri.parse("https://mobial.herokuapp.com/api/get_cduty");
     var response = await http.get(url);
     print(response.statusCode);
@@ -100,6 +103,7 @@ class _Custom_dutyState extends State<Custom_duty> {
       for (int i = 0; i < list.length; i++) {
         item.add(list[i]["name"]);
       }
+      isLoading = false;
     });
   }
 
@@ -220,79 +224,80 @@ class _Custom_dutyState extends State<Custom_duty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffd5e4e1),
-      appBar: header(context),
-      drawer: drawer(context),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: DropdownSearch<String>(
-              mode: Mode.DIALOG,
-              showSearchBox: true,
-              showSelectedItem: true,
-              searchBoxDecoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.list,
-                    color: Colors.blueAccent,
-                  ),
-                  fillColor: Color(0xff12928f)),
-              items: item,
-              label: "Items",
-              onChanged: (String? item) => {
-                setState(() {
-                  selectedItem = item!;
-                  isShow = true;
-                })
-              },
-              selectedItem: "Select Item",
-            ),
-          ),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: ElevatedButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add_a_photo),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    Text('Click a photo')
-                  ],
-                ),
-                onPressed: () => {_showPicker(context)},
-              )),
-          !isLoading
-              ? (this.isShow
-                  ? (this.isPhoto
-                      ? Container(
-                          child: Column(
-                            children: [
-                              Container(
-                                  height: 200.0,
-                                  child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: Image(
-                                        image: NetworkImage(finalImageUrl),
-                                        fit: BoxFit.fill,
-                                      ))),
-                              Column(
-                                children: cardWidgets,
-                              ),
-                            ],
+        backgroundColor: Color(0xffd5e4e1),
+        appBar: header(context),
+        drawer: drawer(context),
+        body: !isLoading
+            ? (Column(mainAxisAlignment: MainAxisAlignment.start, children: <
+                Widget>[
+                Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                    child: DropdownSearch<String>(
+                      mode: Mode.DIALOG,
+                      showSearchBox: true,
+                      showSelectedItem: true,
+                      searchBoxDecoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.list,
+                            color: Colors.blueAccent,
                           ),
-                        )
-                      : (info_item[selectedItem]!))
-                  : Expanded(
-                      child: Image(
-                      image: AssetImage('assets/img/duty.png'),
-                    )))
-              : circularProgress(),
-        ],
-      ),
-    );
+                          fillColor: Color(0xff12928f)),
+                      items: item,
+                      label: "Items",
+                      onChanged: (String? item) => {
+                        setState(() {
+                          selectedItem = item!;
+                          isShow = true;
+                        })
+                      },
+                      selectedItem: "Select Item",
+                    )),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ElevatedButton(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_a_photo),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Text('Click a Photo'),
+                      ],
+                    ),
+                    onPressed: () => {_showPicker(context)},
+                  ),
+                ),
+                !isLoading
+                    ? (this.isShow
+                        ? (this.isPhoto
+                            ? Container(
+                                child: Column(
+                                  children: [
+                                    Container(
+                                        height: 200.0,
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            child: Image(
+                                              image:
+                                                  NetworkImage(finalImageUrl),
+                                              fit: BoxFit.fill,
+                                            ))),
+                                    Column(
+                                      children: cardWidgets,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : (info_item[selectedItem]!))
+                        : Expanded(
+                            child: Image(
+                            image: AssetImage('assets/img/duty.png'),
+                          )))
+                    : circularProgress(),
+              ]))
+            : circularProgress());
   }
 }
 

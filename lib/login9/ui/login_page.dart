@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:mobial/widgets/progress.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mobial/home.dart';
@@ -13,6 +14,7 @@ class Login9 extends StatefulWidget {
 }
 
 class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
+  bool isLoading = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final LocalStorage storage = new LocalStorage('mobial');
   final FocusNode myFocusNodeEmailLogin = FocusNode();
@@ -48,6 +50,9 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   }
 
   handleSignIn() async {
+    setState(() {
+      isLoading = true;
+    });
     print(loginEmailController.text.toString());
     print(loginPasswordController.text.toString());
     var url = Uri.parse("https://mobial.herokuapp.com/api/signin");
@@ -75,9 +80,15 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     } else {
       print("Error while logging in");
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   handleSignUp() async {
+    setState(() {
+      isLoading = true;
+    });
     if (signupPasswordController.text.toString() ==
         signupConfirmPasswordController.text.toString()) {
       var url = Uri.parse("https://mobial.herokuapp.com/api/signup");
@@ -109,81 +120,85 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
         print('Response body: ${response.body}');
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      key: _scaffoldKey,
-      body: NotificationListener<OverscrollIndicatorNotification>(
-        // onNotification: (overscroll) {
-        //   overscroll.disallowGlow();
-        // },
-        child: SingleChildScrollView(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height >= 775.0
-                ? MediaQuery.of(context).size.height
-                : 775.0,
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                  colors: [Color(0xFFfc8c1b), Color(0xffFD5F08)],
-                  begin: const FractionalOffset(0.0, 0.0),
-                  end: const FractionalOffset(1.0, 1.0),
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 75.0),
-                  child: new Image(
-                      width: 250.0,
-                      height: 191.0,
-                      fit: BoxFit.fill,
-                      image:
-                          new AssetImage('assets/img/bial_logo-removebg.png')),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20.0),
-                  child: _buildMenuBar(context),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (i) {
-                      if (i == 0) {
-                        setState(() {
-                          right = Colors.white;
-                          left = Colors.black;
-                        });
-                      } else if (i == 1) {
-                        setState(() {
-                          right = Colors.black;
-                          left = Colors.white;
-                        });
-                      }
-                    },
-                    children: <Widget>[
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignIn(context),
-                      ),
-                      new ConstrainedBox(
-                        constraints: const BoxConstraints.expand(),
-                        child: _buildSignUp(context),
-                      ),
-                    ],
+        key: _scaffoldKey,
+        body: !isLoading
+            ? (NotificationListener<OverscrollIndicatorNotification>(
+                // onNotification: (overscroll) {
+                //   overscroll.disallowGlow();
+                // },
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height >= 775.0
+                        ? MediaQuery.of(context).size.height
+                        : 775.0,
+                    decoration: new BoxDecoration(
+                      gradient: new LinearGradient(
+                          colors: [Color(0xFFfc8c1b), Color(0xffFD5F08)],
+                          begin: const FractionalOffset(0.0, 0.0),
+                          end: const FractionalOffset(1.0, 1.0),
+                          stops: [0.0, 1.0],
+                          tileMode: TileMode.clamp),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 75.0),
+                          child: new Image(
+                              width: 250.0,
+                              height: 191.0,
+                              fit: BoxFit.fill,
+                              image: new AssetImage(
+                                  'assets/img/bial_logo-removebg.png')),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20.0),
+                          child: _buildMenuBar(context),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: PageView(
+                            controller: _pageController,
+                            onPageChanged: (i) {
+                              if (i == 0) {
+                                setState(() {
+                                  right = Colors.white;
+                                  left = Colors.black;
+                                });
+                              } else if (i == 1) {
+                                setState(() {
+                                  right = Colors.black;
+                                  left = Colors.white;
+                                });
+                              }
+                            },
+                            children: <Widget>[
+                              new ConstrainedBox(
+                                constraints: const BoxConstraints.expand(),
+                                child: _buildSignIn(context),
+                              ),
+                              new ConstrainedBox(
+                                constraints: const BoxConstraints.expand(),
+                                child: _buildSignUp(context),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+              ))
+            : circularProgress());
   }
 
   @override
