@@ -22,7 +22,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+    apiKey: "AIzaSyB-P6C3dgduf2tu03DsrBczK4x4990ppyk",
+    appId: "1:109889701868:web:451a23ce9d1be320a862c9",
+    messagingSenderId: "109889701868",
+    projectId: "mobial",
+  ));
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
