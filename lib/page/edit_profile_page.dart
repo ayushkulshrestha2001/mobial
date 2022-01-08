@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:mobial/widgets/progress.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mobial/model/user.dart';
 import 'package:mobial/utils/user_preferences.dart';
 import 'package:mobial/widgets/appbar_widget.dart';
+import 'package:mobial/widgets/header.dart';
 import 'package:mobial/widgets/profile_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
@@ -19,6 +21,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  bool isLoading = false;
   User user = UserPreferences.myUser;
   TextEditingController? nameController;
   TextEditingController? dobController;
@@ -35,7 +38,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   TextEditingController searchText = TextEditingController();
   File? selectedImage;
+  void addItemsToLocalStorage(var data) async {
+    await storage.setItem('user', data);
+    print("hello");
+    print(storage.getItem('user'));
+  }
+
   handleCamera(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
     Navigator.pop(context);
     XFile? file = await ImagePicker()
         .pickImage(source: ImageSource.camera, maxHeight: 675, maxWidth: 690);
@@ -45,16 +57,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     var name = selectedImage!.path.split("/").last;
     print(name);
 
-    var storage = AzureStorage.parse(
+    var storage1 = AzureStorage.parse(
         'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
-    await storage.putBlob('/mobialc/$name',
+    await storage1.putBlob('/mobialc/$name',
         bodyBytes: selectedImage!.readAsBytesSync(),
         contentType: lookupMimeType('$name'),
         type: BlobType.BlockBlob);
 
     String selectedPath = '/mobialc/$name';
 
-    var val = storage.uri();
+    var val = storage1.uri();
     String finalUrl = "$val" + "mobialc/$name";
     print(finalUrl);
 
@@ -68,9 +80,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
         body: json.encode({'email': user.email, 'picture': finalUrl}));
     print(response.statusCode);
     print(response.body);
+    var b_url1 = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+    var response1 = await http.post(b_url1,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({'email': user.email}));
+    print(response1.statusCode);
+    print(response1.body);
+    storage.clear();
+    var data = jsonDecode(response1.body);
+    addItemsToLocalStorage(data);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   handleChooseFromGallery(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
     Navigator.pop(context);
     XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
@@ -79,16 +110,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
     var name = selectedImage!.path.split("/").last;
     print(name);
 
-    var storage = AzureStorage.parse(
+    var storage1 = AzureStorage.parse(
         'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
-    await storage.putBlob('/mobialc/$name',
+    await storage1.putBlob('/mobialc/$name',
         bodyBytes: selectedImage!.readAsBytesSync(),
         contentType: lookupMimeType('$name'),
         type: BlobType.BlockBlob);
 
     String selectedPath = '/mobialc/$name';
 
-    var val = storage.uri();
+    var val = storage1.uri();
     String finalUrl = "$val" + "mobialc/$name";
     print(finalUrl);
 
@@ -104,13 +135,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
           'picture': finalUrl,
         }));
     print(response.statusCode);
-
+    var b_url1 = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+    var response1 = await http.post(b_url1,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({'email': user.email}));
+    print(response1.statusCode);
+    storage.clear();
+    var data = jsonDecode(response1.body);
+    addItemsToLocalStorage(data);
     setState(() {
       print(response.body);
+      isLoading = false;
     });
   }
 
   editName() async {
+    setState(() {
+      isLoading = true;
+    });
     print(nameController!.text);
     var url = Uri.parse("https://mobial.herokuapp.com/api/update_profile");
     var response = await http.post(url,
@@ -126,16 +172,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (response.statusCode == 200) {
       print(response.body);
-      setState(() {
-        storage.getItem("user")['name'] = nameController!.text;
-      });
+      var b_url1 = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+      var response1 = await http.post(b_url1,
+          headers: <String, String>{
+            'content-type': 'application/json',
+            "Accept": "application/json",
+            "charset": "utf-8"
+          },
+          body: json.encode({'email': user.email}));
+      print(response1.statusCode);
+      print(response1.body);
+      storage.clear();
+      var data = jsonDecode(response1.body);
+      addItemsToLocalStorage(data);
+      // setState(() {
+      //   storage.getItem("user")['name'] = nameController!.text;
+      // });
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   editDob() async {
+    setState(() {
+      isLoading = true;
+    });
     print(dobController!.text);
     var url = Uri.parse("https://mobial.herokuapp.com/api/update_profile");
     var response = await http.post(url,
@@ -151,16 +216,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (response.statusCode == 200) {
       print(response.body);
-      setState(() {
-        storage.getItem("user")['dob'] = dobController!.text;
-      });
+      var b_url1 = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+      var response1 = await http.post(b_url1,
+          headers: <String, String>{
+            'content-type': 'application/json',
+            "Accept": "application/json",
+            "charset": "utf-8"
+          },
+          body: json.encode({'email': user.email}));
+      print(response1.statusCode);
+      print(response1.body);
+      storage.clear();
+      var data = jsonDecode(response1.body);
+      addItemsToLocalStorage(data);
+      // setState(() {
+      //   storage.getItem("user")['dob'] = dobController!.text;
+      // });
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   editUsername() async {
+    setState(() {
+      isLoading = true;
+    });
     print(usernameController!.text);
     var url = Uri.parse("https://mobial.herokuapp.com/api/update_profile");
     var response = await http.post(url,
@@ -171,21 +255,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
         },
         body: json.encode({
           'email': user.email,
-          'name': usernameController!.text,
+          'username': usernameController!.text,
         }));
 
     if (response.statusCode == 200) {
       print(response.body);
-      setState(() {
-        storage.getItem("user")['username'] = usernameController!.text;
-      });
+      var b_url1 = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+      var response1 = await http.post(b_url1,
+          headers: <String, String>{
+            'content-type': 'application/json',
+            "Accept": "application/json",
+            "charset": "utf-8"
+          },
+          body: json.encode({'email': user.email}));
+      print(response1.statusCode);
+      print(response1.body);
+      storage.clear();
+      var data = jsonDecode(response1.body);
+      addItemsToLocalStorage(data);
+      // setState(() {
+      //   storage.getItem("user")['username'] = usernameController!.text;
+      // });
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   editPhone() async {
+    setState(() {
+      isLoading = true;
+    });
     print(phoneController!.text);
     var url = Uri.parse("https://mobial.herokuapp.com/api/update_profile");
     var response = await http.post(url,
@@ -196,18 +299,34 @@ class _EditProfilePageState extends State<EditProfilePage> {
         },
         body: json.encode({
           'email': user.email,
-          'name': phoneController!.text,
+          'phone': phoneController!.text,
         }));
 
     if (response.statusCode == 200) {
       print(response.body);
-      setState(() {
-        storage.getItem("user")['phone'] = phoneController!.text;
-      });
+      var b_url1 = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+      var response1 = await http.post(b_url1,
+          headers: <String, String>{
+            'content-type': 'application/json',
+            "Accept": "application/json",
+            "charset": "utf-8"
+          },
+          body: json.encode({'email': user.email}));
+      print(response1.statusCode);
+      print(response1.body);
+      storage.clear();
+      var data = jsonDecode(response1.body);
+      addItemsToLocalStorage(data);
+      // setState(() {
+      //   storage.getItem("user")['phone'] = phoneController!.text;
+      // });
     } else {
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void _showPicker(context) {
@@ -242,124 +361,126 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Widget build(BuildContext context) => Center(
         child: Builder(
           builder: (context) => Scaffold(
-            appBar: buildAppBar(context),
-            body: ListView(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              physics: BouncingScrollPhysics(),
-              children: [
-                ProfileWidget(
-                  imagePath: user.imagePath,
-                  isEdit: false,
-                  onClicked: () => {_showPicker(context)},
-                ),
-                const SizedBox(height: 24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Full name',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+              appBar: header(context),
+              body: !isLoading
+                  ? (ListView(
+                      padding: EdgeInsets.symmetric(horizontal: 32),
+                      physics: BouncingScrollPhysics(),
+                      children: [
+                        const SizedBox(height: 16),
+                        ProfileWidget(
+                          imagePath: user.imagePath,
+                          isEdit: false,
+                          onClicked: () => {_showPicker(context)},
                         ),
-                      ),
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {
-                    editName();
-                  },
-                  icon: const Icon(Icons.check),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Phone',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: phoneController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        const SizedBox(height: 24),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Full name',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: nameController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              maxLines: 1,
+                            ),
+                          ],
                         ),
-                      ),
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {
-                    editPhone();
-                  },
-                  icon: const Icon(Icons.check),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Username',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: usernameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        IconButton(
+                          onPressed: () {
+                            editName();
+                          },
+                          icon: const Icon(Icons.check),
                         ),
-                      ),
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {
-                    editUsername();
-                  },
-                  icon: const Icon(Icons.check),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'DOB(dd-mm-yyyy)',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: dobController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Phone',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: phoneController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              maxLines: 1,
+                            ),
+                          ],
                         ),
-                      ),
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-                IconButton(
-                  onPressed: () {
-                    editDob();
-                  },
-                  icon: const Icon(Icons.check),
-                ),
-              ],
-            ),
-          ),
+                        IconButton(
+                          onPressed: () {
+                            editPhone();
+                          },
+                          icon: const Icon(Icons.check),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Username',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: usernameController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            editUsername();
+                          },
+                          icon: const Icon(Icons.check),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'DOB(dd-mm-yyyy)',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: dobController,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            editDob();
+                          },
+                          icon: const Icon(Icons.check),
+                        ),
+                      ],
+                    ))
+                  : circularProgress()),
         ),
       );
 }

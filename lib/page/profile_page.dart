@@ -1,12 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobial/model/user.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
 import 'package:mobial/page/edit_profile_page.dart';
 import 'package:mobial/utils/user_preferences.dart';
 import 'package:mobial/widgets/appbar_widget.dart';
 import 'package:mobial/widgets/button_widget.dart';
 import 'package:mobial/widgets/numbers_widget.dart';
 import 'package:mobial/widgets/profile_widget.dart';
+import 'package:mobial/widgets/header.dart';
+import 'package:mobial/widgets/progress.dart';
+
+final LocalStorage storage = new LocalStorage('mobial');
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -14,6 +21,41 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool isLoading = false;
+  void addItemsToLocalStorage(var data) async {
+    await storage.setItem('user', data);
+    print("hello");
+    print(storage.getItem('user'));
+  }
+
+  getUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    var b_url1 = Uri.parse("https://mobial.herokuapp.com/api/userdata");
+    var response1 = await http.post(b_url1,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({'email': UserPreferences.myUser.email}));
+    print(response1.statusCode);
+    print(response1.body);
+    storage.clear();
+    var data = jsonDecode(response1.body);
+    addItemsToLocalStorage(data);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     var user = UserPreferences.myUser;
@@ -21,26 +63,28 @@ class _ProfilePageState extends State<ProfilePage> {
     return Center(
       child: Builder(
         builder: (context) => Scaffold(
-          backgroundColor: Color(0xffd5e4e1),
-          appBar: buildAppBar(context),
-          body: ListView(
-            physics: BouncingScrollPhysics(),
-            children: [
-              ProfileWidget(
-                imagePath: user.imagePath,
-                onClicked: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => EditProfilePage()),
-                  );
-                },
-              ),
-              const SizedBox(height: 24),
-              buildName(user),
-              const SizedBox(height: 48),
-              buildAbout(user),
-            ],
-          ),
-        ),
+            backgroundColor: Color(0xffd5e4e1),
+            appBar: header(context),
+            body: !isLoading
+                ? (ListView(
+                    physics: BouncingScrollPhysics(),
+                    children: [
+                      ProfileWidget(
+                        imagePath: storage.getItem('user')["picture"],
+                        onClicked: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => EditProfilePage()),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      buildName(user),
+                      const SizedBox(height: 48),
+                      buildAbout(user),
+                    ],
+                  ))
+                : circularProgress()),
       ),
     );
   }
@@ -48,12 +92,12 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget buildName(User user) => Column(
         children: [
           Text(
-            user.name,
+            storage.getItem('user')["name"],
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
           const SizedBox(height: 4),
           Text(
-            user.email,
+            storage.getItem('user')["email"],
             style: TextStyle(color: Colors.grey),
           )
         ],
@@ -74,7 +118,7 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 16),
               Center(
                 child: Text(
-                  user.phone,
+                  storage.getItem('user')["phone"],
                   style: TextStyle(fontSize: 16, height: 1.4),
                 ),
               ),
@@ -88,7 +132,21 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 16),
               Center(
                 child: Text(
-                  user.username,
+                  storage.getItem('user')["username"],
+                  style: TextStyle(fontSize: 16, height: 1.4),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Center(
+                child: Text(
+                  'DOB',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: Text(
+                  storage.getItem('user')["dob"],
                   style: TextStyle(fontSize: 16, height: 1.4),
                 ),
               ),

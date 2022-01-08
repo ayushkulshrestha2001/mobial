@@ -37,6 +37,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   TextEditingController signupConfirmPasswordController =
       new TextEditingController();
   TextEditingController phoneController = new TextEditingController();
+  TextEditingController dobController = new TextEditingController();
 
   PageController _pageController = PageController();
 
@@ -104,6 +105,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
             'name': signupNameController.text.toString(),
             //'username': signupEmailController.text.toString(),
             'phone': phoneController.text.toString(),
+            'dob': dobController.text.toString(),
           }));
 
       if (response.statusCode == 200) {
@@ -490,235 +492,285 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
   Widget _buildSignUp(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 23.0),
-      child: Column(
-        children: <Widget>[
-          Stack(
-            alignment: Alignment.topCenter,
-            overflow: Overflow.visible,
-            children: <Widget>[
-              Card(
-                elevation: 2.0,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Card(
+                  elevation: 2.0,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Container(
+                    width: 300.0,
+                    height: 450.0,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0,
+                                bottom: 10.0,
+                                left: 25.0,
+                                right: 25.0),
+                            child: TextField(
+                              focusNode: myFocusNodeName,
+                              controller: signupNameController,
+                              keyboardType: TextInputType.text,
+                              textCapitalization: TextCapitalization.words,
+                              style: TextStyle(
+                                  fontFamily: "WorkSansSemiBold",
+                                  fontSize: 16.0,
+                                  color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.user,
+                                  color: Colors.black,
+                                ),
+                                hintText: "Name",
+                                hintStyle: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 250.0,
+                            height: 1.0,
+                            color: Colors.grey[400],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0,
+                                bottom: 10.0,
+                                left: 25.0,
+                                right: 25.0),
+                            child: TextField(
+                              focusNode: myFocusNodeEmail,
+                              controller: signupEmailController,
+                              keyboardType: TextInputType.emailAddress,
+                              style: TextStyle(
+                                  fontFamily: "WorkSansSemiBold",
+                                  fontSize: 16.0,
+                                  color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.envelope,
+                                  color: Colors.black,
+                                ),
+                                hintText: "Email Address",
+                                hintStyle: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 250.0,
+                            height: 1.0,
+                            color: Colors.grey[400],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0,
+                                bottom: 10.0,
+                                left: 25.0,
+                                right: 25.0),
+                            child: TextField(
+                              focusNode: myFocusNodePassword,
+                              controller: signupPasswordController,
+                              obscureText: _obscureTextSignup,
+                              style: TextStyle(
+                                  fontFamily: "WorkSansSemiBold",
+                                  fontSize: 16.0,
+                                  color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.lock,
+                                  color: Colors.black,
+                                ),
+                                hintText: "Password",
+                                hintStyle: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                                suffixIcon: GestureDetector(
+                                  onTap: _toggleSignup,
+                                  child: Icon(
+                                    _obscureTextSignup
+                                        ? FontAwesomeIcons.eye
+                                        : FontAwesomeIcons.eyeSlash,
+                                    size: 15.0,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 250.0,
+                            height: 1.0,
+                            color: Colors.grey[400],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0,
+                                bottom: 10.0,
+                                left: 25.0,
+                                right: 25.0),
+                            child: TextField(
+                              controller: signupConfirmPasswordController,
+                              obscureText: _obscureTextSignupConfirm,
+                              style: TextStyle(
+                                  fontFamily: "WorkSansSemiBold",
+                                  fontSize: 16.0,
+                                  color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.lock,
+                                  color: Colors.black,
+                                ),
+                                hintText: "Confirm Password",
+                                hintStyle: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                                suffixIcon: GestureDetector(
+                                  onTap: _toggleSignupConfirm,
+                                  child: Icon(
+                                    _obscureTextSignupConfirm
+                                        ? FontAwesomeIcons.eye
+                                        : FontAwesomeIcons.eyeSlash,
+                                    size: 15.0,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 250.0,
+                            height: 1.0,
+                            color: Colors.grey[400],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0,
+                                bottom: 10.0,
+                                left: 25.0,
+                                right: 25.0),
+                            child: TextField(
+                              controller: phoneController,
+                              //obscureText: _obscureTextSignupConfirm,
+                              style: TextStyle(
+                                  fontFamily: "WorkSansSemiBold",
+                                  fontSize: 16.0,
+                                  color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.phone,
+                                  color: Colors.black,
+                                ),
+                                hintText: "Phone Number",
+                                hintStyle: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 250.0,
+                            height: 1.0,
+                            color: Colors.grey[400],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 10.0,
+                                bottom: 10.0,
+                                left: 25.0,
+                                right: 25.0),
+                            child: TextField(
+                              controller: dobController,
+                              //obscureText: _obscureTextSignupConfirm,
+                              style: TextStyle(
+                                  fontFamily: "WorkSansSemiBold",
+                                  fontSize: 16.0,
+                                  color: Colors.black),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  FontAwesomeIcons.calendar,
+                                  color: Colors.black,
+                                ),
+                                hintText: "DOB(dd-mm-yyyy)",
+                                hintStyle: TextStyle(
+                                    fontFamily: "WorkSansSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-                child: Container(
-                  width: 300.0,
-                  height: 360.0,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
-                        child: TextField(
-                          focusNode: myFocusNodeName,
-                          controller: signupNameController,
-                          keyboardType: TextInputType.text,
-                          textCapitalization: TextCapitalization.words,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(
-                              FontAwesomeIcons.user,
-                              color: Colors.black,
-                            ),
-                            hintText: "Name",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold",
-                                fontSize: 16.0,
-                                color: Colors.black),
-                          ),
-                        ),
+                Container(
+                  margin: EdgeInsets.only(top: 420.0),
+                  decoration: new BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Color(0xFFfbab66),
+                        offset: Offset(1.0, 6.0),
+                        blurRadius: 20.0,
                       ),
-                      Container(
-                        width: 250.0,
-                        height: 1.0,
-                        color: Colors.grey[400],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
-                        child: TextField(
-                          focusNode: myFocusNodeEmail,
-                          controller: signupEmailController,
-                          keyboardType: TextInputType.emailAddress,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(
-                              FontAwesomeIcons.envelope,
-                              color: Colors.black,
-                            ),
-                            hintText: "Email Address",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold",
-                                fontSize: 16.0,
-                                color: Colors.black),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 250.0,
-                        height: 1.0,
-                        color: Colors.grey[400],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
-                        child: TextField(
-                          focusNode: myFocusNodePassword,
-                          controller: signupPasswordController,
-                          obscureText: _obscureTextSignup,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(
-                              FontAwesomeIcons.lock,
-                              color: Colors.black,
-                            ),
-                            hintText: "Password",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold",
-                                fontSize: 16.0,
-                                color: Colors.black),
-                            suffixIcon: GestureDetector(
-                              onTap: _toggleSignup,
-                              child: Icon(
-                                _obscureTextSignup
-                                    ? FontAwesomeIcons.eye
-                                    : FontAwesomeIcons.eyeSlash,
-                                size: 15.0,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 250.0,
-                        height: 1.0,
-                        color: Colors.grey[400],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
-                        child: TextField(
-                          controller: signupConfirmPasswordController,
-                          obscureText: _obscureTextSignupConfirm,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(
-                              FontAwesomeIcons.lock,
-                              color: Colors.black,
-                            ),
-                            hintText: "Confirm Password",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold",
-                                fontSize: 16.0,
-                                color: Colors.black),
-                            suffixIcon: GestureDetector(
-                              onTap: _toggleSignupConfirm,
-                              child: Icon(
-                                _obscureTextSignupConfirm
-                                    ? FontAwesomeIcons.eye
-                                    : FontAwesomeIcons.eyeSlash,
-                                size: 15.0,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: 250.0,
-                        height: 1.0,
-                        color: Colors.grey[400],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: 10.0, bottom: 10.0, left: 25.0, right: 25.0),
-                        child: TextField(
-                          controller: phoneController,
-                          //obscureText: _obscureTextSignupConfirm,
-                          style: TextStyle(
-                              fontFamily: "WorkSansSemiBold",
-                              fontSize: 16.0,
-                              color: Colors.black),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            icon: Icon(
-                              FontAwesomeIcons.phone,
-                              color: Colors.black,
-                            ),
-                            hintText: "Phone Number",
-                            hintStyle: TextStyle(
-                                fontFamily: "WorkSansSemiBold",
-                                fontSize: 16.0,
-                                color: Colors.black),
-                          ),
-                        ),
+                      BoxShadow(
+                        color: Color(0xFFf7418c),
+                        offset: Offset(1.0, 6.0),
+                        blurRadius: 20.0,
                       ),
                     ],
+                    gradient: new LinearGradient(
+                        colors: [Color(0xFFfc8c1b), Color(0xffFD5F08)],
+                        begin: const FractionalOffset(0.2, 0.2),
+                        end: const FractionalOffset(1.0, 1.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp),
+                  ),
+                  child: MaterialButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: Color(0xFFf7418c),
+                    //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 42.0),
+                      child: Text(
+                        "SIGN UP",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                            fontFamily: "WorkSansBold"),
+                      ),
+                    ),
+                    onPressed: handleSignUp,
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 340.0),
-                decoration: new BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Color(0xFFfbab66),
-                      offset: Offset(1.0, 6.0),
-                      blurRadius: 20.0,
-                    ),
-                    BoxShadow(
-                      color: Color(0xFFf7418c),
-                      offset: Offset(1.0, 6.0),
-                      blurRadius: 20.0,
-                    ),
-                  ],
-                  gradient: new LinearGradient(
-                      colors: [Color(0xFFfc8c1b), Color(0xffFD5F08)],
-                      begin: const FractionalOffset(0.2, 0.2),
-                      end: const FractionalOffset(1.0, 1.0),
-                      stops: [0.0, 1.0],
-                      tileMode: TileMode.clamp),
-                ),
-                child: MaterialButton(
-                  highlightColor: Colors.transparent,
-                  splashColor: Color(0xFFf7418c),
-                  //shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5.0))),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 42.0),
-                    child: Text(
-                      "SIGN UP",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25.0,
-                          fontFamily: "WorkSansBold"),
-                    ),
-                  ),
-                  onPressed: handleSignUp,
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

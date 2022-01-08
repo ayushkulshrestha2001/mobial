@@ -1,13 +1,18 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mobial/widgets/header.dart';
 
 class PrivacyPolicy extends StatelessWidget {
   const PrivacyPolicy({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Markdown(
-      data: _privacyPolicyText,
+    return Scaffold(
+      appBar: header(context),
+      body: Markdown(
+        data: _privacyPolicyText,
+      ),
     );
   }
 }
