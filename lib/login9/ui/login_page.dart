@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:mobial/widgets/progress.dart';
@@ -56,7 +58,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     });
     print(loginEmailController.text.toString());
     print(loginPasswordController.text.toString());
-    var url = Uri.parse("https://mobial.herokuapp.com/api/signin");
+    var url = Uri.parse("https://mobial.azurewebsites.net/api/signin");
     var response = await http.post(url,
         headers: <String, String>{
           'content-type': 'application/json',
@@ -97,7 +99,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     });
     if (signupPasswordController.text.toString() ==
         signupConfirmPasswordController.text.toString()) {
-      var url = Uri.parse("https://mobial.herokuapp.com/api/signup");
+      var url = Uri.parse("https://mobial.azurewebsites.net/api/signup");
       var response = await http.post(url,
           headers: <String, String>{
             'content-type': 'application/json',
@@ -291,7 +293,6 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                 ),
               ),
             ),
-            //Container(height: 33.0, width: 1.0, color: Colors.white),
             Expanded(
               child: FlatButton(
                 splashColor: Colors.transparent,
@@ -443,14 +444,6 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                   ),
                   onPressed: () {
                     handleSignIn();
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) {
-                    //       return Home();
-                    //     },
-                    //   ),
-                    // );
                   },
                 ),
               ),

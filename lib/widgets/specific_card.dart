@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class SpecificsCard extends StatelessWidget {
-  final MainHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 30);
+  final mainHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 30);
 
-  final SubHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
+  final subHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
 
-  final BasicHeading = TextStyle(fontSize: 15);
+  final basicHeading = TextStyle(fontSize: 15);
   final double? price;
   final String? name;
   final String? name2;
@@ -26,14 +26,14 @@ class SpecificsCard extends StatelessWidget {
               children: [
                 Text(
                   "$name",
-                  style: BasicHeading,
+                  style: basicHeading,
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 Text(
                   "$name2",
-                  style: SubHeading,
+                  style: subHeading,
                 ),
               ],
             )
@@ -41,14 +41,14 @@ class SpecificsCard extends StatelessWidget {
               children: [
                 Text(
                   "$name",
-                  style: BasicHeading,
+                  style: basicHeading,
                 ),
                 SizedBox(
                   height: 5,
                 ),
                 Text(
                   price.toString(),
-                  style: SubHeading,
+                  style: subHeading,
                 ),
                 SizedBox(
                   height: 5,

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
-import 'package:mobial/check_list.dart';
-import 'package:mobial/page/profile_page.dart';
+import 'package:mobial/widgets/check_list.dart';
+import 'package:mobial/pages/page/profile_page.dart';
 import 'package:mobial/login9/ui/login_page.dart';
-import 'package:mobial/privacy_policy.dart';
-import 'package:mobial/renter_form.dart';
-import 'package:mobial/settings.dart';
+import 'package:mobial/widgets/privacy_policy.dart';
+import 'package:mobial/pages/car.dart/renter_form.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
 
