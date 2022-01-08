@@ -80,6 +80,11 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
                   Home(email: loginEmailController.text.toString())));
     } else {
       print("Error while logging in");
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('User details not found')));
+      setState(() {
+        isLoading = false;
+      });
     }
     setState(() {
       isLoading = false;
@@ -120,6 +125,11 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
       } else {
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid Registration')));
+        setState(() {
+          isLoading = false;
+        });
       }
     }
     setState(() {
