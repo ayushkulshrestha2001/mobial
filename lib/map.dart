@@ -1,9 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:http/http.dart' as http;
 
 class MapDisplay extends StatefulWidget {
@@ -16,119 +15,147 @@ class MapDisplay extends StatefulWidget {
 }
 
 class _MapDisplayState extends State<MapDisplay> {
+  PopupController _popupLayerController = PopupController();
   List<Marker> markers;
   _MapDisplayState({required this.markers});
   @override
   void initState() {
     super.initState();
-    //getQrLocation();
+    print(markers.length);
   }
 
-  // getQrLocation() async {
-  //   var url = Uri.parse("https://mobial.herokuapp.com/api/get_qrcodes");
-  //   http.Response response = await http.get(url);
-  //   print(response.body);
-  //   var data = jsonDecode(response.body);
-  //   setState(() {
-  //     qrMarkers = data;
-  //     getMarkers();
-  //   });
-  // }
-
-  // getMarkers() {
-  //   qrMarkers.forEach((e) {
-  //     String longitudeS = e['location'].split(",").first;
-  //     String latitudeS = (e['location'].split(",").last);
-  //     double _longitude = double.parse(longitudeS);
-  //     double _latitude = double.parse(latitudeS);
-  //     markers.add(Marker(
-  //       width: 80.0,
-  //       height: 80.0,
-  //       point: LatLng(_longitude, _latitude),
-  //       builder: (ctx) => Container(
-  //         child: Icon(Icons.location_on, color: Colors.black),
-  //       ),
-  //     ));
-  //   });
-  // }
-
-  // List<Marker> markers = [
-  //   Marker(
-  //     width: 80.0,
-  //     height: 80.0,
-  //     point: LatLng(13.199379, 77.710136),
-  //     builder: (ctx) => Container(
-  //       child: Icon(Icons.location_on, color: Colors.black),
-  //     ),
-  //   ),
-  //   Marker(
-  //     anchorPos: AnchorPos.align(AnchorAlign.center),
-  //     width: 80.0,
-  //     height: 80.0,
-  //     point: LatLng(13.198465052455404, 77.70745378642731),
-  //     builder: (ctx) => Container(
-  //       child: Icon(Icons.location_on, color: Colors.black),
-  //     ),
-  //   ),
-  //   Marker(
-  //     anchorPos: AnchorPos.align(AnchorAlign.center),
-  //     width: 80.0,
-  //     height: 80.0,
-  //     point: LatLng(13.200235379999054, 77.70852205083513),
-  //     builder: (ctx) => Container(
-  //       child: Icon(Icons.location_on, color: Colors.black),
-  //     ),
-  //   ),
-  //   Marker(
-  //     anchorPos: AnchorPos.align(AnchorAlign.center),
-  //     width: 80.0,
-  //     height: 80.0,
-  //     point: LatLng(13.200074666613734, 77.70951250043967),
-  //     builder: (ctx) => Container(
-  //       child: Icon(
-  //         Icons.location_on,
-  //         color: Colors.black,
-  //       ),
-  //     ),
-  //   ),
-  // ];
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
-        plugins: [MarkerClusterPlugin()],
-        center: LatLng(13.199379, 77.710136),
-        zoom: 14,
-        // rotation: 90.0,
-      ),
+          // plugins: [
+          //   MarkerClusterPlugin(),
+          // ],
+          center: LatLng(13.199379, 77.710136),
+          zoom: 14,
+          interactiveFlags: InteractiveFlag.all,
+          onTap: (_, Latlng) => _popupLayerController.hideAllPopups()
+          // rotation: 90.0,
+          ),
       children: <Widget>[
         TileLayerWidget(
           options: TileLayerOptions(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c'],
-          ),
-        ),
-        MarkerClusterLayerWidget(
-          options: MarkerClusterLayerOptions(
-            maxClusterRadius: 120,
-            size: Size(40, 40),
-            fitBoundsOptions: FitBoundsOptions(
-              padding: EdgeInsets.all(50),
-            ),
-            markers: markers,
-            polygonOptions: PolygonOptions(
-                borderColor: Colors.blueAccent,
-                color: Colors.black12,
-                borderStrokeWidth: 3),
-            builder: (context, markers) {
-              return FloatingActionButton(
-                child: Text(markers.length.toString()),
-                onPressed: null,
-              );
+            urlTemplate:
+                'https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&tileSize=256&view=Auto&zoom={z}&x={x}&y={y}&subscription-key=gCUOaS3l6uKVcg20GfuNBtkRBlZuNZwlZSbgwEjfqlA',
+            additionalOptions: {
+              'subscriptionKey': 'gCUOaS3l6uKVcg20GfuNBtkRBlZuNZwlZSbgwEjfqlA',
             },
           ),
-        )
+        ),
+        // MarkerClusterLayerWidget(
+        //   options: MarkerClusterLayerOptions(
+        //     maxClusterRadius: 120,
+        //     size: Size(40, 40),
+        //     fitBoundsOptions: FitBoundsOptions(
+        //       padding: EdgeInsets.all(50),
+        //     ),
+        //     markers: markers,
+        //     polygonOptions: PolygonOptions(
+        //         borderColor: Colors.blueAccent,
+        //         color: Colors.black12,
+        //         borderStrokeWidth: 3),
+        //     builder: (context, markers) {
+        //       return FloatingActionButton(
+        //         child: Text(markers.length.toString()),
+        //         onPressed: null,
+        //       );
+        //     },
+        //   ),
+        // ),
+        PopupMarkerLayerWidget(
+            options: PopupMarkerLayerOptions(
+          markers: markers,
+          popupController: _popupLayerController,
+          popupBuilder: (_, Marker marker) {
+            if (marker is MonumentMarker) {
+              return MonumentMarkerPopup(monument: marker.monument);
+            }
+            return Container(
+                child: Card(
+                    child: Text(
+              'Not a monument',
+            )));
+          },
+        )),
       ],
     );
   }
 }
+
+class Monument {
+  static const double size = 25;
+
+  Monument({
+    required this.name,
+    required this.imagePath,
+    required this.lat,
+    required this.long,
+  });
+
+  final String name;
+  final String imagePath;
+  final double lat;
+  final double long;
+}
+
+class MonumentMarker extends Marker {
+  MonumentMarker({required this.monument})
+      : super(
+          anchorPos: AnchorPos.align(AnchorAlign.top),
+          height: Monument.size,
+          width: Monument.size,
+          point: LatLng(monument.lat, monument.long),
+          builder: (BuildContext ctx) => Icon(Icons.location_on),
+        );
+
+  final Monument monument;
+}
+
+class MonumentMarkerPopup extends StatelessWidget {
+  const MonumentMarkerPopup({Key? key, required this.monument})
+      : super(key: key);
+  final Monument monument;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Image.network(monument.imagePath, width: 200),
+            Text(monument.name),
+            Text('${monument.lat},${monument.long}'),
+          ],
+        ),
+      ),
+    );
+  }
+}
+// <Marker>[
+//             MonumentMarker(
+//               monument: Monument(
+//                 name: 'Eiffel Tower',
+//                 imagePath:
+//                     'https://cdn.lifestyleasia.com/wp-content/uploads/2019/10/21224220/Winer-Parisienne.jpg',
+//                 lat: 48.857661,
+//                 long: 2.295135,
+//               ),
+//             ),
+//             Marker(
+//               anchorPos: AnchorPos.align(AnchorAlign.top),
+//               point: LatLng(48.859661, 2.305135),
+//               height: Monument.size,
+//               width: Monument.size,
+//               builder: (BuildContext ctx) => Icon(Icons.shop),
+//             ),
+//           ],

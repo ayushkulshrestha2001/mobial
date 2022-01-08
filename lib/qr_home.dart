@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 final LocalStorage storage = LocalStorage('mobial');
 
@@ -23,7 +24,8 @@ class QrHome extends StatefulWidget {
   _QrHomeState createState() => _QrHomeState(logInUser: logInUser);
 }
 
-class _QrHomeState extends State<QrHome> {
+class _QrHomeState extends State<QrHome>
+    with AutomaticKeepAliveClientMixin<QrHome> {
   bool isLoading = false;
   final String logInUser;
   _QrHomeState({required this.logInUser});
@@ -35,6 +37,8 @@ class _QrHomeState extends State<QrHome> {
   num points = 0;
   List<dynamic> codes = [];
   List<Marker> markers = [];
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   @override
   void initState() {
     //bialLocation = LatLng(latitude, longitude);
@@ -43,7 +47,8 @@ class _QrHomeState extends State<QrHome> {
     getUserDetails();
   }
 
-  getUserDetails() async {
+  Future<void> getUserDetails() async {
+    print('After refresh');
     setState(() {
       isLoading = true;
     });
@@ -56,13 +61,13 @@ class _QrHomeState extends State<QrHome> {
         String longitude = markerData[i]['location'].split(', ').last;
         double lat = double.parse(latitude);
         double long = double.parse(longitude);
-        markers.add(Marker(
-          height: 80.0,
-          width: 80.0,
-          point: LatLng(lat, long),
-          builder: (ctx) => Container(
-            child: Icon(Icons.location_on, color: Colors.black),
-          ),
+        markers.add(MonumentMarker(
+          monument: Monument(
+              name: markerData[i]['name'],
+              imagePath:
+                  'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
+              lat: lat,
+              long: long),
         ));
       }
     });
@@ -90,16 +95,29 @@ class _QrHomeState extends State<QrHome> {
       String longitude = e['location'].split(', ').last;
       double lat = double.parse(latitude);
       double long = double.parse(longitude);
+      // setState(() {
+      //   markers.add(Marker(
+      //       height: 80.0,
+      //       width: 80.0,
+      //       point: LatLng(lat, long),
+      //       builder: (ctx) => Container(
+      //               child: Icon(
+      //             Icons.star,
+      //             size: 30.0,
+      //             color: Color(
+      //               0xffdaa520,
+      //             ),
+      //           ))));
+      // });
       setState(() {
-        markers.add(Marker(
-            height: 80.0,
-            width: 80.0,
-            point: LatLng(lat, long),
-            builder: (ctx) => Container(
-                    child: Icon(
-                  Icons.star,
-                  color: Color(0xffdaa520),
-                ))));
+        markers.add(MonumentMarker(
+          monument: Monument(
+              name: e['name'],
+              imagePath:
+                  'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
+              lat: lat,
+              long: long),
+        ));
       });
     });
     print(rewards);
@@ -107,195 +125,232 @@ class _QrHomeState extends State<QrHome> {
       points = rewards;
       name = decodedData['name'];
       isLoading = false;
+      _refreshController.refreshCompleted();
     });
   }
 
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xffd5e4e1),
         appBar: header(context),
         drawer: drawer(context),
-        body: !isLoading
-            ? (Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                    margin: EdgeInsets.all(8.0),
-                    color: Color(0xff4255db),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
+        body: SmartRefresher(
+            controller: _refreshController,
+            enablePullDown: true,
+            onRefresh: () => getUserDetails(),
+            child: !isLoading
+                ? (Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
+                        margin: EdgeInsets.all(8.0),
+                        color: Color(0xff4255db),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              CircleAvatar(
-                                foregroundColor: Theme.of(context).primaryColor,
-                                backgroundColor: Colors.grey,
-                                backgroundImage: NetworkImage(
-                                    storage.getItem('user')['picture']),
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    foregroundColor:
+                                        Theme.of(context).primaryColor,
+                                    backgroundColor: Colors.grey,
+                                    backgroundImage: NetworkImage(
+                                        storage.getItem('user')['picture']),
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      "$name",
+                                      style: GoogleFonts.signika(
+                                          fontSize: 50.0,
+                                          color: Color(0xffe5f7ff)),
+                                    ),
+                                  ),
+                                ],
                               ),
                               SizedBox(
-                                width: 10.0,
+                                height: 10.0,
                               ),
-                              Expanded(
-                                child: Text(
-                                  "$name",
-                                  style: GoogleFonts.signika(
-                                      fontSize: 50.0, color: Color(0xffe5f7ff)),
-                                ),
-                              ),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.api_rounded,
+                                    size: 40.0,
+                                    color: Color(0xfff9c508),
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    "$points",
+                                    style: GoogleFonts.signika(
+                                        fontSize: 40.0,
+                                        color: Color(0xffe5f7ff)),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Row(
+                        ),
+                      ),
+                      SizedBox(
+                        height: 35.0,
+                      ),
+                      Card(
+                        child: TextButton(
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Card5(
+                                          codes: this.codes,
+                                        )))
+                          },
+                          child: Column(
                             children: [
-                              Icon(
-                                Icons.api_rounded,
-                                size: 40.0,
-                                color: Color(0xfff9c508),
-                              ),
-                              SizedBox(
-                                width: 10.0,
-                              ),
                               Text(
-                                "$points",
+                                "History",
                                 style: GoogleFonts.signika(
-                                    fontSize: 40.0, color: Color(0xffe5f7ff)),
+                                    fontSize: 20.0,
+                                    color: Color(0xff30302e),
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 35.0,
-                  ),
-                  Card(
-                    child: TextButton(
-                      onPressed: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Card5(
-                                      codes: this.codes,
-                                    )))
-                      },
-                      child: Column(
-                        children: [
-                          Text(
-                            "History",
-                            style: GoogleFonts.signika(
-                                fontSize: 20.0,
-                                color: Color(0xff30302e),
-                                fontWeight: FontWeight.bold),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  Card(
-                    child: TextButton(
-                      onPressed: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RedeemCoupons()))
-                      },
-                      child: Column(
-                        children: [
-                          Text(
-                            "Redeem Coupons",
-                            style: GoogleFonts.signika(
-                                fontSize: 20.0,
-                                color: Color(0xff30302e),
-                                fontWeight: FontWeight.bold),
+                      Card(
+                        child: TextButton(
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RedeemCoupons()))
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                "Redeem Coupons",
+                                style: GoogleFonts.signika(
+                                    fontSize: 20.0,
+                                    color: Color(0xff30302e),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  Card(
-                    child: TextButton(
-                      onPressed: () => {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => QrScan()))
-                      },
-                      child: Column(
-                        children: [
-                          Text(
-                            "Scan Qr Code",
-                            style: GoogleFonts.signika(
-                                fontSize: 20.0,
-                                color: Color(0xff30302e),
-                                fontWeight: FontWeight.bold),
+                      Card(
+                        child: TextButton(
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => QrScan()))
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                "Scan Qr Code",
+                                style: GoogleFonts.signika(
+                                    fontSize: 20.0,
+                                    color: Color(0xff30302e),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  Card(
-                    child: TextButton(
-                      onPressed: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => MapDisplay(
-                                      markers: markers,
-                                    )))
-                      },
-                      child: Column(
-                        children: [
-                          Text(
-                            "map",
-                            style: GoogleFonts.signika(
-                                fontSize: 20.0,
-                                color: Color(0xff30302e),
-                                fontWeight: FontWeight.bold),
+                      Card(
+                        child: TextButton(
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MapDisplay(
+                                          markers: markers,
+                                        )))
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                "map",
+                                style: GoogleFonts.signika(
+                                    fontSize: 20.0,
+                                    color: Color(0xff30302e),
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                  //   Card(
-                  //     child: FlutterMap(
-                  //       options: new MapOptions(
-                  //         center: LatLng(latitude, longitude),
-                  //         zoom: 13.0,
-                  //       ),
-                  //       layers: [
-                  //         new TileLayerOptions(
-                  //           urlTemplate:
-                  //               "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  //           subdomains: ['a', 'b', 'c'],
-                  //           attributionBuilder: (_) {
-                  //             return Text("© MoBIAL");
-                  //           },
-                  //         ),
-                  //         MarkerLayerOptions(
-                  //           markers: [
-                  //             new Marker(
-                  //               width: 80.0,
-                  //               height: 80.0,
-                  //               point: LatLng(latitude, longitude),
-                  //               builder: (ctx) => Container(
-                  //                 child: FlutterLogo(),
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                ],
-              ))
-            : circularProgress());
+                    ],
+                  ))
+                : circularProgress()));
+  }
+}
+
+class Monument {
+  static const double size = 25;
+
+  Monument({
+    required this.name,
+    required this.imagePath,
+    required this.lat,
+    required this.long,
+  });
+
+  final String name;
+  final String imagePath;
+  final double lat;
+  final double long;
+}
+
+class MonumentMarker extends Marker {
+  MonumentMarker({required this.monument})
+      : super(
+          anchorPos: AnchorPos.align(AnchorAlign.top),
+          height: Monument.size,
+          width: Monument.size,
+          point: LatLng(monument.lat, monument.long),
+          builder: (BuildContext ctx) => Icon(Icons.location_on),
+        );
+
+  final Monument monument;
+}
+
+class MonumentMarkerPopup extends StatelessWidget {
+  const MonumentMarkerPopup({Key? key, required this.monument})
+      : super(key: key);
+  final Monument monument;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Image.network(monument.imagePath, width: 200),
+            Text(monument.name),
+            Text('${monument.lat}-${monument.long}'),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobial/translated_chat_page.dart';
 import 'package:mobial/userProfile.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobial/widgets/progress.dart';
 import 'model/language.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -30,6 +30,7 @@ class ChatScreenState extends State<ChatScreen> {
   final String? sender;
   final String? reciever;
   final String? recieverEmail;
+  bool isLoading = false;
   ChatScreenState(
       {this.logInUser, this.sender, this.reciever, this.recieverEmail});
   final TextEditingController textEditingController =
@@ -103,6 +104,9 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   onTranslate() async {
+    setState(() {
+      isLoading = true;
+    });
     var url = Uri.parse("https://mobial.herokuapp.com/api/translate");
     var response = await http.post(url,
         headers: <String, String>{
@@ -141,6 +145,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
     setState(() {
       translated = [];
+      isLoading = false;
     });
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => TranslatedChat(
@@ -155,104 +160,100 @@ class ChatScreenState extends State<ChatScreen> {
       backgroundColor: Color(0xffd5e4e1),
       appBar: AppBar(
         backgroundColor: Color(0xff12928f),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            GestureDetector(
-              onTap: showProfile,
-              child: Text("$reciever"),
-            ),
-            SizedBox(
-              width: 120,
-            ),
-            DropdownButton<String>(
-              value: value,
-              icon: const Icon(
-                Icons.arrow_downward,
-                color: Colors.grey,
-              ),
-              //elevation: 16,
-              style: const TextStyle(color: Colors.grey),
-              onChanged: (String? newValue) {
-                setState(() {
-                  value = newValue!;
-                });
-                onTranslate();
-              },
-              items: languages.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: GoogleFonts.signika(
-                        fontSize: 15.0, color: Colors.black),
-                  ),
-                );
-              }).toList(),
-            ),
-          ],
+        title: GestureDetector(
+          onTap: showProfile,
+          child: Text("$reciever"),
         ),
-      ),
-      body: new Column(
-        children: <Widget>[
-          new Flexible(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: _firestore
-                  .collection('messages')
-                  .orderBy('timestamp')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  final messages = snapshot.data!.docs.reversed;
-                  print(messages.length);
-                  List<ChatMessage> messageWidgets = [];
-
-                  for (var message in messages) {
-                    final messageText = message['message'];
-                    final messageSender = message['sender'];
-                    final messageReciever = message['reciever'];
-                    final messageTime = message['timestamp'].toString();
-                    if ((messageSender == logInUser &&
-                            messageReciever == recieverEmail) ||
-                        (messageSender == recieverEmail &&
-                            messageReciever == logInUser)) {
-                      translate.add({
-                        "sender": messageSender,
-                        "text": messageText,
-                        "reciever": messageReciever,
-                        "timestamp": messageTime
-                      });
-                      messageWidgets.add(ChatMessage(
-                        logInUser: logInUser!,
-                        text: messageText,
-                        sender: messageSender,
-                        reciever: messageReciever,
-                        recieverEmail: recieverEmail!,
-                      ));
-                    }
-                  }
-                  return Expanded(
-                      child: ListView(
-                    reverse: true,
-                    padding: EdgeInsets.zero,
-                    children: messageWidgets,
-                  ));
-                }
-                return Container();
-              },
+        actions: [
+          DropdownButton<String>(
+            value: value,
+            icon: const Icon(
+              Icons.arrow_downward,
+              color: Colors.grey,
             ),
+            //elevation: 16,
+            style: const TextStyle(color: Colors.grey),
+            onChanged: (String? newValue) {
+              setState(() {
+                value = newValue!;
+              });
+              onTranslate();
+            },
+            items: languages.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style:
+                      GoogleFonts.signika(fontSize: 15.0, color: Colors.black),
+                ),
+              );
+            }).toList(),
           ),
-          new Divider(
-            height: 1.0,
-          ),
-          new Container(
-            decoration: new BoxDecoration(
-              color: Theme.of(context).cardColor,
-            ),
-            child: _textComposerWidget(),
-          )
         ],
       ),
+      body: !isLoading
+          ? (new Column(
+              children: <Widget>[
+                new Flexible(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: _firestore
+                        .collection('messages')
+                        .orderBy('timestamp')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final messages = snapshot.data!.docs.reversed;
+                        print(messages.length);
+                        List<ChatMessage> messageWidgets = [];
+
+                        for (var message in messages) {
+                          final messageText = message['message'];
+                          final messageSender = message['sender'];
+                          final messageReciever = message['reciever'];
+                          final messageTime = message['timestamp'].toString();
+                          if ((messageSender == logInUser &&
+                                  messageReciever == recieverEmail) ||
+                              (messageSender == recieverEmail &&
+                                  messageReciever == logInUser)) {
+                            translate.add({
+                              "sender": messageSender,
+                              "text": messageText,
+                              "reciever": messageReciever,
+                              "timestamp": messageTime
+                            });
+                            messageWidgets.add(ChatMessage(
+                              logInUser: logInUser!,
+                              text: messageText,
+                              sender: messageSender,
+                              reciever: messageReciever,
+                              recieverEmail: recieverEmail!,
+                            ));
+                          }
+                        }
+                        return Expanded(
+                            child: ListView(
+                          reverse: true,
+                          padding: EdgeInsets.zero,
+                          children: messageWidgets,
+                        ));
+                      }
+                      return Container();
+                    },
+                  ),
+                ),
+                new Divider(
+                  height: 1.0,
+                ),
+                new Container(
+                  decoration: new BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                  ),
+                  child: _textComposerWidget(),
+                )
+              ],
+            ))
+          : circularProgress(),
     );
   }
 }
