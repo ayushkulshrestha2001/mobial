@@ -4,6 +4,7 @@ import 'package:mobial/check_list.dart';
 import 'package:mobial/page/profile_page.dart';
 import 'package:mobial/login9/ui/login_page.dart';
 import 'package:mobial/privacy_policy.dart';
+import 'package:mobial/renter_form.dart';
 import 'package:mobial/settings.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -114,7 +115,7 @@ Widget drawer(BuildContext context) {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return Settings();
+                  return RenterForm();
                 },
               ),
             );

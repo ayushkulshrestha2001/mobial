@@ -1,5 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
+import 'package:http/http.dart' as http;
+import 'package:localstorage/localstorage.dart';
+import 'package:mobial/widgets/progress.dart';
+
+final LocalStorage storage = LocalStorage('mobial');
 
 class RentRequestList extends StatefulWidget {
   RentRequestList({Key? key}) : super(key: key);
@@ -9,22 +16,57 @@ class RentRequestList extends StatefulWidget {
 }
 
 class _RentRequestListState extends State<RentRequestList> {
+  bool isLoading = false;
   final double _borderRadius = 24;
+  var cars = [];
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getRequestList();
+  }
 
-  var items = [
-    PlaceInfo('Sleeping Lounge', Colors.black, Colors.white, 30,
-        'Bangalore · In BIAL', 'Cosy · Secure'),
-    PlaceInfo('Baby Care Rooms', Color(0xffFFB157), Color(0xffFFA057), 40,
-        'Bangalore · In BIAL', 'Joyous'),
-    PlaceInfo('Smoking Lounge', Color(0xffFF5B95), Color(0xffF8556D), 100,
-        'Bangalore · In BIAL', 'Casual'),
-    PlaceInfo('Buggy Service', Color(0xffD76EF5), Color(0xff8F7AFE), 75,
-        'Bangalore · In BIAL', 'Transport'),
-    PlaceInfo('Taj Bangalore', Color(0xff42E695), Color(0xff3BB2B8), 200,
-        'Bangalore', ' luxurious rooms · restaurants · banquet facilities'),
-    PlaceInfo('080 Transit Hotel', Color(0xff42E695), Color(0xff3BB2B8), 250,
-        'Bangalore', 'dream destination'),
-  ];
+  getRequestList() async {
+    setState(() {
+      isLoading = true;
+    });
+    var url = Uri.parse("https://mobial.herokuapp.com/api/previous_car");
+    http.Response response = await http.post(url,
+        headers: <String, String>{
+          'content-type': 'application/json',
+          "Accept": "application/json",
+          "charset": "utf-8"
+        },
+        body: json.encode({
+          'renter': true,
+          'renter_email': storage.getItem('user')['email'],
+        }));
+    var data = jsonDecode(response.body);
+    print(data);
+    for (int i = 0; i < data.length; i++) {
+      var car_url = Uri.parse("https://mobial.herokuapp.com/api/previous_car");
+      http.Response car_response = await http.post(car_url,
+          headers: <String, String>{
+            'content-type': 'application/json',
+            "Accept": "application/json",
+            "charset": "utf-8"
+          },
+          body: json.encode({'id': data[i]['vehicle_id']}));
+      var car = jsonDecode(car_response.body);
+      print("car info: $car");
+      cars.add(PlaceInfo(
+          car['vehicle_name'],
+          Colors.black,
+          Colors.black,
+          car['expected_charge'],
+          car['status'] == '0' ? 'Pending' : 'Accepted',
+          car['vehicle_number']));
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,124 +79,126 @@ class _RentRequestListState extends State<RentRequestList> {
         ),
         title: Text('Rent Car Request List'),
       ),
-      body: ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    height: 150,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(_borderRadius),
-                      color: Color(0xff072227),
-                      // gradient: LinearGradient(colors: [
-                      //   items[index].startColor,
-                      //   items[index].endColor
-                      // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //     color: items[index].endColor,
-                      //     blurRadius: 12,
-                      //     offset: Offset(0, 6),
-                      //   ),
-                      // ],
-                    ),
-                  ),
-                  // Positioned(
-                  //   right: 0,
-                  //   bottom: 0,
-                  //   top: 0,
-                  //   child: CustomPaint(
-                  //     size: Size(100, 150),
-                  //     painter: CustomCardShapePainter(_borderRadius,
-                  //         items[index].startColor, items[index].endColor),
-                  //   ),
-                  // ),
-                  Positioned.fill(
-                    child: Row(
+      body: !isLoading
+          ? (ListView.builder(
+              itemCount: cars.length,
+              itemBuilder: (context, index) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Stack(
                       children: <Widget>[
-                        Expanded(
-                          child: Image.asset(
-                            'assets/img/bial_logo_bg.png',
-                            height: 64,
-                            width: 64,
+                        Container(
+                          height: 150,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(_borderRadius),
+                            color: Color(0xff072227),
+                            // gradient: LinearGradient(colors: [
+                            //   items[index].startColor,
+                            //   items[index].endColor
+                            // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                            // boxShadow: [
+                            //   BoxShadow(
+                            //     color: items[index].endColor,
+                            //     blurRadius: 12,
+                            //     offset: Offset(0, 6),
+                            //   ),
+                            // ],
                           ),
-                          flex: 2,
                         ),
-                        Expanded(
-                          flex: 4,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        // Positioned(
+                        //   right: 0,
+                        //   bottom: 0,
+                        //   top: 0,
+                        //   child: CustomPaint(
+                        //     size: Size(100, 150),
+                        //     painter: CustomCardShapePainter(_borderRadius,
+                        //         items[index].startColor, items[index].endColor),
+                        //   ),
+                        // ),
+                        Positioned.fill(
+                          child: Row(
                             children: <Widget>[
-                              Text(
-                                items[index].name,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Avenir',
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              Text(
-                                items[index].category,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Avenir',
+                              Expanded(
+                                child: Image.asset(
+                                  'assets/img/bial_logo_bg.png',
+                                  height: 64,
+                                  width: 64,
                                 ),
+                                flex: 2,
                               ),
-                              SizedBox(height: 16),
-                              Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.white,
-                                    size: 16,
-                                  ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      items[index].location,
+                              Expanded(
+                                flex: 4,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      cars[index].name,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Avenir',
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Text(
+                                      cars[index].category,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Avenir',
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(height: 16),
+                                    Row(
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.location_on,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Flexible(
+                                          child: Text(
+                                            cars[index].location,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Avenir',
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text(
-                                items[index].rating.toString(),
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Avenir',
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Text(
+                                      cars[index].rating.toString(),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Avenir',
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    //RatingBar(rating: items[index].rating),
+                                  ],
+                                ),
                               ),
-                              //RatingBar(rating: items[index].rating),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+                );
+              },
+            ))
+          : circularProgress(),
     );
   }
 }
@@ -163,7 +207,7 @@ class PlaceInfo {
   final String name;
   final String category;
   final String location;
-  final double rating;
+  final String rating;
   final Color startColor;
   final Color endColor;
 

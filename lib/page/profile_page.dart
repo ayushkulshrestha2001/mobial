@@ -21,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Center(
       child: Builder(
         builder: (context) => Scaffold(
+          backgroundColor: Color(0xffd5e4e1),
           appBar: buildAppBar(context),
           body: ListView(
             physics: BouncingScrollPhysics(),

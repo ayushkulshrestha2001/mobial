@@ -1,110 +1,28 @@
 import 'package:flutter/material.dart';
 
-// class CheckList extends StatefulWidget {
-//   @override
-//   _CheckListState createState() => _CheckListState();
-// }
-
-// class _CheckListState extends State<CheckList> {
-//   bool value = false;
-//   // save data
-//   final List<String> _todoList = <String>[];
-//   // text field
-//   final TextEditingController _textFieldController = TextEditingController();
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color(0xffd5e4e1),
-//       appBar: AppBar(
-//         title: const Text('Check List'),
-//         backgroundColor: Color(0xff12928f),
-//       ),
-//       body: ListView(children: _getItems()),
-//       floatingActionButton: FloatingActionButton(
-//           onPressed: () => _displayDialog(context),
-//           tooltip: 'Add Item',
-//           child: Icon(Icons.add)),
-//     );
-//   }
-
-//   void _addTodoItem(String title) {
-//     // Wrapping it inside a set state will notify
-//     // the app that the state has changed
-//     setState(() {
-//       _todoList.add(title);
-//     });
-//     _textFieldController.clear();
-//   }
-
-//   // this Generate list of item widgets
-//   Widget _buildTodoItem(String title) {
-//     return ListTile(
-//       leading: Checkbox,
-//       title: Text(title));
-//     // return CheckboxListTile(
-//     //   value: this.value,
-//     //   onChanged: (bool? value) => {this.value = !value!},
-//     //   title: Text(title,style: TextStyle(
-
-//     //   ),),
-//     );
-//   }
-
-//   // display a dialog for the user to enter items
-//   Future<AlertDialog> _displayDialog(BuildContext context) async {
-//     // alter the app state to show a dialog
-//     return await showDialog(
-//         context: context,
-//         builder: (BuildContext context) {
-//           return AlertDialog(
-//             title: const Text('Add a task to your list'),
-//             content: TextField(
-//               controller: _textFieldController,
-//               decoration: const InputDecoration(hintText: 'Enter task here'),
-//             ),
-//             actions: <Widget>[
-//               // add button
-//               FlatButton(
-//                 child: const Text('ADD'),
-//                 onPressed: () {
-//                   Navigator.of(context).pop();
-//                   _addTodoItem(_textFieldController.text);
-//                 },
-//               ),
-//               // Cancel button
-//               FlatButton(
-//                 child: const Text('CANCEL'),
-//                 onPressed: () {
-//                   Navigator.of(context).pop();
-//                 },
-//               )
-//             ],
-//           );
-//         });
-//   }
-
-//   // iterates through our todo list title
-//   List<Widget> _getItems() {
-//     final List<Widget> _todoWidgets = <Widget>[];
-//     for (String title in _todoList) {
-//       _todoWidgets.add(_buildTodoItem(title));
-//     }
-//     return _todoWidgets;
-//   }
-// }
-
 class TodoLIst extends StatefulWidget {
   @override
   _TodoLIstState createState() => _TodoLIstState();
 }
 
-class _TodoLIstState extends State<TodoLIst> {
+class _TodoLIstState extends State<TodoLIst>
+    with AutomaticKeepAliveClientMixin {
   final TextEditingController _textFieldController = TextEditingController();
-  final List<Todo> _todos = <Todo>[];
+  final List<Todo> _todos = <Todo>[
+    Todo(name: 'Ticket', checked: false),
+    Todo(name: 'Passport', checked: false),
+    Todo(name: 'Id Proof', checked: false),
+    Todo(name: 'Mask & Shield', checked: false),
+    Todo(name: 'Sanitizer', checked: false),
+    Todo(name: 'Luggage under 15kg', checked: false),
+    Todo(name: 'HandBag under 7kg', checked: false),
+  ];
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: new AppBar(
+        backgroundColor: Color(0xff12928f),
         title: new Text('Todo list'),
       ),
       body: ListView(
@@ -148,6 +66,7 @@ class _TodoLIstState extends State<TodoLIst> {
     );
   }
 
+  bool get wantKeepAlive => true;
   void _addTodoItem(String name) {
     setState(() {
       _todos.add(Todo(name: name, checked: false));

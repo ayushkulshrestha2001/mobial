@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobial/renter_form.dart';
 import 'package:mobial/widgets/specific_card.dart';
 
 class LendCarDetails extends StatelessWidget {
@@ -7,6 +8,8 @@ class LendCarDetails extends StatelessWidget {
   final SubHeading = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
 
   final BasicHeading = TextStyle(fontSize: 15);
+  final String? id;
+  final String? picture;
   final String? vehicle_name;
   final String? price;
   final String? fromDate;
@@ -18,7 +21,8 @@ class LendCarDetails extends StatelessWidget {
   final String? path;
 
   LendCarDetails(
-      {this.vehicle_name,
+      {this.id,
+      this.vehicle_name,
       this.price,
       this.fromDate,
       this.toDate,
@@ -26,24 +30,27 @@ class LendCarDetails extends StatelessWidget {
       this.vehicle_number,
       this.description,
       this.vehicle_type,
-      this.path});
+      this.path,
+      this.picture});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xffd5e4e1),
       appBar: AppBar(
         backgroundColor: Color(0xff12928f),
         title: Text('Vehicle Information'),
         elevation: 0,
         actions: [
-          IconButton(
-              onPressed: null,
-              icon: Icon(Icons.bookmark,
-                  size: 30, color: Theme.of(context).colorScheme.onSurface)),
-          IconButton(
-              onPressed: null,
-              icon: Icon(Icons.share,
-                  size: 30, color: Theme.of(context).colorScheme.onSurface)),
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+              child: ElevatedButton(
+                onPressed: () => {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => RenterForm(id: id)))
+                },
+                child: Text('Book'),
+              )),
         ],
       ),
       body: Container(
@@ -59,8 +66,8 @@ class LendCarDetails extends StatelessWidget {
                 tag: "$vehicle_name",
                 child: Image.asset(
                   "assets/img/car.png",
-                  height: 200,
-                  width: 200,
+                  height: 150,
+                  width: 150,
                 ),
               ), //$path
 // Row(
@@ -147,6 +154,17 @@ class LendCarDetails extends StatelessWidget {
                       name2: toDate!.split("T")[0] +
                           " " +
                           toDate!.split("T")[1].split("Z")[0],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: SpecificsCard(
+                      name: 'Charge',
+                      name2: price,
                     ),
                   ),
                 ],

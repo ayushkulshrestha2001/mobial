@@ -132,6 +132,7 @@ class _RentCarListState extends State<RentCarList> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => LendCarDetails(
+                          id: list[index]['_id'],
                           vehicle_number: list[index]["vehicle_number"],
                           price: list[index]["expected_charge"],
                           rentee_email: list[index]["rentee_email"],

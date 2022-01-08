@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobial/rent_car_info.dart';
 import 'package:mobial/widgets/widget_button.dart';
-import 'package:date_field/date_field.dart';
 import 'package:date_field/date_field.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -89,6 +87,28 @@ class _PostCarState extends State<PostCar> {
     setState(() {
       this.selectedImage = File(file!.path);
     });
+    var name = selectedImage!.path.split("/").last;
+    print(name);
+
+    var storage = AzureStorage.parse(
+        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
+    await storage.putBlob('/mobialc/$name',
+        bodyBytes: selectedImage!.readAsBytesSync(),
+        contentType: lookupMimeType('$name'),
+        type: BlobType.BlockBlob);
+
+    String selectedPath = '/mobialc/$name';
+
+    var val = storage.uri();
+    String finalUrl = "$val" + "mobialc/$name";
+    print(finalUrl);
+    setState(() {
+      if (type == 'picture') {
+        pic_url = finalUrl;
+      } else {
+        doc_url = finalUrl;
+      }
+    });
   }
 
   void _showPicker(context, String type) {
@@ -139,7 +159,7 @@ class _PostCarState extends State<PostCar> {
           'to_date': toString,
           'car_rc': doc_url,
           'vehicle_picture': pic_url,
-          'expecied_charge': chargeController.text,
+          'expected_charge': chargeController.text,
         }));
     print(response.statusCode);
     print(response.body);
@@ -244,72 +264,94 @@ class _PostCarState extends State<PostCar> {
                         ),
                       ),
                       buildTextField(
-                          "Expencted Charge", Icons.money, false, size,
-                          (valuename) {
-                        if (valuename.length <= 2) {
-                          buildSnackError(
-                            'Invalid name',
-                            context,
-                            size,
-                          );
-                          return '';
-                        }
-                        return null;
-                      }, _firstnamekey, 0, chargeController),
+                          "Expencted Charge",
+                          Icons.money,
+                          false,
+                          size,
+                          //     (valuename) {
+                          //   if (valuename.length <= 2) {
+                          //     buildSnackError(
+                          //       'Invalid name',
+                          //       context,
+                          //       size,
+                          //     );
+                          //     return '';
+                          //   }
+                          //   return null;
+                          // },
+                          _firstnamekey,
+                          0,
+                          chargeController),
                       buildTextField(
-                          "Vehicle Name", Icons.person_outlined, false, size,
-                          (valuesurname) {
-                        if (valuesurname.length <= 2) {
-                          buildSnackError(
-                            'Invalid last name',
-                            context,
-                            size,
-                          );
-                          return '';
-                        }
-                        return null;
-                      }, _lastNamekey, 1, vehicleNameController),
+                          "Vehicle Name",
+                          Icons.person_outlined,
+                          false,
+                          size,
+                          //     (valuesurname) {
+                          //   if (valuesurname.length <= 2) {
+                          //     buildSnackError(
+                          //       'Invalid last name',
+                          //       context,
+                          //       size,
+                          //     );
+                          //     return '';
+                          //   }
+                          //   return null;
+                          // },
+                          _lastNamekey,
+                          1,
+                          vehicleNameController),
                       Form(
                         child: buildTextField(
-                            "Vehicle Number", Icons.email_outlined, false, size,
-                            (valuemail) {
-                          if (valuemail.length < 5) {
-                            buildSnackError(
-                              'Invalid email',
-                              context,
-                              size,
-                            );
-                            return '';
-                          }
-                          if (!RegExp(
-                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+.[a-zA-Z]+")
-                              .hasMatch(valuemail)) {
-                            buildSnackError(
-                              'Invalid email',
-                              context,
-                              size,
-                            );
-                            return '';
-                          }
-                          return null;
-                        }, _emailKey, 2, vehicleNumberController),
+                            "Vehicle Number",
+                            Icons.email_outlined,
+                            false,
+                            size,
+                            //     (valuemail) {
+                            //   if (valuemail.length < 5) {
+                            //     buildSnackError(
+                            //       'Invalid email',
+                            //       context,
+                            //       size,
+                            //     );
+                            //     return '';
+                            //   }
+                            //   if (!RegExp(
+                            //           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+.[a-zA-Z]+")
+                            //       .hasMatch(valuemail)) {
+                            //     buildSnackError(
+                            //       'Invalid email',
+                            //       context,
+                            //       size,
+                            //     );
+                            //     return '';
+                            //   }
+                            //   return null;
+                            // },
+                            _emailKey,
+                            2,
+                            vehicleNumberController),
                       ),
                       Form(
                         child: buildTextField(
                             "Description",
                             Icons.description_outlined,
                             false,
-                            size, (valuepassword) {
-                          if (valuepassword != textfieldsStrings[3]) {
-                            buildSnackError(
-                              'Passwords must match',
-                              context,
-                              size,
-                            );
-                            return '';
-                          }
-                          return null;
-                        }, _confirmPasswordKey, 4, descriptionController),
+                            size,
+                            //      (valuepassword) {
+                            //   if (valuepassword != textfieldsStrings[3]) {
+                            //     buildSnackError(
+                            //       'Passwords must match',
+                            //       context,
+                            //       size,
+                            //     );
+                            //     return '';
+                            //   }
+                            //   return null;
+                            // },
+                            _confirmPasswordKey,
+                            4,
+                            descriptionController),
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: size.height * 0.025),
@@ -447,18 +489,18 @@ class _PostCarState extends State<PostCar> {
                             //     }
                             //   }
                             // }
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LendCarDetails(
-                                          vehicle_name: "WagonR",
-                                          //price: 1000,
-                                          rentee_email: "white",
-                                          vehicle_number: "Manual",
-                                          description: "Petrol",
-                                          vehicle_type: "MAryti Suzuki",
-                                          path: "assets/img/login_logo.png",
-                                        )));
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => LendCarDetails(
+                            //               vehicle_name: "WagonR",
+                            //               //price: 1000,
+                            //               rentee_email: "white",
+                            //               vehicle_number: "Manual",
+                            //               description: "Petrol",
+                            //               vehicle_type: "MAryti Suzuki",
+                            //               path: "assets/img/login_logo.png",
+                            //             )));
                             postCar();
                             // print(fromString + "Z");
                             // print(toString + "Z");
@@ -495,7 +537,7 @@ class _PostCarState extends State<PostCar> {
     IconData icon,
     bool password,
     size,
-    FormFieldValidator validator,
+    //FormFieldValidator validator,
     Key key,
     int stringToEdit,
     TextEditingController controller,
@@ -519,7 +561,7 @@ class _PostCarState extends State<PostCar> {
                 textfieldsStrings[stringToEdit] = value;
               });
             },
-            validator: validator,
+            //validator: validator,
             textInputAction: TextInputAction.next,
             obscureText: password ? !pwVisible : false,
             decoration: InputDecoration(
