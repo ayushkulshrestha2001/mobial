@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/car.dart/lend_options.dart';
-import 'package:mobial/pages/car.dart/rent_option.dart';
-import 'package:mobial/widgets/drawer.dart';
-import 'package:mobial/widgets/header.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobial/pages/car/rent_car_list.dart';
+import 'package:mobial/pages/car/rent_request_list.dart';
+import 'package:mobial/widgets/header.dart';
 
-class CarService extends StatefulWidget {
-  CarService({Key? key}) : super(key: key);
+class RentOptions extends StatefulWidget {
+  RentOptions({Key? key}) : super(key: key);
 
   @override
-  _CarServiceState createState() => _CarServiceState();
+  _RentOptionsState createState() => _RentOptionsState();
 }
 
-class _CarServiceState extends State<CarService> {
+class _RentOptionsState extends State<RentOptions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffd5e4e1),
       appBar: header(context),
-      drawer: drawer(context),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -27,13 +25,13 @@ class _CarServiceState extends State<CarService> {
             child: TextButton(
               onPressed: () => {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => RentOptions()))
+                    MaterialPageRoute(builder: (context) => RentRequestList()))
                 // print("Renter Info")
               },
               child: Column(
                 children: [
                   Text(
-                    "RENT",
+                    "Requests",
                     style: GoogleFonts.signika(
                         fontSize: 20.0,
                         color: Color(0xff30302e),
@@ -47,12 +45,13 @@ class _CarServiceState extends State<CarService> {
             child: TextButton(
               onPressed: () => {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LendOptions()))
+                    MaterialPageRoute(builder: (context) => RentCarList()))
+                //print("Rentee Info")
               },
               child: Column(
                 children: [
                   Text(
-                    "LEND",
+                    "Search a Car",
                     style: GoogleFonts.signika(
                         fontSize: 20.0,
                         color: Color(0xff30302e),

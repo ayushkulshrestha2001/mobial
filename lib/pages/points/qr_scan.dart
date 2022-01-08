@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:mobial/pages/points.dart/qr_home.dart';
+import 'package:mobial/pages/points/qr_home.dart';
 import 'package:mobial/widgets/button_widget.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/meet_chat.dart/chat_screen.dart';
+import 'package:mobial/pages/meet_chat/chat_screen.dart';
 
 class TranslatedChat extends StatefulWidget {
   final List<ChatMessage> messages;

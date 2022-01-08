@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobial/main.dart';
-import 'package:mobial/pages/meet_chat.dart/translated_chat_page.dart';
+import 'package:mobial/pages/meet_chat/translated_chat_page.dart';
 import 'package:mobial/page/userProfile.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobial/widgets/progress.dart';

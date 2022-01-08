@@ -3,7 +3,7 @@ import 'package:mobial/widgets/check_list.dart';
 import 'package:mobial/pages/page/profile_page.dart';
 import 'package:mobial/login9/ui/login_page.dart';
 import 'package:mobial/widgets/privacy_policy.dart';
-import 'package:mobial/pages/car.dart/renter_form.dart';
+import 'package:mobial/pages/car/renter_form.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
 

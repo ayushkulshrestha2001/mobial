@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:mobial/widgets/progress.dart';
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/meet_chat.dart/chat_screen.dart';
+import 'package:mobial/pages/meet_chat/chat_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/car.dart/rent_car_info.dart';
+import 'package:mobial/pages/car/rent_car_info.dart';
 import 'dart:ui' as ui;
 import 'package:mobial/widgets/progress.dart';
 

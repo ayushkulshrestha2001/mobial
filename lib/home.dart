@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/ticket_search.dart/Ticket.dart';
-import 'package:mobial/pages/car.dart/car_service.dart';
-import 'package:mobial/pages/custom_duty_search.dart/custom_duty.dart';
-import 'package:mobial/pages/points.dart/qr_home.dart';
-import 'package:mobial/pages/meet_chat.dart/chat_home.dart';
+import 'package:mobial/pages/ticket_search/Ticket.dart';
+import 'package:mobial/pages/car/car_service.dart';
+import 'package:mobial/pages/custom_duty_search/custom_duty.dart';
+import 'package:mobial/pages/points/qr_home.dart';
+import 'package:mobial/pages/meet_chat/chat_home.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class Home extends StatefulWidget {

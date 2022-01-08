@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/ticket_search.dart/ticket_info.dart';
+import 'package:mobial/pages/ticket_search/ticket_info.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:date_field/date_field.dart';

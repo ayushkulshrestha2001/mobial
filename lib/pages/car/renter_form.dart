@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/car.dart/rent_request_list.dart';
+import 'package:mobial/pages/car/rent_request_list.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:date_field/date_field.dart';
 import 'package:image_picker/image_picker.dart';

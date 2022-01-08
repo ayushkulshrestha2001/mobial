@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:mobial/widgets/progress.dart';
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/custom_duty_search.dart/card.dart';
-import 'package:mobial/pages/points.dart/map.dart';
-import 'package:mobial/pages/points.dart/qr_scan.dart';
-import 'package:mobial/pages/points.dart/redeem_coupons.dart';
+import 'package:mobial/pages/custom_duty_search/card.dart';
+import 'package:mobial/pages/points/map.dart';
+import 'package:mobial/pages/points/qr_scan.dart';
+import 'package:mobial/pages/points/redeem_coupons.dart';
 import 'package:mobial/widgets/drawer.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:latlong2/latlong.dart';

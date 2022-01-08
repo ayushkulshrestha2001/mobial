@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mobial/pages/car.dart/lend_car_list.dart';
-import 'package:mobial/pages/car.dart/post_car.dart';
+import 'package:mobial/pages/car/lend_car_list.dart';
+import 'package:mobial/pages/car/post_car.dart';
 import 'package:mobial/widgets/header.dart';
 
 class LendOptions extends StatefulWidget {
