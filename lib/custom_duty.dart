@@ -69,6 +69,14 @@ class _Custom_dutyState extends State<Custom_duty> {
         body: json.encode({'url': finalUrl}));
     print(response.statusCode);
     print(response.body);
+
+    if (jsonDecode(response.body) == 'Can\'t Find') {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Object details not found')));
+      setState(() {
+        isLoading = false;
+      });
+    }
     var data = jsonDecode(response.body);
     setState(() {
       for (int i = 0; i < data.length; i++) {
@@ -140,6 +148,13 @@ class _Custom_dutyState extends State<Custom_duty> {
         body: json.encode({'url': finalUrl}));
     print(response.statusCode);
     print(response.body);
+    if (jsonDecode(response.body) == 'Can\'t Find') {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Object details not found')));
+      setState(() {
+        isLoading = false;
+      });
+    }
     var data = jsonDecode(response.body);
     setState(() {
       for (int i = 0; i < data.length; i++) {

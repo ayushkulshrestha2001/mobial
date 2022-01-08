@@ -75,7 +75,13 @@ class _TicketState extends State<Ticket> {
           'flight': text_controller.text,
           'departure': timeString,
         }));
-
+    if (jsonDecode(response.body) == 'Can\'t Find') {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ticket details not found')));
+      setState(() {
+        isLoading = false;
+      });
+    }
     if (response.statusCode == 200) {
       print(response.body);
       var data = jsonDecode(response.body);

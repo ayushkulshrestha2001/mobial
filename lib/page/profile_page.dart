@@ -12,6 +12,7 @@ import 'package:mobial/widgets/numbers_widget.dart';
 import 'package:mobial/widgets/profile_widget.dart';
 import 'package:mobial/widgets/header.dart';
 import 'package:mobial/widgets/progress.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 final LocalStorage storage = new LocalStorage('mobial');
 
@@ -47,9 +48,12 @@ class _ProfilePageState extends State<ProfilePage> {
     addItemsToLocalStorage(data);
     setState(() {
       isLoading = false;
+      _refreshController.refreshCompleted();
     });
   }
 
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   @override
   void initState() {
     super.initState();
@@ -65,26 +69,31 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (context) => Scaffold(
             backgroundColor: Color(0xffd5e4e1),
             appBar: header(context),
-            body: !isLoading
-                ? (ListView(
-                    physics: BouncingScrollPhysics(),
-                    children: [
-                      ProfileWidget(
-                        imagePath: storage.getItem('user')["picture"],
-                        onClicked: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => EditProfilePage()),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      buildName(user),
-                      const SizedBox(height: 48),
-                      buildAbout(user),
-                    ],
-                  ))
-                : circularProgress()),
+            body: SmartRefresher(
+              controller: _refreshController,
+              enablePullDown: true,
+              onRefresh: () => getUser(),
+              child: !isLoading
+                  ? (ListView(
+                      physics: BouncingScrollPhysics(),
+                      children: [
+                        ProfileWidget(
+                          imagePath: storage.getItem('user')["picture"],
+                          onClicked: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfilePage()),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        buildName(user),
+                        const SizedBox(height: 48),
+                        buildAbout(user),
+                      ],
+                    ))
+                  : circularProgress(),
+            )),
       ),
     );
   }
