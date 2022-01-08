@@ -6,6 +6,7 @@ import 'package:mobial/widgets/privacy_policy.dart';
 import 'package:mobial/pages/car/renter_form.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobial/widgets/settings.dart';
 
 Widget drawer(BuildContext context) {
   final LocalStorage storage = new LocalStorage('mobial');
@@ -113,7 +114,7 @@ Widget drawer(BuildContext context) {
               context,
               MaterialPageRoute(
                 builder: (context) {
-                  return RenterForm();
+                  return Settings();
                 },
               ),
             );
