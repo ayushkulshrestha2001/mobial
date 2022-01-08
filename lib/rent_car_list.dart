@@ -36,12 +36,87 @@ class _RentCarListState extends State<RentCarList> {
 
   final double _borderRadius = 24;
 
+  void filter(String fil) {
+    setState(() {
+      isLoading = true;
+    });
+    List temp = list;
+    setState(() {
+      list = [];
+    });
+    for (int i = 0; i < temp.length; i++) {
+      if (temp[i]["vehicle_type"] == fil) {
+        list.add(temp[i]);
+      }
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xffd5e4e1),
         appBar: AppBar(
           backgroundColor: Color(0xff12928f),
+          elevation: 0,
+          actions: [
+            PopupMenuButton(
+              icon: Icon(Icons.filter_alt_outlined),
+              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.car_rental_outlined),
+                    title: Text('Sedan'),
+                    onTap: () {
+                      String fil = 'Sedan';
+                      filter(fil);
+                    },
+                  ),
+                ),
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.bike_scooter_outlined),
+                    title: Text('Two wheelers'),
+                    onTap: () {
+                      String fil = 'Two-wheeler';
+                      filter(fil);
+                    },
+                  ),
+                ),
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.car_rental_outlined),
+                    title: Text('SUV'),
+                    onTap: () {
+                      String fil = 'SUV';
+                      filter(fil);
+                    },
+                  ),
+                ),
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.car_rental_outlined),
+                    title: Text('Mini/Hitchback'),
+                    onTap: () {
+                      String fil = 'Mini/Hitchback';
+                      filter(fil);
+                    },
+                  ),
+                ),
+                PopupMenuItem(
+                  child: ListTile(
+                    leading: Icon(Icons.refresh),
+                    title: Text('All vehicles'),
+                    onTap: () {
+                      getCarList();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
           leading: IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () => {Navigator.pop(context)},
@@ -63,6 +138,8 @@ class _RentCarListState extends State<RentCarList> {
                           vehicle_name: list[index]["vehicle_name"],
                           vehicle_type: list[index]["vehicle_type"],
                           description: list[index]["description"],
+                          fromDate: list[index]["from_date"],
+                          toDate: list[index]["to_date"],
                         ),
                       ),
                     ),
