@@ -24,8 +24,7 @@ class QrHome extends StatefulWidget {
   _QrHomeState createState() => _QrHomeState(logInUser: logInUser);
 }
 
-class _QrHomeState extends State<QrHome>
-    with AutomaticKeepAliveClientMixin<QrHome> {
+class _QrHomeState extends State<QrHome> {
   bool isLoading = false;
   final String logInUser;
   _QrHomeState({required this.logInUser});
@@ -37,12 +36,11 @@ class _QrHomeState extends State<QrHome>
   num points = 0;
   List<dynamic> codes = [];
   List<Marker> markers = [];
+  Map<String, Widget> popup = {};
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   @override
   void initState() {
-    //bialLocation = LatLng(latitude, longitude);
-
     super.initState();
     getUserDetails();
   }
@@ -61,14 +59,59 @@ class _QrHomeState extends State<QrHome>
         String longitude = markerData[i]['location'].split(', ').last;
         double lat = double.parse(latitude);
         double long = double.parse(longitude);
-        markers.add(MonumentMarker(
-          monument: Monument(
-              name: markerData[i]['name'],
-              imagePath:
-                  'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
-              lat: lat,
-              long: long),
-        ));
+        setState(() {
+          popup[markerData[i]['name']] = AlertDialog(
+            title: Column(
+              children: [
+                Image(
+                  image: NetworkImage(
+                      "https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg"),
+                ),
+                Text('${markerData[i]['name']}'),
+              ],
+            ),
+          );
+
+          markers.add(Marker(
+            height: 80.0,
+            width: 80.0,
+            point: LatLng(lat, long),
+            builder: (ctx) {
+              return GestureDetector(
+                child: Icon(
+                  Icons.location_on,
+                  size: 30.0,
+                  color: Colors.black,
+                ),
+                onTap: () => {
+                  showDialog(
+                      context: ctx,
+                      builder: (ctx) {
+                        return AlertDialog(
+                          title: Column(
+                            children: [
+                              Image(
+                                image: NetworkImage(
+                                    "https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg"),
+                              ),
+                              Text('${markerData[i]['name']}'),
+                            ],
+                          ),
+                        );
+                      })
+                },
+              );
+            },
+          ));
+        });
+        // markers.add(MarkMap(
+        //   mark: Mark(
+        //       name: markerData[i]['name'],
+        //       imagePath:
+        //           'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
+        //       lat: lat,
+        //       long: long),
+        // ));
       }
     });
     num rewards = 0;
@@ -95,31 +138,33 @@ class _QrHomeState extends State<QrHome>
       String longitude = e['location'].split(', ').last;
       double lat = double.parse(latitude);
       double long = double.parse(longitude);
-      // setState(() {
-      //   markers.add(Marker(
-      //       height: 80.0,
-      //       width: 80.0,
-      //       point: LatLng(lat, long),
-      //       builder: (ctx) => Container(
-      //               child: Icon(
-      //             Icons.star,
-      //             size: 30.0,
-      //             color: Color(
-      //               0xffdaa520,
-      //             ),
-      //           ))));
-      // });
       setState(() {
-        markers.add(MonumentMarker(
-          monument: Monument(
-              name: e['name'],
-              imagePath:
-                  'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
-              lat: lat,
-              long: long),
-        ));
+        markers.add(Marker(
+            height: 80.0,
+            width: 80.0,
+            point: LatLng(lat, long),
+            builder: (ctx) => Container(
+                    child: Icon(
+                  Icons.star,
+                  size: 30.0,
+                  color: Color(
+                    0xffdaa520,
+                  ),
+                ))));
       });
     });
+
+    //   setState(() {
+    //     markers.add(MarkMap(
+    //       mark: Mark(
+    //           name: e['name'],
+    //           imagePath:
+    //               'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
+    //           lat: lat,
+    //           long: long),
+    //     ));
+    //   });
+    // });
     print(rewards);
     setState(() {
       points = rewards;
@@ -129,7 +174,6 @@ class _QrHomeState extends State<QrHome>
     });
   }
 
-  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -279,6 +323,7 @@ class _QrHomeState extends State<QrHome>
                                 MaterialPageRoute(
                                     builder: (context) => MapDisplay(
                                           markers: markers,
+                                          popup: popup,
                                         )))
                           },
                           child: Column(
@@ -297,60 +342,5 @@ class _QrHomeState extends State<QrHome>
                     ],
                   ))
                 : circularProgress()));
-  }
-}
-
-class Monument {
-  static const double size = 25;
-
-  Monument({
-    required this.name,
-    required this.imagePath,
-    required this.lat,
-    required this.long,
-  });
-
-  final String name;
-  final String imagePath;
-  final double lat;
-  final double long;
-}
-
-class MonumentMarker extends Marker {
-  MonumentMarker({required this.monument})
-      : super(
-          anchorPos: AnchorPos.align(AnchorAlign.top),
-          height: Monument.size,
-          width: Monument.size,
-          point: LatLng(monument.lat, monument.long),
-          builder: (BuildContext ctx) => Icon(Icons.location_on),
-        );
-
-  final Monument monument;
-}
-
-class MonumentMarkerPopup extends StatelessWidget {
-  const MonumentMarkerPopup({Key? key, required this.monument})
-      : super(key: key);
-  final Monument monument;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 200,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Image.network(monument.imagePath, width: 200),
-            Text(monument.name),
-            Text('${monument.lat}-${monument.long}'),
-          ],
-        ),
-      ),
-    );
   }
 }

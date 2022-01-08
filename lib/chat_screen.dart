@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mobial/main.dart';
 import 'package:mobial/translated_chat_page.dart';
 import 'package:mobial/userProfile.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobial/widgets/progress.dart';
 import 'model/language.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -42,15 +45,27 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    getMessageStream();
+
+    getNotification();
   }
 
-  getMessageStream() async {
-    await for (var snapshot in _firestore.collection('messages').snapshots()) {
-      for (var text in snapshot.docs) {
-        print(text.data());
+  getNotification() async {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+                android: AndroidNotificationDetails(channel.id, channel.name,
+                    channelDescription: channel.description,
+                    color: Colors.blueAccent,
+                    playSound: true,
+                    icon: '@mipmap/ic_launcher')));
       }
-    }
+    });
   }
 
   //to_lang
