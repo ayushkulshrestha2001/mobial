@@ -122,6 +122,20 @@ class ChatScreenState extends State<ChatScreen> {
             )));
   }
 
+  void showNotification(String reciever) {
+    flutterLocalNotificationsPlugin.show(
+        0,
+        'MoBIAl chat',
+        'New Message from $reciever',
+        NotificationDetails(
+            android: AndroidNotificationDetails(channel.id, channel.name,
+                channelDescription: channel.description,
+                importance: Importance.high,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher')));
+  }
+
   onTranslate() async {
     setState(() {
       isLoading = true;
@@ -241,6 +255,7 @@ class ChatScreenState extends State<ChatScreen> {
                               "reciever": messageReciever,
                               "timestamp": messageTime
                             });
+                            showNotification(reciever!);
                             messageWidgets.add(ChatMessage(
                               chatReciever: reciever!,
                               logInUser: logInUser!,

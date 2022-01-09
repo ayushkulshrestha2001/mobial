@@ -20,47 +20,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print('A bg message showe up: ${message.messageId}');
 }
 
-void showNotification(String reciever) {
-  flutterLocalNotificationsPlugin.show(
-      0,
-      'MoBIAl chat',
-      'New Message from $reciever',
-      NotificationDetails(
-          android: AndroidNotificationDetails(channel.id, channel.name,
-              channelDescription: channel.description,
-              importance: Importance.high,
-              color: Colors.blue,
-              playSound: true,
-              icon: '@mipmap/ic_launcher')));
-}
-
-void pushFCMtoken() async {
-  String? token = await FirebaseMessaging.instance.getToken();
-  print(token);
-}
-
-void initMessaging() {
-  var androiInit =
-      AndroidInitializationSettings('@mipmap/ic_launcher'); //for logo
-  var iosInit = IOSInitializationSettings();
-  var initSetting = InitializationSettings(android: androiInit, iOS: iosInit);
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  flutterLocalNotificationsPlugin.initialize(initSetting);
-  var androidDetails = AndroidNotificationDetails(channel.id, channel.name,
-      channelDescription: channel.description);
-  var iosDetails = IOSNotificationDetails();
-  var generalNotificationDetails =
-      NotificationDetails(android: androidDetails, iOS: iosDetails);
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    RemoteNotification notification = message.notification!;
-    AndroidNotification? android = message.notification?.android;
-    if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.show(notification.hashCode,
-          notification.title, notification.body, generalNotificationDetails);
-    }
-  });
-}
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
