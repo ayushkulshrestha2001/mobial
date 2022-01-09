@@ -69,24 +69,25 @@ class _CustomDutyState extends State<CustomDuty> {
     print(response.body);
 
     if (jsonDecode(response.body) == 'Can\'t Find') {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Object details not found')));
       setState(() {
         isLoading = false;
       });
-    }
-    var data = jsonDecode(response.body);
-    setState(() {
-      for (int i = 0; i < data.length; i++) {
-        if (infoItem[data['name']] != null) {
-          cardWidgets.add(infoItem[data['name']]!);
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Object details not found')));
+    } else {
+      var data = jsonDecode(response.body);
+      setState(() {
+        for (int i = 0; i < data.length; i++) {
+          if (infoItem[data['name']] != null) {
+            cardWidgets.add(infoItem[data['name']]!);
+          }
         }
-      }
-      finalImageUrl = finalUrl;
-      isLoading = false;
-      isShow = true;
-      isPhoto = true;
-    });
+        finalImageUrl = finalUrl;
+        isLoading = false;
+        isShow = true;
+        isPhoto = true;
+      });
+    }
   }
 
   getList() async {
