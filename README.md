@@ -17,11 +17,11 @@ With this app, with the above-mentioned features, we aim to enhance user experie
 
 ## Instruction to Run the repos:
 ### Frontend
-#### -Clone the repo using git:
+#### - Clone the repo using git:
      git clone https://github.com/ayushkulshrestha2001/mobial.git
-#### -To install Flutter packages, run (preferably in flutter console) :
+#### - To install Flutter packages, run (preferably in flutter console) :
      flutter  pub get
-#### -Start the server and frontend using:
+#### - Start the server and frontend using:
 	   npm start
 #### -for run:
      flutter run
@@ -31,12 +31,12 @@ With this app, with the above-mentioned features, we aim to enhance user experie
 
  
 ### Backend
-#### -Clone the repo using git:
+#### - Clone the repo using git:
  	   git clone https://github.com/jinik21/MoBial-backend.git
 
-#### -Install Node packages using NPM run :
+#### - Install Node packages using NPM run :
      npm i
-#### -Start the server using:
+#### - Start the server using:
      npm start
     
 ## Technologies Used:
@@ -58,8 +58,11 @@ With this app, with the above-mentioned features, we aim to enhance user experie
 - Customer Support AI Chatbot can be integrated to assist and aid travelers and smart feedback system using sentiment analysis can be integrated (Ref: our Other Project -Botalysis ,BotalysisChat)
 - Better API support for flight Info and Booking options can be provided once given required access to Premium APIs from BIAL. 
 - Online support for buying/placing orders at BIAL Shops and Parking Ticket Management System. 
--UI Upgradations and Chat system support can be optimized for sending documents and other stuff
--Car Pool System can be implemented but since it will affect the user’s right to privacy after taking proper permissions for location and sharing with other people can be easily implemented.   
+- UI Upgradations and Chat system support can be optimized for sending documents and other stuff
+- Car Pool System can be implemented but since it will affect the user’s right to privacy after taking proper permissions for location and sharing with other people can be easily implemented.   
+
+## Video Demo at:
+- https://youtu.be/yiX_RNbmt14
 
 ## Live Demo at:
 - https://drive.google.com/file/d/1OCVItRBph47yggOEPlmdqtbQEhj_ey2z/view (APP)
