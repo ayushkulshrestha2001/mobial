@@ -10,6 +10,9 @@ import '../../model/language.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:localstorage/localstorage.dart';
+
+final LocalStorage storage = LocalStorage('mobial');
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -79,6 +82,7 @@ class ChatScreenState extends State<ChatScreen> {
         'reciever': recieverEmail,
         'timestamp': FieldValue.serverTimestamp(),
       });
+      showNotification(reciever!);
     }
     textEditingController.clear();
   }
@@ -151,6 +155,7 @@ class ChatScreenState extends State<ChatScreen> {
     print("in final message function");
     translated.forEach((message) {
       translatedMessages.add(ChatMessage(
+          chatReciever: reciever!,
           logInUser: logInUser!,
           text: message['text'],
           sender: message['sender'],
@@ -237,6 +242,7 @@ class ChatScreenState extends State<ChatScreen> {
                               "timestamp": messageTime
                             });
                             messageWidgets.add(ChatMessage(
+                              chatReciever: reciever!,
                               logInUser: logInUser!,
                               text: messageText,
                               sender: messageSender,
@@ -274,6 +280,7 @@ class ChatScreenState extends State<ChatScreen> {
 
 // ignore: must_be_immutable
 class ChatMessage extends StatelessWidget {
+  String chatReciever;
   String logInUser;
   String text;
   String sender;
@@ -281,7 +288,8 @@ class ChatMessage extends StatelessWidget {
   String recieverEmail;
 
   ChatMessage(
-      {required this.logInUser,
+      {required this.chatReciever,
+      required this.logInUser,
       required this.text,
       required this.sender,
       required this.reciever,
@@ -305,7 +313,7 @@ class ChatMessage extends StatelessWidget {
             children: <Widget>[
               Text(" "),
               Text(
-                sender,
+                '${storage.getItem('user')['name']}',
                 style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black),
               ),
             ],
@@ -331,7 +339,7 @@ class ChatMessage extends StatelessWidget {
       leading: new CircleAvatar(
         child: new Text(sender[0]),
       ),
-      title: Text(sender,
+      title: Text('$chatReciever',
           style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black)),
       subtitle: Text(
         "$txt",
