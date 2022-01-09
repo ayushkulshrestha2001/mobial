@@ -133,6 +133,7 @@ class _RentCarListState extends State<RentCarList> {
                       MaterialPageRoute(
                         builder: (context) => LendCarDetails(
                           id: list[index]['_id'],
+                          picture: list[index]["vehicle_picture"],
                           vehicleNumber: list[index]["vehicle_number"],
                           price: list[index]["expected_charge"],
                           renteeEmail: list[index]["rentee_email"],
@@ -182,8 +183,8 @@ class _RentCarListState extends State<RentCarList> {
                               child: Row(
                                 children: <Widget>[
                                   Expanded(
-                                    child: Image.asset(
-                                      'assets/img/bial_logo_bg.png',
+                                    child: Image.network(
+                                      list[index]["vehicle_picture"],
                                       height: 64,
                                       width: 64,
                                     ),
