@@ -21,8 +21,8 @@ class _Card5State extends State<Card5> {
 
   getCodeList() {
     codes.forEach((e) {
-      PlaceInfo info = new PlaceInfo(e['name'], Colors.black, Colors.white,
-          e['reward'], 'location', 'food');
+      PlaceInfo info = new PlaceInfo(e['picture'], e['name'], Colors.black,
+          Colors.white, e['reward'], 'location', 'food');
       scanned.add(info);
     });
   }
@@ -59,14 +59,21 @@ class _Card5State extends State<Card5> {
                   Positioned.fill(
                     child: Row(
                       children: <Widget>[
+                        SizedBox(
+                          width: 5.0,
+                        ),
                         Expanded(
-                          child: Image.asset(
-                            'assets/img/login_logo.png',
-                            height: 64,
-                            width: 64,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: Image.network(
+                              scanned[index].picture,
+                              height: 64,
+                              width: 64,
+                            ),
                           ),
                           flex: 2,
                         ),
+                        SizedBox(width: 10.0),
                         Expanded(
                           flex: 4,
                           child: Column(
@@ -142,6 +149,7 @@ class _Card5State extends State<Card5> {
 }
 
 class PlaceInfo {
+  final String picture;
   final String name;
   final String category;
   final String location;
@@ -149,8 +157,8 @@ class PlaceInfo {
   final Color startColor;
   final Color endColor;
 
-  PlaceInfo(this.name, this.startColor, this.endColor, this.rating,
-      this.location, this.category);
+  PlaceInfo(this.picture, this.name, this.startColor, this.endColor,
+      this.rating, this.location, this.category);
 }
 
 class CustomCardShapePainter extends CustomPainter {

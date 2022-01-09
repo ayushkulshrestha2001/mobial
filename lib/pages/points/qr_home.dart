@@ -103,14 +103,6 @@ class _QrHomeState extends State<QrHome> {
             },
           ));
         });
-        // markers.add(MarkMap(
-        //   mark: Mark(
-        //       name: markerData[i]['name'],
-        //       imagePath:
-        //           'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
-        //       lat: lat,
-        //       long: long),
-        // ));
       }
     });
     num rewards = 0;
@@ -152,18 +144,6 @@ class _QrHomeState extends State<QrHome> {
                 ))));
       });
     });
-
-    //   setState(() {
-    //     markers.add(MarkMap(
-    //       mark: Mark(
-    //           name: e['name'],
-    //           imagePath:
-    //               'https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg',
-    //           lat: lat,
-    //           long: long),
-    //     ));
-    //   });
-    // });
     print(rewards);
     setState(() {
       points = rewards;

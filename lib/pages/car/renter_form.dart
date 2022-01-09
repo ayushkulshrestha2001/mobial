@@ -139,15 +139,16 @@ class _RenterFormState extends State<RenterForm> {
               .push(MaterialPageRoute(builder: (context) => RentRequestList()));
         }
       }
+    } else {
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Center(
+                  child: Text('ERROR: Every Field is Compulsory to be filled')),
+            );
+          });
     }
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Center(
-                child: Text('ERROR: Every Field is Compulsory to be filled')),
-          );
-        });
   }
 
   @override
