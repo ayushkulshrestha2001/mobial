@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:mobial/pages/car/rent_car_info.dart';
 import 'dart:ui' as ui;
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
@@ -46,6 +45,7 @@ class _LendCarListState extends State<LendCarList> {
     setState(() {
       for (int i = 0; i < data.length; i++) {
         cars.add(PlaceInfo(
+            data[i]['picture'],
             data[i]['vehicle_name'],
             Colors.black,
             Colors.black,
@@ -81,31 +81,33 @@ class _LendCarListState extends State<LendCarList> {
                     child: Stack(
                       children: <Widget>[
                         GestureDetector(
-                            onTap: () => {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => LendCarDetails(
-                                            vehicleName: cars[index].name,
-                                            price: cars[index].rating,
-                                            vehicleNumber: cars[index].location,
-                                          )))
-                                },
+                            // onTap: () => {
+                            //       Navigator.of(context).push(MaterialPageRoute(
+                            //           builder: (context) => LendCarDetails(
+                            //                 vehicleName: cars[index].name,
+                            //                 price: cars[index].rating,
+                            //                 vehicleNumber: cars[index].location,
+                            //               )))
+                            //     },
                             child: Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(_borderRadius),
-                                color: Color(0xff072227),
-                              ),
-                            )),
+                          height: 150,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(_borderRadius),
+                            color: Color(0xff072227),
+                          ),
+                        )),
                         Positioned.fill(
                           child: Row(
                             children: <Widget>[
                               Expanded(
-                                child: Image.asset(
-                                  'assets/img/bial_logo_bg.png',
-                                  height: 64,
-                                  width: 64,
-                                ),
+                                child: cars[index].picture != ""
+                                    ? Image(
+                                        image:
+                                            NetworkImage(cars[index].picture),
+                                        height: 64,
+                                        width: 64,
+                                      )
+                                    : Image.asset('assests/img/car.png'),
                                 flex: 2,
                               ),
                               Expanded(
@@ -185,6 +187,7 @@ class _LendCarListState extends State<LendCarList> {
 }
 
 class PlaceInfo {
+  final String picture;
   final String name;
   final String category;
   final String location;
@@ -192,8 +195,8 @@ class PlaceInfo {
   final Color startColor;
   final Color endColor;
 
-  PlaceInfo(this.name, this.startColor, this.endColor, this.rating,
-      this.location, this.category);
+  PlaceInfo(this.picture, this.name, this.startColor, this.endColor,
+      this.rating, this.location, this.category);
 }
 
 class CustomCardShapePainter extends CustomPainter {

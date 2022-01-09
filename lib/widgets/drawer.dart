@@ -3,7 +3,6 @@ import 'package:mobial/widgets/check_list.dart';
 import 'package:mobial/pages/page/profile_page.dart';
 import 'package:mobial/login9/ui/login_page.dart';
 import 'package:mobial/widgets/privacy_policy.dart';
-import 'package:mobial/pages/car/renter_form.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobial/widgets/settings.dart';
@@ -41,15 +40,9 @@ Widget drawer(BuildContext context) {
               fontSize: 17.0,
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.account_circle_outlined,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a Account button')));
-            },
+          leading: Icon(
+            Icons.account_circle_outlined,
+            color: Colors.black,
           ),
           onTap: () {
             Navigator.push(
@@ -69,16 +62,9 @@ Widget drawer(BuildContext context) {
               fontSize: 17.0,
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.list,
-              color: Colors.black,
-            ),
-            tooltip: 'Show Snackbar',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
-            },
+          leading: Icon(
+            Icons.list,
+            color: Colors.black,
           ),
           onTap: () {
             Navigator.push(
@@ -98,16 +84,9 @@ Widget drawer(BuildContext context) {
               fontSize: 17.0,
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.settings,
-              color: Colors.black,
-            ),
-            tooltip: 'Show Snackbar',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
-            },
+          leading: Icon(
+            Icons.settings,
+            color: Colors.black,
           ),
           onTap: () {
             Navigator.push(
@@ -125,16 +104,9 @@ Widget drawer(BuildContext context) {
               style: GoogleFonts.signika(
                 fontSize: 17.0,
               )),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.privacy_tip,
-              color: Colors.black,
-            ),
-            tooltip: 'Show Snackbar',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
-            },
+          leading: Icon(
+            Icons.privacy_tip,
+            color: Colors.black,
           ),
           onTap: () {
             Navigator.push(
@@ -152,15 +124,9 @@ Widget drawer(BuildContext context) {
               style: GoogleFonts.signika(
                 fontSize: 17.0,
               )),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.logout,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a Logout button')));
-            },
+          leading: Icon(
+            Icons.logout,
+            color: Colors.black,
           ),
           onTap: () {
             storage.deleteItem('user');

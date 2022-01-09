@@ -134,29 +134,65 @@ class _PostCarState extends State<PostCar> {
   }
 
   postCar() async {
+    print('in post car function');
     String fromString = dateFormat.format(fromDate);
     String toString = dateFormat.format(toDate);
-    var url = Uri.parse("https://mobial.azurewebsites.net/api/post_car");
-    http.Response response = await http.post(url,
-        headers: <String, String>{
-          'content-type': 'application/json',
-          "Accept": "application/json",
-          "charset": "utf-8"
-        },
-        body: json.encode({
-          'rentee_email': storage.getItem('user')['email'],
-          'vehicle_name': vehicleNameController.text,
-          'vehicle_type': vehicleType,
-          'vehicle_number': vehicleNumberController.text,
-          'description': descriptionController.text,
-          'from_date': fromString,
-          'to_date': toString,
-          'car_rc': docUrl,
-          'vehicle_picture': picUrl,
-          'expected_charge': chargeController.text,
-        }));
-    print(response.statusCode);
-    print(response.body);
+    if (chargeController.text != "") {
+      if (vehicleNameController.text != "") {
+        if (vehicleNumberController.text != "") {
+          if (descriptionController != "") {
+            if (fromString != "" && toString != "") {
+              if (picUrl != "" && docUrl != "") {
+                var url =
+                    Uri.parse("https://mobial.azurewebsites.net/api/post_car");
+                http.Response response = await http.post(url,
+                    headers: <String, String>{
+                      'content-type': 'application/json',
+                      "Accept": "application/json",
+                      "charset": "utf-8"
+                    },
+                    body: json.encode({
+                      'rentee_email': storage.getItem('user')['email'],
+                      'vehicle_name': vehicleNameController.text,
+                      'vehicle_type': vehicleType,
+                      'vehicle_number': vehicleNumberController.text,
+                      'description': descriptionController.text,
+                      'from_date': fromString,
+                      'to_date': toString,
+                      'car_rc': docUrl,
+                      'vehicle_picture': picUrl,
+                      'expected_charge': chargeController.text,
+                    }));
+                print(response.statusCode);
+                print(response.body);
+                var data = jsonDecode(response.body);
+                if (data == 'Car Sucessfully Created') {
+                  Navigator.of(context).pop();
+                } else {
+                  return showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(
+                              'Error in Posting. Please check the form and try again '),
+                        );
+                      });
+                }
+              }
+            }
+          }
+        }
+      }
+    } else {
+      return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Center(
+                  child: Text('ERROR: Every Field is Compulsory to be filled')),
+            );
+          });
+    }
   }
 
   @override
@@ -176,7 +212,7 @@ class _PostCarState extends State<PostCar> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(top: size.height * 0.02),
+                        padding: EdgeInsets.only(top: size.height * 0.01),
                         child: Align(
                           child: Text(
                             'Hey there,',
@@ -218,7 +254,7 @@ class _PostCarState extends State<PostCar> {
                               ),
                               Icon(
                                 Icons.car_rental,
-                                color: Colors.grey,
+                                color: Colors.black,
                               ),
                               SizedBox(
                                 width: 10.0,
@@ -227,10 +263,10 @@ class _PostCarState extends State<PostCar> {
                                 value: vehicleType,
                                 icon: const Icon(
                                   Icons.arrow_downward,
-                                  color: Colors.grey,
+                                  color: Colors.black,
                                 ),
                                 elevation: 16,
-                                style: const TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Colors.black),
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     vehicleType = newValue!;
@@ -277,23 +313,13 @@ class _PostCarState extends State<PostCar> {
                             descriptionController),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: size.height * 0.025),
-                        child: Container(
-                          width: size.width * 0.9,
-                          height: size.height * 0.05,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                          ),
+                          padding: EdgeInsets.fromLTRB(35.0, 8.0, 10.0, 5.0),
                           child: DateTimeFormField(
                             decoration: const InputDecoration(
-                              enabledBorder: InputBorder.none,
-                              hintText: "From",
-                              hintStyle: TextStyle(color: Colors.white),
+                              hintStyle: TextStyle(color: Colors.black45),
                               errorStyle: TextStyle(color: Colors.redAccent),
-                              border: OutlineInputBorder(),
-                              suffixIcon:
-                                  Icon(Icons.event_note, color: Colors.grey),
+                              border: InputBorder.none,
+                              suffixIcon: Icon(Icons.event_note),
                               labelText: 'From',
                             ),
                             mode: DateTimeFieldPickerMode.dateAndTime,
@@ -307,27 +333,15 @@ class _PostCarState extends State<PostCar> {
                                 fromDate = value;
                               });
                             },
-                          ),
-                        ),
-                      ),
+                          )),
                       Padding(
-                        padding: EdgeInsets.only(top: size.height * 0.025),
-                        child: Container(
-                          width: size.width * 0.9,
-                          height: size.height * 0.05,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                          ),
+                          padding: EdgeInsets.fromLTRB(35.0, 8.0, 10.0, 5.0),
                           child: DateTimeFormField(
                             decoration: const InputDecoration(
-                              enabledBorder: InputBorder.none,
-                              hintText: "to",
-                              hintStyle: TextStyle(color: Colors.white),
+                              hintStyle: TextStyle(color: Colors.black45),
                               errorStyle: TextStyle(color: Colors.redAccent),
-                              border: OutlineInputBorder(),
-                              suffixIcon:
-                                  Icon(Icons.event_note, color: Colors.grey),
+                              border: InputBorder.none,
+                              suffixIcon: Icon(Icons.event_note),
                               labelText: 'To',
                             ),
                             mode: DateTimeFieldPickerMode.dateAndTime,
@@ -341,9 +355,7 @@ class _PostCarState extends State<PostCar> {
                                 toDate = value;
                               });
                             },
-                          ),
-                        ),
-                      ),
+                          )),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             vertical: 5.0, horizontal: 22.0),
@@ -419,14 +431,13 @@ class _PostCarState extends State<PostCar> {
         width: size.width * 0.9,
         height: size.height * 0.05,
         decoration: BoxDecoration(
-          //color: isDarkMode ? Colors.black : const Color(0xffF7F8F8),
           borderRadius: const BorderRadius.all(Radius.circular(15)),
         ),
         child: Form(
           key: key,
           child: TextFormField(
             controller: controller,
-            style: TextStyle(color: const Color(0xffADA4A5)),
+            style: TextStyle(color: Colors.black),
             onChanged: (value) {
               setState(() {
                 textfieldsStrings[stringToEdit] = value;
@@ -449,7 +460,7 @@ class _PostCarState extends State<PostCar> {
                 ),
                 child: Icon(
                   icon,
-                  color: const Color(0xff7B6F72),
+                  color: Colors.black,
                 ),
               ),
               suffixIcon: password

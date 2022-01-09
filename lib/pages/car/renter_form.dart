@@ -113,27 +113,41 @@ class _RenterFormState extends State<RenterForm> {
   }
 
   addRequest() async {
-    print(id);
     String fromString = dateFormat.format(fromDate);
     String toString = dateFormat.format(toDate);
-    var url = Uri.parse("https://mobial.azurewebsites.net/api/rent_car");
-    http.Response response = await http.post(url,
-        headers: <String, String>{
-          'content-type': 'application/json',
-          "Accept": "application/json",
-          "charset": "utf-8"
-        },
-        body: json.encode({
-          'vehicle_id': id,
-          'renter_email': storage.getItem('user')['email'],
-          'from_date': fromString,
-          'to_date': toString,
-          'id_proof': idUrl,
-        }));
-    print(response.body);
-    print(response.statusCode);
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => RentRequestList()));
+    print(id);
+    if (id != "") {
+      if (toString != "" && fromString != "") {
+        if (idUrl != "") {
+          var url = Uri.parse("https://mobial.azurewebsites.net/api/rent_car");
+          http.Response response = await http.post(url,
+              headers: <String, String>{
+                'content-type': 'application/json',
+                "Accept": "application/json",
+                "charset": "utf-8"
+              },
+              body: json.encode({
+                'vehicle_id': id,
+                'renter_email': storage.getItem('user')['email'],
+                'from_date': fromString,
+                'to_date': toString,
+                'id_proof': idUrl,
+              }));
+          print(response.body);
+          print(response.statusCode);
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => RentRequestList()));
+        }
+      }
+    }
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+                child: Text('ERROR: Every Field is Compulsory to be filled')),
+          );
+        });
   }
 
   @override
