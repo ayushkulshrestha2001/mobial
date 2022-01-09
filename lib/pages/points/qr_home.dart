@@ -90,8 +90,8 @@ class _QrHomeState extends State<QrHome> {
                           title: Column(
                             children: [
                               Image(
-                                image: NetworkImage(
-                                    "https://www.bengaluruairport.com/content/dam/bial/global/logo/bial-logo/KIAB-Logo-1200-X-628.jpg"),
+                                image:
+                                    NetworkImage('${markerData[i]['picture']}'),
                               ),
                               Text('${markerData[i]['name']}'),
                             ],

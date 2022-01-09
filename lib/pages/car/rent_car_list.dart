@@ -131,18 +131,23 @@ class _RentCarListState extends State<RentCarList> {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => LendCarDetails(
-                          id: list[index]['_id'],
-                          picture: list[index]["vehicle_picture"],
-                          vehicleNumber: list[index]["vehicle_number"],
-                          price: list[index]["expected_charge"],
-                          renteeEmail: list[index]["rentee_email"],
-                          vehicleName: list[index]["vehicle_name"],
-                          vehicleType: list[index]["vehicle_type"],
-                          description: list[index]["description"],
-                          fromDate: list[index]["from_date"],
-                          toDate: list[index]["to_date"],
-                        ),
+                        builder: (context) {
+                          print(list.length);
+                          return LendCarDetails(
+                            id: list[index]['_id'],
+                            // picture: list[index]["vehicle_picture"],
+                            picture: list[index]['vehicle_picture'],
+                            vehicleNumber: list[index]["vehicle_number"],
+                            price: list[index]["expected_charge"],
+                            renteeEmail: list[index]["rentee_email"],
+                            vehicleName: list[index]["vehicle_name"],
+                            vehicleType: list[index]["vehicle_type"],
+                            description: list[index]["description"],
+                            fromDate: list[index]["from_date"],
+                            toDate: list[index]["to_date"],
+                            path: "Hello",
+                          );
+                        },
                       ),
                     ),
                     child: Center(

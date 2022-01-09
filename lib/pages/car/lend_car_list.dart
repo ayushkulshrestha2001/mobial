@@ -45,7 +45,7 @@ class _LendCarListState extends State<LendCarList> {
     setState(() {
       for (int i = 0; i < data.length; i++) {
         cars.add(PlaceInfo(
-            data[i]['picture'],
+            data[i]['vehicle_picture'],
             data[i]['vehicle_name'],
             Colors.black,
             Colors.black,

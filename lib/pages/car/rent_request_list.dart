@@ -55,6 +55,7 @@ class _RentRequestListState extends State<RentRequestList> {
       var car = jsonDecode(carResponse.body);
       print("car info: $car");
       cars.add(PlaceInfo(
+          car['vehicle_picture'],
           car['vehicle_name'],
           Colors.black,
           Colors.black,
@@ -93,35 +94,14 @@ class _RentRequestListState extends State<RentRequestList> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(_borderRadius),
                             color: Color(0xff072227),
-                            // gradient: LinearGradient(colors: [
-                            //   items[index].startColor,
-                            //   items[index].endColor
-                            // ], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: items[index].endColor,
-                            //     blurRadius: 12,
-                            //     offset: Offset(0, 6),
-                            //   ),
-                            // ],
                           ),
                         ),
-                        // Positioned(
-                        //   right: 0,
-                        //   bottom: 0,
-                        //   top: 0,
-                        //   child: CustomPaint(
-                        //     size: Size(100, 150),
-                        //     painter: CustomCardShapePainter(_borderRadius,
-                        //         items[index].startColor, items[index].endColor),
-                        //   ),
-                        // ),
                         Positioned.fill(
                           child: Row(
                             children: <Widget>[
                               Expanded(
-                                child: Image.asset(
-                                  'assets/img/bial_logo_bg.png',
+                                child: Image.network(
+                                  cars[index].picture,
                                   height: 64,
                                   width: 64,
                                 ),
@@ -204,6 +184,7 @@ class _RentRequestListState extends State<RentRequestList> {
 }
 
 class PlaceInfo {
+  final String picture;
   final String name;
   final String category;
   final String location;
@@ -211,8 +192,8 @@ class PlaceInfo {
   final Color startColor;
   final Color endColor;
 
-  PlaceInfo(this.name, this.startColor, this.endColor, this.rating,
-      this.location, this.category);
+  PlaceInfo(this.picture, this.name, this.startColor, this.endColor,
+      this.rating, this.location, this.category);
 }
 
 class CustomCardShapePainter extends CustomPainter {
