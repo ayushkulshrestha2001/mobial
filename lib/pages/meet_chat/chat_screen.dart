@@ -336,6 +336,7 @@ class ChatScreenState extends State<ChatScreen> {
                               (messageSender == recieverEmail &&
                                   messageReciever == logInUser)) {
                             translate.add({
+                              "isPhoto": isPhoto,
                               "sender": messageSender,
                               "text": messageText,
                               "reciever": messageReciever,
@@ -452,10 +453,16 @@ class ChatMessage extends StatelessWidget {
       ),
       title: Text('$chatReciever',
           style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black)),
-      subtitle: Text(
-        "$txt",
-        style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
-      ),
+      subtitle: isPhoto
+          ? Image.network(
+              txt,
+              width: 250,
+              height: 200,
+            )
+          : Text(
+              "$txt",
+              style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+            ),
     );
   }
 
