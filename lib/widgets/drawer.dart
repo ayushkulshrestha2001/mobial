@@ -77,28 +77,28 @@ Widget drawer(BuildContext context) {
             );
           },
         ),
-        ListTile(
-          title: Text(
-            'Settings',
-            style: GoogleFonts.signika(
-              fontSize: 17.0,
-            ),
-          ),
-          leading: Icon(
-            Icons.settings,
-            color: Colors.black,
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) {
-                  return Settings();
-                },
-              ),
-            );
-          },
-        ),
+        // ListTile(
+        //   title: Text(
+        //     'Settings',
+        //     style: GoogleFonts.signika(
+        //       fontSize: 17.0,
+        //     ),
+        //   ),
+        //   leading: Icon(
+        //     Icons.settings,
+        //     color: Colors.black,
+        //   ),
+        //   onTap: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) {
+        //           return Settings();
+        //         },
+        //       ),
+        //     );
+        //   },
+        // ),
         ListTile(
           title: Text('Privacy Policy',
               style: GoogleFonts.signika(

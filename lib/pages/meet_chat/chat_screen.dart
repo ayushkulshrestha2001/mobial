@@ -150,6 +150,13 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   onTranslate() async {
+    if (translate.length == 0) {
+      return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                content: Text('No Messages to Translate'),
+              ));
+    }
     setState(() {
       isLoading = true;
     });

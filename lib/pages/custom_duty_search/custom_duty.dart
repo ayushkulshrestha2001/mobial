@@ -78,8 +78,8 @@ class _CustomDutyState extends State<CustomDuty> {
       var data = jsonDecode(response.body);
       setState(() {
         for (int i = 0; i < data.length; i++) {
-          if (infoItem[data['name']] != null) {
-            cardWidgets.add(infoItem[data['name']]!);
+          if (infoItem[data[i]['name']] != null) {
+            cardWidgets.add(infoItem[data[i]['name']]!);
           }
         }
         finalImageUrl = finalUrl;
