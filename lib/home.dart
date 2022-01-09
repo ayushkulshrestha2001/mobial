@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:mobial/pages/ticket_search/Ticket.dart';
 import 'package:mobial/pages/car/car_service.dart';
@@ -26,15 +27,17 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   PageController _pageController = PageController();
   int pageIndex = 0;
   void onPageChange(int pageIndex) {
+    print(_pageController);
     setState(() {
       this.pageIndex = pageIndex;
     });
   }
 
   onTap(int pageIndex) async {
+    print(pageIndex);
     await _pageController.animateToPage(
       pageIndex,
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 650),
       curve: Curves.ease,
     );
   }
@@ -78,6 +81,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           controller: _pageController,
           onPageChanged: onPageChange,
           physics: NeverScrollableScrollPhysics(),
+          dragStartBehavior: DragStartBehavior.start,
         ),
       ),
     );

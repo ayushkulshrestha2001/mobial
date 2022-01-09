@@ -64,8 +64,8 @@ class LendCarDetails extends StatelessWidget {
               ),
               Hero(
                 tag: "$vehicleName",
-                child: Image.asset(
-                  "assets/img/car.png",
+                child: Image.network(
+                  "$picture",
                   height: 150,
                   width: 150,
                 ),
