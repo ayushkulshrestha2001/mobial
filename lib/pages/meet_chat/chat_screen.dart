@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mobial/main.dart';
@@ -11,6 +13,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:azblob/azblob.dart';
 
 final LocalStorage storage = LocalStorage('mobial');
 
@@ -36,6 +40,7 @@ class ChatScreenState extends State<ChatScreen> {
   final String? sender;
   final String? reciever;
   final String? recieverEmail;
+  File? selectedImage;
   bool isLoading = false;
   ChatScreenState(
       {this.logInUser, this.sender, this.reciever, this.recieverEmail});
@@ -81,6 +86,7 @@ class ChatScreenState extends State<ChatScreen> {
         'sender': sender,
         'reciever': recieverEmail,
         'timestamp': FieldValue.serverTimestamp(),
+        'isPhoto': false,
       });
       showNotification(reciever!);
     }
@@ -100,6 +106,13 @@ class ChatScreenState extends State<ChatScreen> {
                     hintText: "Enter your message"),
                 controller: textEditingController,
                 onSubmitted: _handleSubmit,
+              ),
+            ),
+            new Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: new IconButton(
+                icon: new Icon(Icons.attach_file_rounded),
+                onPressed: _handleAtachmentPressed,
               ),
             ),
             new Container(
@@ -172,6 +185,7 @@ class ChatScreenState extends State<ChatScreen> {
           chatReciever: reciever!,
           logInUser: logInUser!,
           text: message['text'],
+          isPhoto: message['isPhoto'],
           sender: message['sender'],
           reciever: message['reciever'],
           recieverEmail: recieverEmail!));
@@ -185,6 +199,77 @@ class ChatScreenState extends State<ChatScreen> {
               messages: translatedMessages,
               language: value,
             )));
+  }
+
+  void _handleAtachmentPressed() {
+    print("hello");
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: SizedBox(
+            height: 144,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    handleChooseFromGallery(context);
+                  },
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Photo'),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Cancel'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  handleChooseFromGallery(BuildContext context) async {
+    XFile? file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(() {
+      this.selectedImage = File(file!.path);
+      isLoading = true;
+    });
+    var name = selectedImage!.path.split("/").last;
+    print(name);
+
+    var storage = AzureStorage.parse(
+        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
+    await storage.putBlob('/mobialc/$name',
+        bodyBytes: selectedImage!.readAsBytesSync(),
+        contentType: lookupMimeType('$name'),
+        type: BlobType.BlockBlob);
+
+    var val = storage.uri();
+    String finalUrl = "$val" + "mobialc/$name";
+    print(finalUrl);
+
+    if (finalUrl != "") {
+      _firestore.collection('messages').add({
+        'message': finalUrl,
+        'sender': sender,
+        'reciever': recieverEmail,
+        'timestamp': FieldValue.serverTimestamp(),
+        'isPhoto': true,
+      });
+      showNotification(reciever!);
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -242,6 +327,7 @@ class ChatScreenState extends State<ChatScreen> {
 
                         for (var message in messages) {
                           final messageText = message['message'];
+                          final isPhoto = message['isPhoto'];
                           final messageSender = message['sender'];
                           final messageReciever = message['reciever'];
                           final messageTime = message['timestamp'].toString();
@@ -260,6 +346,7 @@ class ChatScreenState extends State<ChatScreen> {
                               chatReciever: reciever!,
                               logInUser: logInUser!,
                               text: messageText,
+                              isPhoto: isPhoto,
                               sender: messageSender,
                               reciever: messageReciever,
                               recieverEmail: recieverEmail!,
@@ -298,6 +385,7 @@ class ChatMessage extends StatelessWidget {
   String chatReciever;
   String logInUser;
   String text;
+  bool isPhoto;
   String sender;
   String reciever;
   String recieverEmail;
@@ -306,12 +394,13 @@ class ChatMessage extends StatelessWidget {
       {required this.chatReciever,
       required this.logInUser,
       required this.text,
+      required this.isPhoto,
       required this.sender,
       required this.reciever,
       required this.recieverEmail});
   @override
   Widget build(BuildContext context) {
-    String txt = getPrettyString(text);
+    String txt = text;
     if (sender == logInUser) {
       return Card(
         color: Color(0xffd5e4e1),
@@ -337,10 +426,17 @@ class ChatMessage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(" "),
-              Text(
-                "$txt",
-                style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
-              )
+              isPhoto
+                  ? Image.network(
+                      txt,
+                      width: 250,
+                      height: 200,
+                    )
+                  : Text(
+                      "$txt",
+                      style: GoogleFonts.signika(
+                          fontSize: 18.0, color: Colors.black),
+                    )
             ],
           ),
         ),
@@ -363,12 +459,12 @@ class ChatMessage extends StatelessWidget {
     );
   }
 
-  String getPrettyString(String str) {
-    for (int i = 1; i < str.length; i++) {
-      if (i % 30 == 0) {
-        str = "${str.substring(0, i)} \n ${str.substring(i)}";
-      }
-    }
-    return str;
-  }
+  // String getPrettyString(String str) {
+  //   for (int i = 1; i < str.length; i++) {
+  //     if (i % 30 == 0) {
+  //       str = "${str.substring(0, i)} \n ${str.substring(i)}";
+  //     }
+  //   }
+  //   return str;
+  // }
 }
