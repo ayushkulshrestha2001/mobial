@@ -9,6 +9,10 @@ import 'package:mobial/home.dart';
 import 'package:mobial/login9/utils/bubble_indication_painter.dart';
 import 'package:http/http.dart' as http;
 import 'package:localstorage/localstorage.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final _firestore = FirebaseFirestore.instance;
 
 class Login9 extends StatefulWidget {
   @override
@@ -52,6 +56,17 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     print(storage.getItem('user'));
   }
 
+  clearBotMessages() {
+    _firestore.collection('chatbotMessages').get().then((message) {
+      for (var message in message.docs) {
+        if (message['sender'] == storage.getItem('user')['email'] ||
+            message['receiver'] == storage.getItem('user')['email']) {
+          message.reference.delete();
+        }
+      }
+    });
+  }
+
   handleSignIn() async {
     setState(() {
       isLoading = true;
@@ -75,6 +90,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
       print(response.body);
       var data = jsonDecode(response.body);
       addItemsToLocalStorage(data);
+      clearBotMessages();
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -228,6 +244,7 @@ class _Login9State extends State<Login9> with SingleTickerProviderStateMixin {
     await storage.ready;
     print(storage.getItem('user'));
     if (storage.getItem('user') != null) {
+      clearBotMessages();
       print(storage.getItem('user'));
       Navigator.push(
           context,

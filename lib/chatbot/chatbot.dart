@@ -5,6 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:highlight_text/highlight_text.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+final _firestore = FirebaseFirestore.instance;
 
 final LocalStorage storage = LocalStorage('mobial');
 
@@ -20,6 +24,7 @@ class _ChatbotState extends State<Chatbot> {
   bool _isListening = false;
   String _text = 'Press the button and start speaking';
   double _confidence = 1.0;
+  TextEditingController messageController = TextEditingController();
 
   // SpeechToText _speechToText = SpeechToText();
   // bool _speechEnabled = false;
@@ -43,6 +48,7 @@ class _ChatbotState extends State<Chatbot> {
         _speech.listen(
           onResult: (val) => setState(() {
             _text = val.recognizedWords;
+            messageController.text = _text;
             print(_text);
             if (val.hasConfidenceRating && val.confidence > 0) {
               _confidence = val.confidence;
@@ -53,39 +59,35 @@ class _ChatbotState extends State<Chatbot> {
     } else {
       setState(() => _isListening = false);
       _speech.stop();
+      handleVoiceSubmit();
     }
   }
 
-  /// This has to happen only once per app
-  // void _initSpeech() async {
-  //   _speechEnabled = await _speechToText.initialize();
-  //   setState(() {});
-  // }
+  handleVoiceSubmit() {
+    print(_text);
+    if (_text != "") {
+      _firestore.collection('chatbotMessages').add({
+        'message': _text,
+        'sender': storage.getItem('user')['email'],
+        'receiver': 'bot',
+        'time': FieldValue.serverTimestamp(),
+      });
+    }
+    messageController.clear();
+  }
 
-  // /// Each time to start a speech recognition session
-  // void _startListening() async {
-  //   await _speechToText.listen(onResult: _onSpeechResult);
-  //   setState(() {});
-  // }
-
-  // /// Manually stop the active speech recognition session
-  // /// Note that there are also timeouts that each platform enforces
-  // /// and the SpeechToText plugin supports setting timeouts on the
-  // /// listen method.
-  // void _stopListening() async {
-  //   await _speechToText.stop();
-  //   setState(() {});
-  // }
-
-  // /// This is the callback that the SpeechToText plugin calls when
-  // /// the platform returns recognized words.
-  // void _onSpeechResult(SpeechRecognitionResult result) {
-  //   print('in speech to text');
-  //   print(result.recognizedWords);
-  //   setState(() {
-  //     _lastWords = result.recognizedWords;
-  //   });
-  // }
+  handleSubmit() {
+    print(messageController.text);
+    if (messageController.text != "") {
+      _firestore.collection('chatbotMessages').add({
+        'message': messageController.text,
+        'sender': storage.getItem('user')['email'],
+        'receiver': 'bot',
+        'time': FieldValue.serverTimestamp(),
+      });
+    }
+    messageController.clear();
+  }
 
   bool isOpen = false;
   @override
@@ -110,7 +112,6 @@ class _ChatbotState extends State<Chatbot> {
   }
 
   Widget chatBuilder() {
-    TextEditingController messageController = TextEditingController();
     // setState(() {
     //   isOpen = true;
     // });
@@ -142,9 +143,43 @@ class _ChatbotState extends State<Chatbot> {
           Divider(
             height: 2.0,
           ),
-          SizedBox(
-            height: 370.0,
+          Container(
+            height: 370,
+            child: StreamBuilder(
+              stream: _firestore
+                  .collection('chatbotMessages')
+                  .orderBy('time')
+                  .snapshots(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  final messages = snapshot.data!.docs.reversed;
+                  List<ChatMessage> messageWidgets = [];
+
+                  for (var message in messages) {
+                    messageWidgets.add(
+                      ChatMessage(
+                          text: message['message'],
+                          sender: message['sender'],
+                          reciever: message['receiver']),
+                    );
+                  }
+                  return Container(
+                    child: Expanded(
+                      child: ListView(
+                        reverse: true,
+                        padding: EdgeInsets.zero,
+                        children: messageWidgets,
+                      ),
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
           ),
+          // SizedBox(
+          //   height: 370.0,
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -171,12 +206,15 @@ class _ChatbotState extends State<Chatbot> {
                 onTap: _listen,
                 child: CircleAvatar(
                   backgroundColor: Colors.blue,
-                  child: Icon(Icons.mic),
+                  child: _isListening ? Icon(Icons.close) : Icon(Icons.mic),
                 ),
               ),
-              CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Icon(Icons.send),
+              GestureDetector(
+                onTap: handleSubmit,
+                child: CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: Icon(Icons.send),
+                ),
               ),
             ],
           )
@@ -185,17 +223,68 @@ class _ChatbotState extends State<Chatbot> {
     );
   }
 }
-// class chatBuilder extends StatefulWidget {
-//   chatBuilder({Key? key}) : super(key: key);
 
-//   @override
-//   State<chatBuilder> createState() => _chatBuilderState();
-// }
+class ChatMessage extends StatelessWidget {
+  String text;
+  String sender;
+  String reciever;
 
-// class _chatBuilderState extends State<chatBuilder> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
-
+  ChatMessage({
+    required this.text,
+    required this.sender,
+    required this.reciever,
+  });
+  @override
+  Widget build(BuildContext context) {
+    String txt = text;
+    if (sender == storage.getItem('user')['email']) {
+      return Card(
+        color: Color(0xffd5e4e1),
+        elevation: 0,
+        child: ListTile(
+          isThreeLine: false,
+          trailing: new CircleAvatar(
+            child: new Text(
+              sender[0],
+            ),
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(" "),
+              Text(
+                '${storage.getItem('user')['name']}',
+                style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black),
+              ),
+            ],
+          ),
+          subtitle: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(" "),
+              Text(
+                "$txt",
+                style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+              )
+            ],
+          ),
+        ),
+      );
+    }
+    return ListTile(
+      contentPadding: EdgeInsets.only(
+        left: 15.0,
+      ),
+      isThreeLine: true,
+      leading: new CircleAvatar(
+        child: new Text(sender[0]),
+      ),
+      title: Text('BOT',
+          style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black)),
+      subtitle: Text(
+        "$txt",
+        style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+      ),
+    );
+  }
+}
