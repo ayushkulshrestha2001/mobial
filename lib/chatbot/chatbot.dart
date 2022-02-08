@@ -1,12 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:custom_pop_up_menu/custom_pop_up_menu.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:highlight_text/highlight_text.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:avatar_glow/avatar_glow.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
+//import 'package:linkify/linkify.dart';
 
 final _firestore = FirebaseFirestore.instance;
 
@@ -85,8 +88,40 @@ class _ChatbotState extends State<Chatbot> {
         'receiver': 'bot',
         'time': FieldValue.serverTimestamp(),
       });
+      handleResponse();
     }
     messageController.clear();
+  }
+
+  handleResponse() async {
+    var url = Uri.parse(
+        'https://mobialqna.azurewebsites.net/qnamaker/knowledgebases/a4980818-d160-4e93-8bfc-2abeed59c5a7/generateAnswer');
+    var endPointKey = 'd25b1656-ae4a-41a5-92c5-1fc00295e357';
+    http.Response response = await http.post(url,
+        headers: <String, String>{
+          "Authorization": endPointKey,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({
+          "question": messageController.text,
+        }));
+    var decodedData = json.decode(response.body);
+    print(decodedData['answers'][0]['answer']);
+    if (decodedData['answers'][0]['answer'] != 'No good match found in KB.') {
+      _firestore.collection('chatbotMessages').add({
+        'message': decodedData['answers'][0]['answer'],
+        'sender': 'bot',
+        'receiver': storage.getItem('user')['email'],
+        'time': FieldValue.serverTimestamp(),
+      });
+    } else {
+      _firestore.collection('chatbotMessages').add({
+        'message': 'Looks Like I have to study more...',
+        'sender': 'bot',
+        'receiver': storage.getItem('user')['email'],
+        'time': FieldValue.serverTimestamp(),
+      });
+    }
   }
 
   bool isOpen = false;
@@ -98,13 +133,15 @@ class _ChatbotState extends State<Chatbot> {
       child: CustomPopupMenu(
         arrowColor: Colors.white,
         child: CircleAvatar(
-          radius: 20.0,
-          backgroundImage: NetworkImage(
-            'https://firebasestorage.googleapis.com/v0/b/mobial.appspot.com/o/chaticon.png?alt=media&token=7e9f5a17-4bc9-41d5-9ac9-dda9fe738aba',
-          ),
-          //backgroundColor: Colors.blue,
-          //child: Icon(Icons.chat, color: Colors.white),
-        ),
+            radius: 20.0,
+            backgroundColor: Colors.black,
+            child: Image(
+              image: AssetImage(
+                'assets/img/only-bial-removebg-preview.png',
+              ),
+              width: 45,
+              fit: BoxFit.fill,
+            )),
         menuBuilder: chatBuilder,
         pressType: PressType.singleClick,
       ),
@@ -130,7 +167,7 @@ class _ChatbotState extends State<Chatbot> {
           ),
           ListTile(
             leading: CircleAvatar(
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.black,
                 child: Icon(Icons.smart_toy_outlined, color: Colors.white)),
             title: Text(
               'Welcome ${storage.getItem('user')['name']}',
@@ -205,14 +242,14 @@ class _ChatbotState extends State<Chatbot> {
               GestureDetector(
                 onTap: _listen,
                 child: CircleAvatar(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.black,
                   child: _isListening ? Icon(Icons.close) : Icon(Icons.mic),
                 ),
               ),
               GestureDetector(
                 onTap: handleSubmit,
                 child: CircleAvatar(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.black,
                   child: Icon(Icons.send),
                 ),
               ),
@@ -235,55 +272,127 @@ class ChatMessage extends StatelessWidget {
     required this.reciever,
   });
   @override
+  // String extractLink(String input) {
+  //   var elements = linkify(input,
+  //       options: LinkifyOptions(
+  //         humanize: false,
+  //       ));
+  //   for (var e in elements) {
+  //     if (e is LinkableElement) {
+  //       return e.url;
+  //     }
+  //   }
+  //   return "";
+  // }
   Widget build(BuildContext context) {
     String txt = text;
+    String anchor = "";
+    String url = "";
+    for (int i = 0; i < txt.length; i++) {
+      if (txt[i] == '[') {
+        i = i + 1;
+        while (txt[i] != ']') {
+          anchor = anchor + txt[i];
+          i++;
+        }
+      }
+      if (txt[i] == '(') {
+        i = i + 1;
+        while (txt[i] != ')') {
+          url = url + txt[i];
+          i++;
+        }
+      }
+    }
+    txt = txt.replaceAll(url, "");
+    txt = txt.replaceAll(anchor, "");
+    txt = txt.replaceAll("[]()", "");
+    // String clickable = extractLink()
+    print(txt);
+    print(anchor);
+    print(url);
     if (sender == storage.getItem('user')['email']) {
-      return Card(
-        color: Color(0xffd5e4e1),
-        elevation: 0,
-        child: ListTile(
-          isThreeLine: false,
-          trailing: new CircleAvatar(
-            child: new Text(
-              sender[0],
-            ),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(" "),
-              Text(
-                '${storage.getItem('user')['name']}',
-                style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black),
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          color: Color(0xfff9f9fa),
+          elevation: 0,
+          child: ListTile(
+            isThreeLine: true,
+            trailing: new CircleAvatar(
+              child: new Text(
+                sender[0],
               ),
-            ],
-          ),
-          subtitle: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(" "),
-              Text(
-                "$txt",
-                style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
-              )
-            ],
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(" "),
+                Text(
+                  '${storage.getItem('user')['name']}',
+                  style:
+                      GoogleFonts.signika(fontSize: 12.0, color: Colors.black),
+                ),
+              ],
+            ),
+            subtitle: Expanded(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(" "),
+                Text(
+                  "$txt",
+                  style:
+                      GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+                  maxLines: 20,
+                ),
+              ],
+            )),
           ),
         ),
       );
     }
-    return ListTile(
-      contentPadding: EdgeInsets.only(
-        left: 15.0,
-      ),
-      isThreeLine: true,
-      leading: new CircleAvatar(
-        child: new Text(sender[0]),
-      ),
-      title: Text('BOT',
-          style: GoogleFonts.signika(fontSize: 12.0, color: Colors.black)),
-      subtitle: Text(
-        "$txt",
-        style: GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Card(
+        elevation: 0,
+        color: Color(0xffeeeeee),
+        child: ListTile(
+            contentPadding: EdgeInsets.only(
+              left: 15.0,
+            ),
+            isThreeLine: true,
+            leading: new CircleAvatar(
+              child: new Text(sender[0]),
+            ),
+            title: Text('BOT',
+                style:
+                    GoogleFonts.signika(fontSize: 12.0, color: Colors.black)),
+            subtitle: Column(
+              children: [
+                !anchor.isEmpty
+                    ? (TextButton(
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.blueAccent),
+                            textStyle: MaterialStateProperty.all(TextStyle(
+                              color: Colors.white,
+                            ))),
+                        onPressed: () => launch(url),
+                        child: Text(
+                          '$anchor',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ))
+                    : Container(),
+                Text(
+                  "$txt",
+                  style:
+                      GoogleFonts.signika(fontSize: 18.0, color: Colors.black),
+                  maxLines: 20,
+                )
+              ],
+            )),
       ),
     );
   }

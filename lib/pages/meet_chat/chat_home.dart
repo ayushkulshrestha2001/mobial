@@ -28,6 +28,7 @@ class ChatScreenState extends State<ChatHome> {
   }
 
   getUsers() async {
+    print('in getUsers');
     setState(() {
       isLoading = true;
     });
