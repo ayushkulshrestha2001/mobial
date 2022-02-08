@@ -75,6 +75,7 @@ class _ChatbotState extends State<Chatbot> {
         'receiver': 'bot',
         'time': FieldValue.serverTimestamp(),
       });
+      handleResponse(_text);
     }
     messageController.clear();
   }
@@ -88,12 +89,12 @@ class _ChatbotState extends State<Chatbot> {
         'receiver': 'bot',
         'time': FieldValue.serverTimestamp(),
       });
-      handleResponse();
+      handleResponse(messageController.text);
     }
     messageController.clear();
   }
 
-  handleResponse() async {
+  handleResponse(String text) async {
     var url = Uri.parse(
         'https://mobialqna.azurewebsites.net/qnamaker/knowledgebases/a4980818-d160-4e93-8bfc-2abeed59c5a7/generateAnswer');
     var endPointKey = 'd25b1656-ae4a-41a5-92c5-1fc00295e357';
@@ -103,7 +104,7 @@ class _ChatbotState extends State<Chatbot> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode({
-          "question": messageController.text,
+          "question": text,
         }));
     var decodedData = json.decode(response.body);
     print(decodedData['answers'][0]['answer']);
