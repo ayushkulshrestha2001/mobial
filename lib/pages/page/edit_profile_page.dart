@@ -57,14 +57,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     print(name);
 
     var storage1 = AzureStorage.parse(
-        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
-    await storage1.putBlob('/mobialc/$name',
+        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobials;AccountKey=MGK+5fB/xysTXXPvG7RnAYnQocXBCtr8oKbkv64qtlX1dpjmq1BWtJCg6gMmvfQ0EpaOXdMTyrT3+AStoRUMqQ==');
+    await storage1.putBlob('/mobial/$name',
         bodyBytes: selectedImage!.readAsBytesSync(),
         contentType: lookupMimeType('$name'),
         type: BlobType.BlockBlob);
 
     var val = storage1.uri();
-    String finalUrl = "$val" + "mobialc/$name";
+    String finalUrl = "$val" + "mobial/$name";
     print(finalUrl);
 
     var bUrl = Uri.parse("https://mobial.azurewebsites.net/api/update_profile");
@@ -108,14 +108,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
     print(name);
 
     var storage1 = AzureStorage.parse(
-        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobial;AccountKey=625C6GU3riuquxpJbkz86DNcCYd4iqFS5RJNpOIW+imfdIz8UI429OXAAZr7gr0fHyKFLhMA7gF1fmgw/Zt48g==');
-    await storage1.putBlob('/mobialc/$name',
+        'DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=mobials;AccountKey=MGK+5fB/xysTXXPvG7RnAYnQocXBCtr8oKbkv64qtlX1dpjmq1BWtJCg6gMmvfQ0EpaOXdMTyrT3+AStoRUMqQ==');
+    await storage1.putBlob('/mobial/$name',
         bodyBytes: selectedImage!.readAsBytesSync(),
         contentType: lookupMimeType('$name'),
         type: BlobType.BlockBlob);
 
     var val = storage1.uri();
-    String finalUrl = "$val" + "mobialc/$name";
+    String finalUrl = "$val" + "mobial/$name";
     print(finalUrl);
 
     var bUrl = Uri.parse("https://mobial.azurewebsites.net/api/update_profile");

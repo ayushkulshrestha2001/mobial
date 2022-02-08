@@ -41,9 +41,9 @@ class _MapDisplayState extends State<MapDisplay> {
         TileLayerWidget(
           options: TileLayerOptions(
             urlTemplate:
-                'https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&tileSize=256&view=Auto&zoom={z}&x={x}&y={y}&subscription-key=gCUOaS3l6uKVcg20GfuNBtkRBlZuNZwlZSbgwEjfqlA',
+                'https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&tileSize=256&view=Auto&zoom={z}&x={x}&y={y}&subscription-key=JENfdJcTMjKcAKIZ2TwVMf3Z6dBA7hgFmveOnlm0CYc',
             additionalOptions: {
-              'subscriptionKey': 'gCUOaS3l6uKVcg20GfuNBtkRBlZuNZwlZSbgwEjfqlA',
+              'subscriptionKey': 'JENfdJcTMjKcAKIZ2TwVMf3Z6dBA7hgFmveOnlm0CYc',
             },
           ),
         ),
@@ -67,28 +67,6 @@ class _MapDisplayState extends State<MapDisplay> {
             },
           ),
         ),
-        // PopupMarkerLayerWidget(
-        //     options: PopupMarkerLayerOptions(
-        //   markers: markers,
-        //   popupController: _popupLayerController,
-        //   popupBuilder: (_, Marker marker) {
-        //     if (marker is MarkMap) {
-        //       return MarkerPopUp(mark: marker.mark);
-        //     }
-        //     return Container(
-        //       height: 100.0,
-        //       child: Card(
-        //         child: Column(
-        //           children: [
-        //             Text(
-        //               'Not a monument',
-        //             )
-        //           ],
-        //         ),
-        //       ),
-        //     );
-        //   },
-        // )),
       ],
     );
   }
@@ -123,31 +101,6 @@ class MarkMap extends Marker {
   final Mark mark;
 }
 
-// class MonumentMarkerPopup extends StatelessWidget {
-//   const MonumentMarkerPopup({Key? key, required this.mark})
-//       : super(key: key);
-//   final Mark mark;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 200,
-//       child: Card(
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(15),
-//         ),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: <Widget>[
-//             Image.network(monument.imagePath, width: 200),
-//             Text(monument.name),
-//             Text('${monument.lat},${monument.long}'),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 class MarkerPopUp extends StatelessWidget {
   final Mark mark;
   const MarkerPopUp({
@@ -170,21 +123,3 @@ class MarkerPopUp extends StatelessWidget {
     );
   }
 }
-// <Marker>[
-//             MonumentMarker(
-//               monument: Monument(
-//                 name: 'Eiffel Tower',
-//                 imagePath:
-//                     'https://cdn.lifestyleasia.com/wp-content/uploads/2019/10/21224220/Winer-Parisienne.jpg',
-//                 lat: 48.857661,
-//                 long: 2.295135,
-//               ),
-//             ),
-//             Marker(
-//               anchorPos: AnchorPos.align(AnchorAlign.top),
-//               point: LatLng(48.859661, 2.305135),
-//               height: Monument.size,
-//               width: Monument.size,
-//               builder: (BuildContext ctx) => Icon(Icons.shop),
-//             ),
-//           ],

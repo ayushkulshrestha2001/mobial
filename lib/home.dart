@@ -86,7 +86,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 controller: _pageController,
                 onPageChanged: onPageChange,
                 physics: NeverScrollableScrollPhysics(),
-                dragStartBehavior: DragStartBehavior.start,
               ),
               // Positioned(
               //     //left: 100.0,
