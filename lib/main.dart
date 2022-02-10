@@ -3,6 +3,7 @@ import 'package:mobial/login9/ui/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_azure_tts/flutter_azure_tts.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'high_importance_channel',
@@ -37,6 +38,11 @@ Future<void> main() async {
       ?.createNotificationChannel(channel);
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true, badge: true, sound: true);
+  AzureTts.init(
+    subscriptionKey: "6ecbf8e96a5448ad90eda7f49a1ee90b",
+    region: "centralindia",
+    withLogs: true,
+  );
   runApp(MyApp());
 }
 
